@@ -1,0 +1,175 @@
+#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+
+version = 2
+final_space = true
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'os'
+    style = 'plain'
+    template = '{{.Icon}} '
+    background = 'transparent'
+    foreground = 'p:os'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    template = '{{ .Path }} '
+    background = 'transparent'
+    foreground = 'p:pink'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+    [blocks.segments.properties]
+      folder_icon = '....'
+      home_icon = '~'
+      style = 'agnoster_short'
+      max_depth = 3
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'plain'
+    template = 'on {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \ueb4b {{ .StashCount }}{{ end }} '
+    background = 'transparent'
+    foreground = 'p:lavender'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+    [blocks.segments.properties]
+      branch_icon = ' '
+      cherry_pick_icon = ' '
+      commit_icon = ' '
+      fetch_status = false
+      fetch_upstream_icon = false
+      merge_icon = ' '
+      no_commits_icon = ' '
+      rebase_icon = ' '
+      revert_icon = ' '
+      tag_icon = ' '
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    template = '❯'
+    background = 'transparent'
+    foreground_templates = [
+      '{{if gt .Code 0}}p:error{{end}}',
+      '{{if eq .Code 0}}p:success{{end}}'
+    ]
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+[[blocks]]
+  type = 'rprompt'
+  alignment = 'right'
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    template = '<#cc7eda> | with</>  {{ .UserName }}@{{ .HostName }}'
+    background = 'transparent'
+    foreground = '#81ff91'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+  [[blocks.segments]]
+    type = 'node'
+    style = 'powerline'
+    template = '<#cc7eda> | </><#7eb8da></> {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}'
+    background = 'transparent'
+    foreground = '#81ff91'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+    [blocks.segments.properties]
+      fetch_version = true
+
+  [[blocks.segments]]
+    type = 'php'
+    style = 'powerline'
+    template = '<#cc7eda> | </><#7eb8da></> {{ .Full }}'
+    background = 'transparent'
+    foreground = '#81ff91'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+  [[blocks.segments]]
+    type = 'npm'
+    style = 'powerline'
+    template = '<#cc7eda> | </><#7eb8da> </> {{ .Full }}'
+    background = 'transparent'
+    foreground = '#81ff91'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+  [[blocks.segments]]
+    type = 'sysinfo'
+    style = 'powerline'
+    template = '<> </>'
+    background = 'transparent'
+    foreground = '#81ff91'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    template = '⌛  {{ .FormattedMs }} '
+    background = 'transparent'
+    foreground = '#FFFFFF'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+    [blocks.segments.properties]
+      style = 'austin'
+      threshold = 150.0
+
+  [[blocks.segments]]
+    type = 'time'
+    style = 'plain'
+    template = 'at {{ .CurrentDate | date .Format }} <#cc7eda> | </>'
+    background = 'transparent'
+    foreground = '#FFFFFF'
+    Text = ''
+    Duration = 0
+    NameLength = 0
+
+    [blocks.segments.properties]
+      time_format = '15:04:05'
+
+[transient_prompt]
+  foreground_templates = [
+    '{{if gt .Code 0}}p:error{{end}}',
+    '{{if eq .Code 0}}p:success{{end}}'
+  ]
+  background = 'transparent'
+  template = '❯ '
+
+[secondary_prompt]
+  foreground = 'p:pink'
+  background = 'transparent'
+  template = '❯❯ '
+
+[palette]
+  blue = '#8CAAEE'
+  closer = 'p:os'
+  lavender = '#BABBF1'
+  os = '#ACB0BE'
+  pink = '#F4B8E4'
+  error = '#FF0000'
+  success = '#00FF00'
