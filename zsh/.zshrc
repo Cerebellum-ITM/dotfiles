@@ -51,4 +51,4 @@ alias ls='ls --color'
 alias vim='nvim'
 
 # Shell integrations
-eval "$(fzf --zsh)"
+source <(fzf --zsh)
