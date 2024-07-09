@@ -28,7 +28,7 @@ final_space = true
     NameLength = 0
 
     [blocks.segments.properties]
-      folder_icon = '....'
+      folder_icon = '.. ..'
       home_icon = '~'
       style = 'agnoster_short'
       max_depth = 3
@@ -42,13 +42,13 @@ final_space = true
       "{{ if gt .Ahead 0 }}#B388FF{{ end }}",
       "{{ if gt .Behind 0 }}#B388FB{{ end }}"
     ]
-    template = "on {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} "
+    template = "on {{ .UpstreamIcon }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} "
     Text = ''
     Duration = 0
     NameLength = 0
 
     [blocks.segments.properties]
-      branch_icon = ' '
+      branch_icon = ' '
       cherry_pick_icon = ' '
       commit_icon = ' '
       fetch_status = true
@@ -77,11 +77,18 @@ final_space = true
   alignment = 'right'
 
   [[blocks.segments]]
+    type = 'shell'
+    style = 'plain'
+    template = 'on 󰅭 {{.Name}}'
+
+  [[blocks.segments]]
     type = 'text'
     style = 'plain'
-    template = '<#cc7eda> | with</>  {{ .UserName }}@{{ .HostName }}'
+    template = '<#cc7eda> | with</> {{ .UserName }}@{{ .HostName }}'
     background = 'transparent'
-    foreground = '#81ff91'
+    foreground_templates = [
+      '{{if .Root}}p:warning{{else}}p:green{{end}}',
+    ]
     Text = ''
     Duration = 0
     NameLength = 0
@@ -132,7 +139,7 @@ final_space = true
   [[blocks.segments]]
     type = 'executiontime'
     style = 'plain'
-    template = '⌛  {{ .FormattedMs }} '
+    template = '<#FFFF00>| Took {{ .FormattedMs }} 󰀡  </>'
     background = 'transparent'
     foreground = '#FFFFFF'
     Text = ''
@@ -146,7 +153,7 @@ final_space = true
   [[blocks.segments]]
     type = 'time'
     style = 'plain'
-    template = 'at {{ .CurrentDate | date .Format }} <#cc7eda> | </>'
+    template = 'at {{ .CurrentDate | date .Format }}  <#cc7eda></>'
     background = 'transparent'
     foreground = '#FFFFFF'
     Text = ''
@@ -176,4 +183,6 @@ final_space = true
   os = '#ACB0BE'
   pink = '#F4B8E4'
   error = '#FF0000'
+  green = '#81ff91'
   success = '#00FF00'
+  warning = '#FFFF00'
