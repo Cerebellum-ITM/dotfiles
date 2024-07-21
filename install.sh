@@ -76,7 +76,6 @@ if ! command -v zoxide &> /dev/null; then
     log_debug "Installing zoxide"
     if [ "$os_name" = "Linux" ]; then
         curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-        ~/.fzf/install --all
     elif [ "$os_name" = "Darwin" ]; then
         brew install zoxide
     fi
@@ -126,6 +125,12 @@ for folder in *; do
         fi
     fi
 done
+
+if ask "Patch .zshrc for zoxide?"; then
+    log_debug "Patching .zshrc for zoxide"
+    echo "export PATH="$PATH:/root/.local/bin"" >> ~/.zshrc
+fis
+
 
 log_info "Installation completed. Please restart your terminal."
 log_info "Run the following command:\nsource ~/.zshrc"
