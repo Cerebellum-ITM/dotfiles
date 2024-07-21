@@ -72,6 +72,31 @@ else
     log_info "fzf is already installed"
 fi
 
+if ! command -v zoxide &> /dev/null; then
+    log_debug "Installing zoxide"
+    if [ "$os_name" = "Linux" ]; then
+        curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+        ~/.fzf/install --all
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install zoxide
+    fi
+else
+    log_info "zoxide is already installed"
+fi
+
+if ! command -v bat &> /dev/null; then
+    log_debug "Installing bat"
+    if [ "$os_name" = "Linux" ]; then
+        sudo apt-get install bat
+        ~/.fzf/install --all
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install bat
+    fi
+else
+    log_info "bat is already installed"
+fi
+
+
 # Check what shell is being used
 SH="${HOME}/.bashrc"
 ZSHRC="${HOME}/.zshrc"
@@ -80,7 +105,7 @@ if [ -f "$ZSHRC" ]; then
 fi
 
 echo >> $SH
-log_info '# -------------- bartekspitza:dotfiles install ---------------' >> $SH
+log_info '# -------------- bartekspitza:dotfiles install ---------------'
 
 # Remove oh-my-zsh
 if ask "Do you want to remove previous oh-my-zsh installation?"; then

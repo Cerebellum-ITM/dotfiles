@@ -45,11 +45,39 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-
+export FZF_DEFAULT_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
+export FZF_CTRL_T_OPTS="
+    --walker-skip .git,node_modules,target
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 # Aliases
 alias ls='ls --color'
 alias vim='nvim'
-
+alias cat='bat'
+alias f='fzf'
+alias fcode='code $(f)'
+alias fcat='bat $(f)'
+alias fg_log='_fzf_git_hashes'
 # Shell integrations
+eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source <(fzf --zsh)
+source ~/dotfiles/scripts/fzf-git.sh
+
+fgit() {
+    if [[ "$1" == "log" ]]; then
+        _fzf_git_hashes 
+    elif [[ "$1" == "status" || "$1" == "-s" ]]; then
+        _fzf_git_files
+    elif [[ "$1" == "branch" ]]; then
+        git checkout $(_fzf_git_branches)
+    elif [[ "$1" == "cherry" ]]; then
+        git cherry-pick $(_fzf_git_hashes)
+    elif [[ "$1" == "remote" || "$1" == "-r" ]]; then
+        _fzf_git_remotes
+    elif [[ "$1" == "stash" ]]; then
+        _fzf_git_stashes
+    else
+        echo "List of available commands:\n- log (default)\n- cherry"
+    fi
+}
