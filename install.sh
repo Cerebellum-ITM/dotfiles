@@ -126,11 +126,5 @@ for folder in *; do
     fi
 done
 
-if ask "Patch .zshrc for zoxide?"; then
-    log_debug "Patching .zshrc for zoxide"
-    echo "export PATH="$PATH:/root/.local/bin"" >> ~/.zshrc
-fis
-
-
 log_info "Installation completed. Please restart your terminal."
 log_info "Run the following command:\nsource ~/.zshrc"

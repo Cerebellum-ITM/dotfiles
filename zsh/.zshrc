@@ -14,6 +14,10 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    export PATH="/root/.local/bin:$PATH"
+fi
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
