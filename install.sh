@@ -87,6 +87,10 @@ if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
         sudo apt-get install bat
+        if ! command -v bat &> /dev/null; then
+            mkdir -p ~/.local/bin
+            ln -s /usr/bin/batcat ~/.local/bin/bat
+        fi
     elif [ "$os_name" = "Darwin" ]; then
         brew install bat
     fi
