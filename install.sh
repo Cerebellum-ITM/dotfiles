@@ -34,13 +34,34 @@ function ask() {
 # install all dependencies
 os_name="$(uname -s)"
 if [ "$os_name" = "Linux" ]; then
-    sudo apt-get update
+    distribution= grep '^NAME=' /etc/os-release | cut -d= -f2
+fi
+
+if [ "$os_name" = "Linux" ]; then    
+    if [ "$distribution" = "Ubuntu" ]; then
+        sudo apt-get update
+    elif [ "$distribution" = "Amazon Linux" ]; then
+        sudo yum update
+    fi
+    
 fi
 
 if ! command -v stow &> /dev/null; then
     log_debug "Installing stow"
     if [ "$os_name" = "Linux" ]; then
-        sudo apt-get install stow
+        if [ "$distribution" = "Ubuntu" ]; then
+            sudo apt-get install stow
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+            tar -xzvf stow-latest.tar.gz
+            cd stow-*/
+            ./configure
+            make
+            sudo make install
+            sudo yum install perl-File-Copy
+            sudo yum install perl-core
+        fi
+
     elif [ "$os_name" = "Darwin" ]; then
         brew install stow
     fi
