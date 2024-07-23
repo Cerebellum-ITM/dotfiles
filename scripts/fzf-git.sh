@@ -224,7 +224,7 @@ _fzf_git_hashes() {
     --header-lines 3 \
     --bind "ctrl-o:execute-silent:bash $__fzf_git commit {}" \
     --bind "ctrl-d:execute:grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git diff --color=$(__fzf_git_color) > /dev/tty" \
-    --bind "alt-a:change-border-label(🍇 All hashes)+reload:bash \"$__fzf_git\" all-hashes" \
+    --bind "ctrl-a:change-border-label(🍇 All hashes)+reload:bash \"$__fzf_git\" all-hashes" \
     --color hl:underline,hl+:underline \
     --preview "grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git show --color=$(__fzf_git_color .) | $(__fzf_git_pager)" "$@" |
   awk 'match($0, /[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/) { print substr($0, RSTART, RLENGTH) }'
