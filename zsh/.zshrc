@@ -15,7 +15,7 @@ source "${ZINIT_HOME}/zinit.zsh"
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    export PATH="/root/.local/bin:$PATH"
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # Add in zsh plugins
