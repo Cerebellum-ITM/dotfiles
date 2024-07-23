@@ -87,7 +87,6 @@ if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
         sudo apt-get install bat
-        ~/.fzf/install --all
     elif [ "$os_name" = "Darwin" ]; then
         brew install bat
     fi
