@@ -2,7 +2,7 @@
 
 version = 2
 final_space = true
-auto_upgrade = true
+auto_upgrade = false
 
 [[blocks]]
   type = 'prompt'
