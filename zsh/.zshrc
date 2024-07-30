@@ -69,19 +69,19 @@ source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
 
 fgit() {
-    if [[ "$1" == "log" ]]; then
+    if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
         _fzf_git_files
-    elif [[ "$1" == "branch" ]]; then
+    elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
-    elif [[ "$1" == "cherry" ]]; then
+    elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
         git cherry-pick $(_fzf_git_hashes)
-    elif [[ "$1" == "remote" || "$1" == "-r" ]]; then
+    elif [[ "$1" == "remote" || "$1" == "-v" ]]; then
         _fzf_git_remotes
     elif [[ "$1" == "stash" ]]; then
         _fzf_git_stashes
     else
-        echo "List of available commands:\n- log (default)\n- cherry"
+        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash"
     fi
 }
