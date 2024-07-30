@@ -107,11 +107,18 @@ fi
 if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
-        sudo apt-get install bat
-        if ! command -v bat &> /dev/null; then
-            mkdir -p ~/.local/bin
-            ln -s /usr/bin/batcat ~/.local/bin/bat
-        fi
+        if [ "$distribution" = "Ubuntu" ]; then
+            sudo apt-get install bat
+            if ! command -v bat &> /dev/null; then
+                mkdir -p ~/.local/bin
+                ln -s /usr/bin/batcat ~/.local/bin/bat
+            fi
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            sudo yum install tar
+            curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-v0.24.0-x86_64-unknown-linux-musl.tar.gz
+            tar -xvf bat.zip
+            mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
+            ln -s /usr/bin/batcat/bat ~/.local/bin/bat 
     elif [ "$os_name" = "Darwin" ]; then
         brew install bat
     fi
