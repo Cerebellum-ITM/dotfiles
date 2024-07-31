@@ -62,11 +62,13 @@ alias f='fzf'
 alias fcode='code $(f)'
 alias fcat='bat $(f)'
 alias fg_log='_fzf_git_hashes'
+alias fmake='_funtion_list'
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
+source ~/dotfiles/scripts/fzf-make.sh
 
 fgit() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
