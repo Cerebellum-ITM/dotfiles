@@ -180,7 +180,7 @@ auto_upgrade = false
 [palette]
   blue = '#8CAAEE'
   closer = 'p:os'
-  lavender = '#BABBF1'
+  lavender = '#87FF63'
   os = '#ACB0BE'
   pink = '#F4B8E4'
   error = '#FF0000'
