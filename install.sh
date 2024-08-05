@@ -119,6 +119,7 @@ if ! command -v bat &> /dev/null; then
             tar -xvf bat.zip
             mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
             ln -s /usr/bin/batcat/bat ~/.local/bin/bat 
+        fi
     elif [ "$os_name" = "Darwin" ]; then
         brew install bat
     fi
@@ -126,6 +127,22 @@ else
     log_info "bat is already installed"
 fi
 
+if ! command -v cookiecutter &> /dev/null; then
+    if command -v python3 &> /dev/null; then
+        log_debug "Installing cookiecutter"
+        pip install cookiecutter
+    else
+        log_error "Python3 is not installed. Please install Python3 and try again."
+    fi
+fi
+
+FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
+
+# Verificar si el archivo de historial existe, si no, crearlo
+if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
+    touch "$FZF_MAKE_HISTORY_FILE"
+    log_info "Created history file for fzf-make"
+fi
 
 # Check what shell is being used
 SH="${HOME}/.bashrc"
@@ -134,7 +151,6 @@ if [ -f "$ZSHRC" ]; then
 	SH="$ZSHRC"
 fi
 
-echo >> $SH
 log_info '# -------------- bartekspitza:dotfiles install ---------------'
 
 # Remove oh-my-zsh

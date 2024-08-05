@@ -70,6 +70,7 @@ eval "$(zoxide init zsh --cmd cd)"
 source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
 source ~/dotfiles/scripts/fzf-make.sh
+source ~/dotfiles/scripts/fzf-templates.sh
 
 fgit() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
