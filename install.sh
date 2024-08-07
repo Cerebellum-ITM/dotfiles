@@ -34,8 +34,9 @@ function ask() {
 # install all dependencies
 os_name="$(uname -s)"
 if [ "$os_name" = "Linux" ]; then
-    distribution= grep '^NAME=' /etc/os-release | cut -d= -f2
+    distribution=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
 fi
+
 
 if [ "$os_name" = "Linux" ]; then    
     if [ "$distribution" = "Ubuntu" ]; then
@@ -50,7 +51,7 @@ if ! command -v stow &> /dev/null; then
     log_debug "Installing stow"
     if [ "$os_name" = "Linux" ]; then
         if [ "$distribution" = "Ubuntu" ]; then
-            sudo apt-get install stow
+            sudo apt-get install stow -y
         elif [ "$distribution" = "Amazon Linux" ]; then
             wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
             tar -xzvf stow-latest.tar.gz
@@ -108,7 +109,7 @@ if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
         if [ "$distribution" = "Ubuntu" ]; then
-            sudo apt-get install bat
+            sudo apt-get install bat -y
             if ! command -v bat &> /dev/null; then
                 mkdir -p ~/.local/bin
                 ln -s /usr/bin/batcat ~/.local/bin/bat
@@ -129,6 +130,10 @@ fi
 
 if ! command -v cookiecutter &> /dev/null; then
     if command -v python3 &> /dev/null; then
+        if ! command -v pip &> /dev/null; then
+            log_debug "pip is not installed. Installing pip."
+            sudo apt-get install -y python3-pip
+        fi
         log_debug "Installing cookiecutter"
         pip install cookiecutter
     else
@@ -144,31 +149,35 @@ if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
     log_info "Created history file for fzf-make"
 fi
 
-# Check what shell is being used
-SH="${HOME}/.bashrc"
-ZSHRC="${HOME}/.zshrc"
-if [ -f "$ZSHRC" ]; then
-	SH="$ZSHRC"
-fi
 
-log_info '# -------------- bartekspitza:dotfiles install ---------------'
 
 # Remove oh-my-zsh
-if ask "Do you want to remove previous oh-my-zsh installation?"; then
-    log_debug "Removing oh-my-zsh"
-    rm -f ~/.p10k.zsh
-    rm -rf -- ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-    sh ~/.oh-my-zsh/tools/uninstall.sh -y
-    rm ~/.zshrc
+if [ -d "$HOME/.oh-my-zsh" ]; then
+    if ask "Do you want to remove previous oh-my-zsh installation?"; then
+        log_debug "Removing oh-my-zsh"
+        rm -f ~/.p10k.zsh
+        rm -rf -- ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+        sh ~/.oh-my-zsh/tools/uninstall.sh -y
+        rm -rf ~/.oh-my-zsh
+        rm ~/.zshrc
+    fi
+else
+    log_info "oh-my-zsh is not installed, skipping removal."
 fi
 
-# Ask which files should be sourced
+log_info '# -------------- dotfiles install ---------------'
+# list of folders to exclude
+exclude_folders=("scripts" "templates")
+
+# Source all files
 log_info "Which files should be sourced?"
 for folder in *; do
     if [ -d "$folder" ]; then
-        filename=$(basename "$folder")
-        if ask "${filename}?"; then
-            stow -R $folder
+        if [[ ! " ${exclude_folders[@]} " =~ " ${folder} " ]]; then
+            filename=$(basename "$folder")
+            if ask "${filename}?"; then
+                stow -R "$folder"
+            fi
         fi
     fi
 done
