@@ -78,6 +78,7 @@ fgit() {
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
         _fzf_git_files
+        print -z 'git commit -m"'
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then

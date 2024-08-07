@@ -44,7 +44,28 @@ if [ "$os_name" = "Linux" ]; then
     elif [ "$distribution" = "Amazon Linux" ]; then
         sudo yum update
     fi
-    
+    if ["distribution" = "Darwin"]; then
+        if ! command -v brew &> /dev/null; then
+            log_debug "Installing Homebrew"
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        fi
+        brew update
+    fi
+fi
+
+if ! command -v zsh &> /dev/null; then
+    log_debug "Installing zsh"
+    if [ "$os_name" = "Linux" ]; then
+        if [ "$distribution" = "Ubuntu" ]; then
+            sudo apt-get install zsh -y
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            sudo yum install zsh -y
+        fi
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install zsh
+    fi
+else
+    log_info "zsh is already installed"
 fi
 
 if ! command -v stow &> /dev/null; then
