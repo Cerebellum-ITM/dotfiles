@@ -115,12 +115,14 @@ else
     log_info "fzf is already installed"
 fi
 
-
 if ! command -v tree &> /dev/null; then
     log_debug "Installing tree"
     if [ "$os_name" = "Linux" ]; then
-        apt-get install tree -y
-        ~/.fzf/install --all
+        if [ "$distribution" = "Ubuntu" ]; then
+            sudo apt-get install tree -y
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            sudo yum install tree -y
+        fi
     elif [ "$os_name" = "Darwin" ]; then
         brew install tree
     fi
