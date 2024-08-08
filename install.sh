@@ -115,6 +115,19 @@ else
     log_info "fzf is already installed"
 fi
 
+
+if ! command -v tree &> /dev/null; then
+    log_debug "Installing tree"
+    if [ "$os_name" = "Linux" ]; then
+        apt-get install tree -y
+        ~/.fzf/install --all
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install tree
+    fi
+else
+    log_info "fzf is already installed"
+fi
+
 if ! command -v zoxide &> /dev/null; then
     log_debug "Installing zoxide"
     if [ "$os_name" = "Linux" ]; then
