@@ -4,6 +4,7 @@ _fzf_templates_gui() {
         --border-label-pos=2 \
         --color='header:italic:underline,label:blue' \
         --preview-window='right,80%,border-left' \
+        --header='Select the template to use' \
         --preview="tree -C $HOME/dotfiles/templates/odoo/{}"
 }
 
