@@ -44,7 +44,7 @@ if [ "$os_name" = "Linux" ]; then
     elif [ "$distribution" = "Amazon Linux" ]; then
         sudo yum update
     fi
-    if ["distribution" = "Darwin"]; then
+    if ["$distribution" = "Darwin"]; then
         if ! command -v brew &> /dev/null; then
             log_debug "Installing Homebrew"
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
