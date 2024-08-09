@@ -66,7 +66,6 @@ alias fmake='_funtion_list'
 alias fm='_funtion_list'
 alias frm='rm -rf $(fzf -m)'
 alias ft='_odoo_template_list'
-alias update='cd $HOME/dotfiles && git pull && ./install --unattended && source ~/.zshrc && cd -'
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -74,6 +73,14 @@ source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
 source ~/dotfiles/scripts/fzf-make.sh
 source ~/dotfiles/scripts/fzf-templates.sh
+
+function dotfiles_update() {
+    cd $HOME/dotfiles
+    git pull
+    ./install.sh --unattended
+    source ~/.zshrc
+    cd -
+}
 
 fgit() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
