@@ -30,7 +30,7 @@ function ask() {
     [ "$response_lc" = "y" ]
 }
 
-
+log_info "Check for dependencies"
 # install all dependencies
 os_name="$(uname -s)"
 if [ "$os_name" = "Linux" ]; then
@@ -186,37 +186,43 @@ if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
 fi
 
 
-
-# Remove oh-my-zsh
-if [ -d "$HOME/.oh-my-zsh" ]; then
-    if ask "Do you want to remove previous oh-my-zsh installation?"; then
-        log_debug "Removing oh-my-zsh"
-        rm -f ~/.p10k.zsh
-        rm -rf -- ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-        sh ~/.oh-my-zsh/tools/uninstall.sh -y
-        rm -rf ~/.oh-my-zsh
-        rm ~/.zshrc
-    fi
-else
-    log_info "oh-my-zsh is not installed, skipping removal."
+UNATTENDED_INSTALLATION=false
+if [ "$1" == "--unattended" ]; then
+    UNATTENDED_INSTALLATION=true
 fi
 
-log_info '# -------------- dotfiles install ---------------'
-# list of folders to exclude
-exclude_folders=("scripts" "templates")
+if [ "$UNATTENDED_INSTALLATION" == false ]; then
+    # Remove oh-my-zsh
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        if ask "Do you want to remove previous oh-my-zsh installation?"; then
+            log_debug "Removing oh-my-zsh"
+            rm -f ~/.p10k.zsh
+            rm -rf -- ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+            sh ~/.oh-my-zsh/tools/uninstall.sh -y
+            rm -rf ~/.oh-my-zsh
+            rm ~/.zshrc
+        fi
+    else
+        log_info "oh-my-zsh is not installed, skipping removal."
+    fi
 
-# Source all files
-log_info "Which files should be sourced?"
-for folder in *; do
-    if [ -d "$folder" ]; then
-        if [[ ! " ${exclude_folders[@]} " =~ " ${folder} " ]]; then
-            filename=$(basename "$folder")
-            if ask "${filename}?"; then
-                stow -R "$folder"
+    log_info '# -------------- dotfiles install ---------------'
+    # list of folders to exclude
+    exclude_folders=("scripts" "templates")
+
+    # Source all files
+    log_info "Which files should be sourced?"
+    for folder in *; do
+        if [ -d "$folder" ]; then
+            if [[ ! " ${exclude_folders[@]} " =~ " ${folder} " ]]; then
+                filename=$(basename "$folder")
+                if ask "${filename}?"; then
+                    stow -R "$folder"
+                fi
             fi
         fi
-    fi
-done
+    done
+fi
 
 log_info "Installation completed. Please restart your terminal."
 log_info "Run the following command:\nsource ~/.zshrc"
