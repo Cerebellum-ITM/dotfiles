@@ -82,12 +82,70 @@ function dotfiles_update() {
     cd -
 }
 
+fzf_select() {
+    trap 'rm -f /tmp/initial_path' EXIT
+    if [[ ! -f /tmp/initial_path ]]; then
+        echo $PWD > /tmp/initial_path
+    fi
+    
+    local mode="${1:-select}"
+    while true; do
+        if [[ "$mode" == "select" ]]; then
+            header="Modo: SELECT (ctrl-w para cambiar a PATH CHANGER)"
+            color="header:bright-green"
+        else
+            header="Modo: PATH CHANGER (ctrl-s para cambiar a SELECT)"
+            color="header:bright-magenta"
+        fi
+
+        selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
+            awk 'BEGIN {print ".."} {print}' | \
+            FZF_DEFAULT_OPTS="--height=50% --layout=reverse --border \
+                --preview='[[ -d {} ]] && tree -L 1 {} || cat {}' \
+                --header='$header' \
+                --color='$color' \
+                --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode)+abort' \
+                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode)+abort'" \
+            fzf)
+
+        if [[ -z "$selected" ]]; then
+            break
+        fi
+
+        if [[ "$selected" == ".." ]]; then
+            cd ..
+            fzf_select "$mode"
+        elif [[ "$mode" == "path_changer" && -d "$selected" ]]; then
+            cd "$selected"
+            fzf_select "select"
+        else
+            echo "$(basename "$selected")"
+            initial_path=$(cat /tmp/initial_path)
+            cd $initial_path
+            rm /tmp/initial_path
+        fi
+        break
+    done
+
+    if [[ -f /tmp/fzf_mode ]]; then
+        mode=$(cat /tmp/fzf_mode)
+        rm /tmp/fzf_mode
+        fzf_select "$mode"
+    fi
+}
+
 fgit() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
-        _fzf_git_files
-        print -z 'git commit -m"'
+        make_a_commit=$(_fzf_git_files)
+        if [[ -z "$make_a_commit" ]]; then
+            exit 1
+        fi
+        local type_of_commit
+        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo {} | cut -f2" | cut -f1)
+        file_or_folder=$(fzf_select)
+        print -z "git commit -m\"$type_of_commit $file_or_folder: "
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
