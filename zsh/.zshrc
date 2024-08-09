@@ -101,7 +101,7 @@ fzf_select() {
         selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
             awk 'BEGIN {print ".."} {print}' | \
             FZF_DEFAULT_OPTS="--height=50% --layout=reverse --border \
-                --preview='[[ -d {} ]] && tree -L 1 {} || cat {}' \
+                --preview='[[ -d {} ]] && tree -L 1 {} || bat -n --color=always {}' \
                 --header='$header' \
                 --color='$color' \
                 --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode)+abort' \
@@ -138,10 +138,9 @@ fgit() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
-        make_a_commit=$(_fzf_git_files)
-        if [[ -z "$make_a_commit" ]]; then
-            exit 1
-        fi
+        _fzf_git_files
+    elif [[ "$1" == "commit" || "$1" == "-sc" ]]; then
+        _fzf_git_files
         local type_of_commit
         type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo {} | cut -f2" | cut -f1)
         file_or_folder=$(fzf_select)
