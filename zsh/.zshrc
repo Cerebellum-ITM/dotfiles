@@ -88,6 +88,12 @@ fzf_select() {
     local multi_select=""
     if [[ "$1" == "-m" ]]; then
         multi_select="-m"
+        echo $multi_select > /tmp/fzf_select_multi
+    fi
+
+    if [[ -f /tmp/fzf_select_multi ]]; then
+        multi_select=$(cat /tmp/fzf_select_multi)
+        rm /tmp/fzf_select_multi
     fi
     
     if [[ ! -f /tmp/initial_path ]]; then
@@ -110,8 +116,8 @@ fzf_select() {
                 --preview='[[ -d {} ]] && tree -L 1 {} || bat -n --color=always {}' \
                 --header='$header' \
                 --color='$color' \
-                --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode)+abort' \
-                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode)+abort'" \
+                --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
+                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort'" \
             fzf $multi_select)
 
         if [[ -z "$selected" ]]; then
@@ -120,12 +126,16 @@ fzf_select() {
 
         if [[ "$selected" == ".." ]]; then
             cd ..
-            fzf_select "$mode"
+            fzf_select "$mode" $multi_select
         elif [[ "$mode" == "path_changer" && -d "$selected" ]]; then
             cd "$selected"
-            fzf_select "select"
+            fzf_select "select" $multi_select
         else
-            echo "$(basename "$selected")"
+            if [[ -n "$multi_select" ]]; then
+                echo $selected
+            else
+                echo "$(basename "$selected")"
+            fi
             initial_path=$(cat /tmp/initial_path)
             cd $initial_path
             rm /tmp/initial_path
@@ -136,7 +146,7 @@ fzf_select() {
     if [[ -f /tmp/fzf_mode ]]; then
         mode=$(cat /tmp/fzf_mode)
         rm /tmp/fzf_mode
-        fzf_select "$mode"
+        fzf_select "$mode" $multi_select
     fi
 }
 
