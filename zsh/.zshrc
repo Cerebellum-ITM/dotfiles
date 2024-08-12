@@ -64,7 +64,7 @@ alias fcat='bat $(f)'
 alias fg_log='_fzf_git_hashes'
 alias fmake='_funtion_list'
 alias fm='_funtion_list'
-alias frm='rm -rf $(fzf -m)'
+alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
@@ -84,6 +84,12 @@ function dotfiles_update() {
 
 fzf_select() {
     trap 'rm -f /tmp/initial_path' EXIT
+
+    local multi_select=""
+    if [[ "$1" == "-m" ]]; then
+        multi_select="-m"
+    fi
+    
     if [[ ! -f /tmp/initial_path ]]; then
         echo $PWD > /tmp/initial_path
     fi
@@ -106,7 +112,7 @@ fzf_select() {
                 --color='$color' \
                 --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode)+abort' \
                 --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode)+abort'" \
-            fzf)
+            fzf $multi_select)
 
         if [[ -z "$selected" ]]; then
             break
