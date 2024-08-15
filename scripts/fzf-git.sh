@@ -177,7 +177,7 @@ _fzf_git_files() {
    git ls-files "$root" | grep -vxFf <(git status -s | grep '^[^?]' | cut -c4-; echo :) | sed 's/^/   /') |
   _fzf_git_fzf -m --ansi --nth 2..,.. \
     --border-label '📁 Files' \
-    --header $'CTRL-O (open in browser) ╱ CTRL-E (open in editor)/ CTRL-A (add to staged)\n\n' \
+    --header $'CTRL-O (open in 🌐) ╱ CTRL-E (open in 💻)/ CTRL-A (add to staged) / CTRL-S (Restore file)\n\n' \
     --bind "ctrl-o:execute-silent:bash $__fzf_git file {-1}" \
     --bind "ctrl-e:execute-silent:${EDITOR:-code} {-1}" \
     --bind "ctrl-a:execute-silent:git add {-1}" \
