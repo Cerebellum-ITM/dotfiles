@@ -44,13 +44,12 @@ if [ "$os_name" = "Linux" ]; then
     elif [ "$distribution" = "Amazon Linux" ]; then
         sudo yum update
     fi
-    if ["$distribution" = "Darwin"]; then
-        if ! command -v brew &> /dev/null; then
-            log_debug "Installing Homebrew"
-            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-        brew update
+elif [ "$os_name" = "Darwin" ]; then
+    if ! command -v brew &> /dev/null; then
+        log_debug "Installing Homebrew"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
+    brew update
 fi
 
 if ! command -v zsh &> /dev/null; then
@@ -96,7 +95,7 @@ if ! command -v oh-my-posh &> /dev/null; then
     if [ "$os_name" = "Linux" ]; then
         sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
         sudo chmod +x /usr/local/bin/oh-my-posh
-    if [ "$os_name" = "Debian GNU/Linux"]; then
+    elif [ "$os_name" = "Debian GNU/Linux"]; then
         wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-arm -O /usr/local/bin/oh-my-posh
         sudo chmod +x /usr/local/bin/oh-my-posh
     elif [ "$os_name" = "Darwin" ]; then
@@ -130,7 +129,7 @@ if ! command -v tree &> /dev/null; then
         brew install tree
     fi
 else
-    log_info "fzf is already installed"
+    log_info "tree is already installed"
 fi
 
 if ! command -v zoxide &> /dev/null; then
@@ -211,7 +210,7 @@ if [ "$UNATTENDED_INSTALLATION" == false ]; then
 
     log_info '# -------------- dotfiles install ---------------'
     # list of folders to exclude
-    exclude_folders=("scripts" "templates")
+    exclude_folders=("scripts" "templates" "git")
 
     # Source all files
     log_info "Which files should be sourced?"
