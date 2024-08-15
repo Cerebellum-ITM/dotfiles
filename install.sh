@@ -38,8 +38,8 @@ if [ "$os_name" = "Linux" ]; then
 fi
 
 
-if [ "$os_name" = "Linux" ]; then    
-    if [ "$distribution" = "Ubuntu" ]; then
+if [ "$os_name" = "Linux" ]; then   
+    if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
         sudo apt-get update
     elif [ "$distribution" = "Amazon Linux" ]; then
         sudo yum update
@@ -56,7 +56,7 @@ fi
 if ! command -v zsh &> /dev/null; then
     log_debug "Installing zsh"
     if [ "$os_name" = "Linux" ]; then
-        if [ "$distribution" = "Ubuntu" ]; then
+        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
             sudo apt-get install zsh -y
         elif [ "$distribution" = "Amazon Linux" ]; then
             sudo yum install zsh -y
@@ -71,7 +71,7 @@ fi
 if ! command -v stow &> /dev/null; then
     log_debug "Installing stow"
     if [ "$os_name" = "Linux" ]; then
-        if [ "$distribution" = "Ubuntu" ]; then
+        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
             sudo apt-get install stow -y
         elif [ "$distribution" = "Amazon Linux" ]; then
             wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
@@ -95,6 +95,9 @@ if ! command -v oh-my-posh &> /dev/null; then
     log_debug "Installing oh-my-posh"
     if [ "$os_name" = "Linux" ]; then
         sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+        sudo chmod +x /usr/local/bin/oh-my-posh
+    if [ "$os_name" = "Debian GNU/Linux"]; then
+        wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-arm -O /usr/local/bin/oh-my-posh
         sudo chmod +x /usr/local/bin/oh-my-posh
     elif [ "$os_name" = "Darwin" ]; then
         brew install jandedobbeleer/oh-my-posh/oh-my-posh
@@ -144,7 +147,7 @@ fi
 if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
-        if [ "$distribution" = "Ubuntu" ]; then
+        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
             sudo apt-get install bat -y
             if ! command -v bat &> /dev/null; then
                 mkdir -p ~/.local/bin
