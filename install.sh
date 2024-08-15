@@ -173,7 +173,11 @@ if ! command -v cookiecutter &> /dev/null; then
             sudo apt-get install -y python3-pip
         fi
         log_debug "Installing cookiecutter"
-        pip install cookiecutter
+        if [ "$distribution" = "Debian GNU/Linux" ]; then
+            sudo apt-get install -y cookiecutter
+        else
+            pip install cookiecutter
+        fi
     else
         log_error "Python3 is not installed. Please install Python3 and try again."
     fi
