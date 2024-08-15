@@ -39,7 +39,7 @@ fi
 
 
 if [ "$os_name" = "Linux" ]; then   
-    if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
+    if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
         sudo apt-get update
     elif [ "$distribution" = "Amazon Linux" ]; then
         sudo yum update
@@ -56,7 +56,7 @@ fi
 if ! command -v zsh &> /dev/null; then
     log_debug "Installing zsh"
     if [ "$os_name" = "Linux" ]; then
-        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
             sudo apt-get install zsh -y
         elif [ "$distribution" = "Amazon Linux" ]; then
             sudo yum install zsh -y
@@ -71,7 +71,7 @@ fi
 if ! command -v stow &> /dev/null; then
     log_debug "Installing stow"
     if [ "$os_name" = "Linux" ]; then
-        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
             sudo apt-get install stow -y
         elif [ "$distribution" = "Amazon Linux" ]; then
             wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
@@ -147,7 +147,7 @@ fi
 if ! command -v bat &> /dev/null; then
     log_debug "Installing bat"
     if [ "$os_name" = "Linux" ]; then
-        if [[ "$distribution" = "Ubuntu" || "$distribution" = "Debian GNU/Linux" ]]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
             sudo apt-get install bat -y
             if ! command -v bat &> /dev/null; then
                 mkdir -p ~/.local/bin
