@@ -38,7 +38,8 @@ view_history() {
     local selected_history=$(
         grep " - $current_dir -" "$FZF_MAKE_HISTORY_FILE" | \
         awk -F' - ' '{print $1 " - " $3}' | \
-        fzf --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
+        sort -rk1,1 | \
+        fzf --layout=reverse --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
         while read cmd; do awk '/^'\"\$cmd\"'[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $current_dir/Makefile | sed 's/^\t//'; done | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh" \
         --preview-window=down:60%:wrap
     )
@@ -73,7 +74,7 @@ execute_commands() {
 
 select_or_history() {
     check_makefile || return 1
-    local choice=$(echo -e "Select commands\nView history" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
+    local choice=$(echo -e "View history\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
 
     if [[ "$choice" == "Select commands" ]]; then
         _funtion_list
