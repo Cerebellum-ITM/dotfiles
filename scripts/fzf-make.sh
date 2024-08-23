@@ -24,6 +24,30 @@ log_history() {
 _funtion_list() {
     check_makefile || return 1
     local selected_commands=$(grep -E '^[^[:space:]]+:' Makefile | grep -v '^.PHONY' | cut -d: -f1 | _fzf_make_gui)
+    execute_commands "$selected_commands"
+}
+
+view_history() {
+    check_makefile || return 1
+    if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
+        echo "No history file found."
+        return 1
+    fi
+
+    local current_dir="$PWD"
+    local selected_history=$(
+        grep " - $current_dir -" "$FZF_MAKE_HISTORY_FILE" | \
+        awk -F' - ' '{print $1 " - " $3}' | \
+        fzf --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
+        while read cmd; do awk '/^'\"\$cmd\"'[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $current_dir/Makefile | sed 's/^\t//'; done | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh" \
+        --preview-window=down:60%:wrap
+    )
+    execute_commands "$(echo "$selected_history" | awk -F' - ' '{print $2}' | sed 's/ *, */,/g' | tr ',' '\n')"
+}
+
+
+execute_commands() {
+    local selected_commands="$1"
     if [ -n "$selected_commands" ]; then
         local original_ifs="$IFS"
         IFS=$'\n' commands_array=()
@@ -35,25 +59,25 @@ _funtion_list() {
         local history_entry=""
 
         for cmd in "${commands_array[@]}"; do
-            make "$cmd"
             history_entry+="$cmd, "
         done
 
         history_entry="${history_entry%, }"
         log_history "$history_entry"
+
+        for cmd in "${commands_array[@]}"; do
+            make "$cmd"
+        done
     fi
 }
 
-view_history() {
-    if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
-        echo "No history file found."
-        return 1
+select_or_history() {
+    check_makefile || return 1
+    local choice=$(echo -e "Select commands\nView history" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
+
+    if [[ "$choice" == "Select commands" ]]; then
+        _funtion_list
+    elif [[ "$choice" == "View history" ]]; then
+        view_history
     fi
-
-    cat "$FZF_MAKE_HISTORY_FILE" | fzf --ansi --preview 'echo {} | awk -F" - " "{print \$3}"' --preview-window=down:3:wrap
-
-    local current_dir="$PWD"
-    
-    grep " - $current_dir -" "$FZF_MAKE_HISTORY_FILE" | awk -F' - ' '{print $1}' | \
-    fzf --ansi --preview "grep -F ' - $current_dir - ' '$FZF_MAKE_HISTORY_FILE' | grep -F '^{}' | awk -F' - ' '{print \$3}'" --preview-window=down:3:wrap
 }
