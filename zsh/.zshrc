@@ -169,7 +169,11 @@ fgit() {
         _fzf_git_remotes
     elif [[ "$1" == "stash" ]]; then
         _fzf_git_stashes
+    elif [[ "$1" == "push" || "$1" == "-p" ]]; then
+        remote=$(_fzf_git_remotes)
+        branch=$(_fzf_git_branches)
+        git push $remote $branch 
     else
-        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash"
+        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p"
     fi
 }
