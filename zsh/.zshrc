@@ -73,6 +73,7 @@ source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
 source ~/dotfiles/scripts/fzf-make.sh
 source ~/dotfiles/scripts/fzf-templates.sh
+source ~/dotfiles/scripts/fzf-translate.sh
 
 function dotfiles_update() {
     cd $HOME/dotfiles
@@ -160,7 +161,8 @@ fgit() {
         local type_of_commit
         type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo {} | cut -f2" | cut -f1)
         file_or_folder=$(fzf_select)
-        print -z "git commit -m\"$type_of_commit $file_or_folder: "
+        message=$(_fzf_translate_main_funtion)
+        print -z "git commit -m\"$type_of_commit $file_or_folder: $message\""
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then

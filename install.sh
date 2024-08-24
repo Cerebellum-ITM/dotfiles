@@ -182,13 +182,17 @@ if ! command -v cookiecutter &> /dev/null; then
         log_error "Python3 is not installed. Please install Python3 and try again."
     fi
 fi
-
+#! Check if history files exist, if not, create them
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
-
-# Verificar si el archivo de historial existe, si no, crearlo
 if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
     touch "$FZF_MAKE_HISTORY_FILE"
     log_info "Created history file for fzf-make"
+fi
+
+FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-translate_history.log"
+if [ ! -f "$FZF_TRANSLATE_HISTORY_FILE" ]; then
+    touch "$FZF_TRANSLATE_HISTORY_FILE"
+    log_info "Created history file for fzf-translate"
 fi
 
 
