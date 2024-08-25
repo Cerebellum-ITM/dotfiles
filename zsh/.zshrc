@@ -62,8 +62,6 @@ alias f='fzf'
 alias fcode='code $(f)'
 alias fcat='bat $(f)'
 alias fg_log='_fzf_git_hashes'
-alias fmake='select_or_history'
-alias fm='select_or_history'
 alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 # Shell integrations
@@ -177,5 +175,15 @@ fgit() {
         git push $remote $branch 
     else
         echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p"
+    fi
+}
+
+fm() {
+    if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
+        execute_commands "$(grep "$(pwd)" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
+    elif [[ "$1" == "help" || "$1" == "-h" ]]; then
+        echo "List of available commands:\n- repeat or -r"
+    else
+        select_or_history       
     fi
 }
