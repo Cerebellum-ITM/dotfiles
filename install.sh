@@ -182,6 +182,22 @@ if ! command -v cookiecutter &> /dev/null; then
         log_error "Python3 is not installed. Please install Python3 and try again."
     fi
 fi
+#! Check for translation dependencies
+if ! command -v trans &> /dev/null; then
+    log_debug "Installing trans"
+    if [ "$os_name" = "Linux" ]; then
+        if [ "$distribution" = "Ubuntu" ]; then
+            sudo apt-get install translate-shell -y
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            sudo yum install translate-shell -y
+        fi
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install translate-shell
+    fi
+else
+    log_info "trans is already installed"
+fi
+
 #! Check if history files exist, if not, create them
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
 if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
@@ -194,6 +210,7 @@ if [ ! -f "$FZF_TRANSLATE_HISTORY_FILE" ]; then
     touch "$FZF_TRANSLATE_HISTORY_FILE"
     log_info "Created history file for fzf-translate"
 fi
+
 
 
 UNATTENDED_INSTALLATION=false
