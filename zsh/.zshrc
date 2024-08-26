@@ -73,10 +73,19 @@ source ~/dotfiles/scripts/fzf-make.sh
 source ~/dotfiles/scripts/fzf-templates.sh
 source ~/dotfiles/scripts/fzf-translate.sh
 
+function history_clean() {
+    FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-translate_history.log"
+    FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
+    tail -n 3000 "$FZF_TRANSLATE_HISTORY_FILE" > "$FZF_TRANSLATE_HISTORY_FILE.tmp" && mv "$FZF_TRANSLATE_HISTORY_FILE.tmp" "$FZF_TRANSLATE_HISTORY_FILE"
+    tail -n 3000 "$FZF_MAKE_HISTORY_FILE" > "$FZF_MAKE_HISTORY_FILE.tmp" && mv "$FZF_MAKE_HISTORY_FILE.tmp" "$FZF_MAKE_HISTORY_FILE"
+}
+
+
 function dotfiles_update() {
     cd $HOME/dotfiles
     git pull
     ./install.sh --unattended
+    history_clean
     source ~/.zshrc
     cd -
 }
@@ -181,7 +190,6 @@ fgit() {
         git push  
     elif [[ "$1" == "push-force" || "$1" == "-pf" ]]; then
         git push -f
-    else
     else
         echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p\n- push-force or -pf\n- push-interactive or -pi\n- push-interactive-upstream or -piu"
     fi
