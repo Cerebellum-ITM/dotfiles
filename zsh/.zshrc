@@ -61,7 +61,7 @@ alias cat='bat'
 alias f='fzf'
 alias fcode='code $(f)'
 alias fcat='bat $(f)'
-alias fg_log='_fzf_git_hashes'
+alias fg='fgit'
 alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 # Shell integrations
