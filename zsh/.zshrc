@@ -169,12 +169,21 @@ fgit() {
         _fzf_git_remotes
     elif [[ "$1" == "stash" ]]; then
         _fzf_git_stashes
-    elif [[ "$1" == "push" || "$1" == "-p" ]]; then
+    elif [[ "$1" == "push-interactive" || "$1" == "-pi" ]]; then
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
         git push $remote $branch 
+    elif [[ "$1" == "push-interactive-upstream" || "$1" == "-piu" ]]; then
+        remote=$(_fzf_git_remotes)
+        branch=$(_fzf_git_branches)
+        git push -u $remote $branch 
+    elif [[ "$1" == "push" || "$1" == "-p" ]]; then
+        git push  
+    elif [[ "$1" == "push-force" || "$1" == "-pf" ]]; then
+        git push -f
     else
-        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p"
+    else
+        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p\n- push-force or -pf\n- push-interactive or -pi\n- push-interactive-upstream or -piu"
     fi
 }
 
