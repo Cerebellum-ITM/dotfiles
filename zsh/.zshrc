@@ -70,6 +70,7 @@ eval "$(zoxide init zsh --cmd cd)"
 source <(fzf --zsh)
 source ~/dotfiles/scripts/fzf-git.sh
 source ~/dotfiles/scripts/fzf-make.sh
+source ~/dotfiles/scripts/tput-config.sh
 source ~/dotfiles/scripts/fzf-templates.sh
 source ~/dotfiles/scripts/fzf-translate.sh
 
