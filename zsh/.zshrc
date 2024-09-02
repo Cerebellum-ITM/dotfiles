@@ -68,6 +68,7 @@ alias ft='_odoo_template_list'
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source <(fzf --zsh)
+source ~/dotfiles/scripts/odoo.sh
 source ~/dotfiles/scripts/fzf-git.sh
 source ~/dotfiles/scripts/fzf-make.sh
 source ~/dotfiles/scripts/tput-config.sh
