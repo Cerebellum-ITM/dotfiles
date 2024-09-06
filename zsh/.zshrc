@@ -89,6 +89,7 @@ function dotfiles_update() {
     ./install.sh --unattended
     history_clean
     source ~/.zshrc
+    oh-my-posh upgrade
     cd -
 }
 
