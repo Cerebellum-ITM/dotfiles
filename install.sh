@@ -103,6 +103,8 @@ if ! command -v oh-my-posh &> /dev/null; then
     fi
 else
     log_info "oh-my-posh is already installed"
+    log_debug "Updating oh-my-posh"
+    sudo oh-my-posh upgrade
 fi
 
 if ! command -v fzf &> /dev/null; then
