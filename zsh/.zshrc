@@ -174,6 +174,13 @@ fgit() {
         print -z "git commit -m\"$type_of_commit $file_or_folder: $message\""
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
+    elif [[ "$1" == "checkout new_branch" || "$1" == "-ckb" ]]; then
+        if [[ -z "$2" ]]; then
+            echo "$(red 'Error: No branch name provided.')"
+            echo "Usage: $(green_bold 'checkout new_branch') $(purple_underlie '<branch_name>') $(green_bold 'or') $(green_bold '-ckb') $(purple_underlie '<branch_name>')"
+        else
+            git checkout -b $2
+        fi
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
         git cherry-pick $(_fzf_git_hashes)
     elif [[ "$1" == "remote" || "$1" == "-v" ]]; then
@@ -193,7 +200,7 @@ fgit() {
     elif [[ "$1" == "push-force" || "$1" == "-pf" ]]; then
         git push -f
     else
-        echo "List of available commands:\n- log or -l (default)\n- cherry or -c\n- status or -s\n- checkout or -ck\n- remote or -v\n- stash or -st\n- push or -p\n- push-force or -pf\n- push-interactive or -pi\n- push-interactive-upstream or -piu"
+        echo -e "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')"
     fi
 }
 
