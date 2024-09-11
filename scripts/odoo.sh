@@ -24,6 +24,8 @@ odoo() {
         else
             echo "There is no URL for the port $(red_bold $port)"
         fi
+    elif [[ "$1" == "-l" ]]; then
+        cat "$CADDYFILE_PATH"
     else
         echo "List of available commands:\n Search for the URL of a port: $(green_bold '-p') $(purple_underlie '<port>'), Exmaple: $(blue_underlie 'odoo -p 8069')"
     fi
