@@ -27,6 +27,6 @@ odoo() {
     elif [[ "$1" == "-l" ]]; then
         cat "$CADDYFILE_PATH"
     else
-        echo "List of available commands:\n Search for the URL of a port: $(green_bold '-p') $(purple_underlie '<port>'), Exmaple: $(blue_underlie 'odoo -p 8069')"
+        echo "List of available commands:\n Search for the URL of a port: $(green_bold '-p') $(purple_underlie '<port>'), Exmaple: $(blue_underlie 'odoo -p 8069')\n Print the $(yellow 'Caddyfile'): $(green_bold '-l')"
     fi
 }
