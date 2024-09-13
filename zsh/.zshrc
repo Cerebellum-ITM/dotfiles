@@ -199,8 +199,10 @@ fgit() {
         git push  
     elif [[ "$1" == "push-force" || "$1" == "-pf" ]]; then
         git push -f
+    elif [[ "$1" == "pull" || "$1" == "-pl" ]]; then
+        git pull
     else
-        echo -e "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')"
+        echo -e "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')"
     fi
 }
 
