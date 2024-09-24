@@ -201,8 +201,20 @@ fgit() {
         git push -f
     elif [[ "$1" == "pull" || "$1" == "-pl" ]]; then
         git pull
+    elif [[ "$1" == "--assume-unchanged" || "$1" == "-un" ]]; then
+        local file_or_files=$(fzf_select -m)
+        for file in $file_or_files; do
+            git update-index --assume-unchanged $file
+        done
+    elif [[ "$1" == "--no-assume-unchanged" || "$1" == "-na" ]]; then
+        local file_or_files=$(fzf_select -m)
+        for file in $file_or_files; do
+            git update-index --no-assume-unchanged $file
+        done
+    elif [[ "$1" == "help" || "$1" == "-h" ]]; then
+        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')"
     else
-        echo -e "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')"
+        echo "For the list of available commands, run $(green_bold 'fgit help') or $(green_bold 'fgit -h')"
     fi
 }
 
