@@ -172,6 +172,10 @@ fgit() {
         file_or_folder=$(fzf_select)
         message=$(_fzf_translate_main_funtion)
         print -z "git commit -m\"$type_of_commit $file_or_folder: $message\""
+    elif [[ "$1" == "ammend" || "$1" == "-am" ]]; then
+        _fzf_git_files
+        git commit --amend --no-edit
+        git push -f
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
     elif [[ "$1" == "checkout new_branch" || "$1" == "-ckb" ]]; then
@@ -203,16 +207,22 @@ fgit() {
         git pull
     elif [[ "$1" == "--assume-unchanged" || "$1" == "-un" ]]; then
         local file_or_files=$(fzf_select -m)
-        for file in $file_or_files; do
-            git update-index --assume-unchanged $file
+        original_ifs=$IFS
+        IFS=$'\n'
+        echo "$file_or_files" | while read -r file; do
+            git update-index --assume-unchanged "$file"
         done
+        IFS=$original_ifs
     elif [[ "$1" == "--no-assume-unchanged" || "$1" == "-na" ]]; then
         local file_or_files=$(fzf_select -m)
-        for file in $file_or_files; do
+        original_ifs=$IFS
+        IFS=$'\n'
+        echo "$file_or_files" | while read -r file; do
             git update-index --no-assume-unchanged $file
         done
+        IFS=$original_ifs
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
-        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')"
+        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(green_bold 'commit') or $(purple_underlie '-sc')\n- $(green_bold 'ammend') or $(purple_underlie '-am')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold 'checkout new_branch') or $(purple_underlie '-ckb')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold 'push-interactive') or $(purple_underlie '-pi')\n- $(green_bold 'push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold 'push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')"
     else
         echo "For the list of available commands, run $(green_bold 'fgit help') or $(green_bold 'fgit -h')"
     fi
