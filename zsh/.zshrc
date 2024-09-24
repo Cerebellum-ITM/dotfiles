@@ -96,8 +96,10 @@ fzf_select() {
     trap 'rm -f /tmp/initial_path' EXIT
 
     local multi_select=""
+    local mode="${1:-select}"
     if [[ "$1" == "-m" ]]; then
         multi_select="-m"
+        mode="select"
         echo $multi_select > /tmp/fzf_select_multi
     fi
 
@@ -110,7 +112,7 @@ fzf_select() {
         echo $PWD > /tmp/initial_path
     fi
     
-    local mode="${1:-select}"
+    
     while true; do
         if [[ "$mode" == "select" ]]; then
             header="Modo: SELECT (ctrl-w para cambiar a PATH CHANGER)"
