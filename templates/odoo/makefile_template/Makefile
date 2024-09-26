@@ -35,10 +35,6 @@ change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
 remove_s3:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE ir_attachment SET store_fname = REPLACE(store_fname, 's3://multimoto-odoo/', '') WHERE store_fname LIKE 's3%' AND 1=1;\""
-update_module:
-	docker-compose restart
-	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
-	docker-compose logs -f --tail 100
 restore_db:
 	unzip $(backup_zip)
 	mv $(filestore_dump_name) $(db-name)
