@@ -64,5 +64,7 @@ remove_if_exists "$HOME/dotfiles/scripts/fzf-translate.sh"
 # Eliminar configuraciones de Makefile
 echo "Removing Makefile configurations..."
 remove_if_exists "$HOME/dotfiles/Makefile"
+remove_if_exists "$HOME/dotfiles/"
+remove_if_exists "$HOME/oh-my-posh"
 
 echo "Uninstallation complete."
