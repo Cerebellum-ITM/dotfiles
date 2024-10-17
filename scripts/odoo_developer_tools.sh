@@ -53,3 +53,16 @@ if ! command -v docker-compose &> /dev/null; then
 else
     log_info "Docker Compose is already installed"
 fi
+
+if ! command -v ccze &> /dev/null; then
+    log_debug "Installing ccze"
+    if [ "$os_name" = "Linux" ]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
+            sudo apt-get install -y ccze
+        fi
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install ccze
+    fi
+else
+    log_info "ccze is already installed"
+fi
