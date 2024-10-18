@@ -199,6 +199,14 @@ fgit() {
         _fzf_git_remotes
     elif [[ "$1" == "stash" ]]; then
         _fzf_git_stashes
+    elif [[ "$1" == "reset" || "$1" == "-r" ]]; then
+        local commit_hash=$(_fzf_git_hashes)
+        if [[ -n "$commit_hash" ]]; then
+            git reset --hard "$commit_hash"
+            echo "Reset to commit $(blue_bold "$commit_hash")"
+        else
+            echo "No commit selected"
+        fi
     elif [[ "$1" == "--push-interactive" || "$1" == "-pi" ]]; then
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
@@ -230,7 +238,7 @@ fgit() {
         done
         IFS=$original_ifs
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
-        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(green_bold 'commit') or $(purple_underlie '-sc')\n- $(green_bold 'ammend') or $(purple_underlie '-am')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold '--checkout-new_branch') or $(purple_underlie '-ckb')\n- $(cyan_bold '--checkout-remote-branch') or $(purple_underlie '-ckr')\n- $(red_bold '--delete-branch') or $(purple_underlie '-D')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold '--push-interactive') or $(purple_underlie '-pi')\n- $(green_bold '--push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold '--push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')"
+        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(green_bold 'commit') or $(purple_underlie '-sc')\n- $(green_bold 'ammend') or $(purple_underlie '-am')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold '--checkout-new_branch') or $(purple_underlie '-ckb')\n- $(cyan_bold '--checkout-remote-branch') or $(purple_underlie '-ckr')\n- $(red_bold '--delete-branch') or $(purple_underlie '-D')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold '--push-interactive') or $(purple_underlie '-pi')\n- $(green_bold '--push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold '--push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')\n        - $(purple_bold 'reset') or $(yellow_underlie '-r')"
     else
         echo "For the list of available commands, run $(green_bold 'fgit help') or $(green_bold 'fgit -h')"
     fi
