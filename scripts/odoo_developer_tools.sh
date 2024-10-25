@@ -105,3 +105,38 @@ if ! command -v caddy &> /dev/null; then
 else
     log_info "Caddy is already installed"
 fi
+
+#* Configure .gitconfig
+if ask "Do you want to configure .gitconfig?"; then
+    log_debug "Configuring .gitconfig"
+    cat <<EOL > ~/.gitconfig
+[user]
+    name = Dev
+    email = dev@dev.mx
+    signingkey = 
+
+[commit]
+    gpgsign = true
+
+[gpg]
+    format = ssh
+EOL
+    log_info ".gitconfig has been configured"
+else
+    log_info "Skipping .gitconfig configuration"
+fi
+
+#* Configure .ssh/config
+if ask "Do you want to configure .ssh/config?"; then
+    log_debug "Configuring .ssh/config"
+    mkdir -p ~/.ssh
+    cat <<EOL > ~/.ssh/config
+# Dev GitHub
+Host github.com
+    IdentityFile ~/.ssh/github.pub
+EOL
+    chmod 600 ~/.ssh/config
+    log_info ".ssh/config has been configured"
+else
+    log_info "Skipping .ssh/config configuration"
+fi
