@@ -18,8 +18,8 @@ _odoo_template_list() {
     fi
     
     if [ "$SELECTED_DIR" = "makefile_template" ]; then
-        ODOO_CONTAINER_NAME=$($DOCKER_COMPOSE_CMD ps | fzf --header-lines=2 --header='Select the name of: Odoo Container' --layout=reverse --color='header:italic:underline:red,label:green' --preview-window=hidden| awk '{print $1}')
-        DB_CONTAINER_NAME=$($DOCKER_COMPOSE_CMD ps | fzf --header-lines=2 --header='Select the name of: Db Container' --layout=reverse --color='header:italic:underline:yellow,label:green' --preview-window=hidden| awk '{print $1}')
+        ODOO_CONTAINER_NAME=$(eval "$DOCKER_COMPOSE_CMD ps" | fzf --header-lines=1 --header='Select the name of: Odoo Container' --layout=reverse --color='header:italic:underline:red,label:green' --preview-window=hidden| awk '{print $1}')
+        DB_CONTAINER_NAME=$(eval "$DOCKER_COMPOSE_CMD ps" | fzf --header-lines=1 --header='Select the name of: Db Container' --layout=reverse --color='header:italic:underline:yellow,label:green' --preview-window=hidden| awk '{print $1}')
         TEMPLATE_FILE="$BASE_DIR/$SELECTED_DIR/Makefile"
         OUTPUT_FILE="Makefile"
         cp "$TEMPLATE_FILE" "$OUTPUT_FILE"
