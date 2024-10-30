@@ -26,12 +26,18 @@ _odoo_template_list() {
         if [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' -e "s/{{ cookiecutter.odoo_container }}/$ODOO_CONTAINER_NAME/g" \
                 -e "s/{{ cookiecutter.db_container }}/$DB_CONTAINER_NAME/g" \
+                -e "s/{{ cookiecutter.docker_compose_cmd }}/$DOCKER_COMPOSE_CMD/g" \
             "$OUTPUT_FILE"
         else
             sed -i -e "s/{{ cookiecutter.odoo_container }}/$ODOO_CONTAINER_NAME/g" \
                 -e "s/{{ cookiecutter.db_container }}/$DB_CONTAINER_NAME/g" \
+                -e "s/{{ cookiecutter.docker_compose_cmd }}/$DOCKER_COMPOSE_CMD/g" \
             "$OUTPUT_FILE"
         fi
+    elif [ "$SELECTED_DIR" = "makefile_server_odoo_template" ]; then
+        TEMPLATE_FILE="$BASE_DIR/$SELECTED_DIR/Makefile"
+        OUTPUT_FILE="Makefile"
+        cp "$TEMPLATE_FILE" "$OUTPUT_FILE"
     else
         cookiecutter $HOME/dotfiles/templates/odoo/$SELECTED_DIR
     fi

@@ -9,16 +9,16 @@ backup_zip=main_2024-07-22_20-55-42.zip
 access_db= docker exec -it -u0 $(docker-container-db) bash
 # Start local instance
 init:
-	docker-compose up -d
+	{{ cookiecutter.docker_compose_cmd }} up -d
 stop:
-	docker-compose stop
+	{{ cookiecutter.docker_compose_cmd }} stop
 down:
-	docker-compose down
+	{{ cookiecutter.docker_compose_cmd }} down
 restart:
-	docker-compose restart
-	docker-compose logs -f --tail 100
+	{{ cookiecutter.docker_compose_cmd }} restart
+	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 logs:
-	docker-compose logs -f --tail 100
+	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 odoo_shell:
 	docker exec -it -u0 $(docker-container) bash -c "odoo shell -d $(db-name) -w odoo -r odoo --db_host db"
 docker_shell:
@@ -28,9 +28,9 @@ db_conteiner_shell:
 postgres_shell:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql --host=localhost --username=odoo --dbname=$(db-name)"
 update_module:
-	docker-compose restart
+	{{ cookiecutter.docker_compose_cmd }} restart
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
-	docker-compose logs -f --tail 100
+	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
 remove_s3:

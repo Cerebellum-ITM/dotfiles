@@ -218,7 +218,7 @@ fi
 DOCKER_COMPOSE_CONFIG_FILE="$HOME/dotfiles/zsh/.docker-compose-config"
 if [ ! -f "$DOCKER_COMPOSE_CONFIG_FILE" ]; then
     touch "$DOCKER_COMPOSE_CONFIG_FILE"
-    echo "DOCKER_COMPOSE_CMD='docker compose'" > "$DOCKER_COMPOSE_CONFIG_FILE"
+    echo "export DOCKER_COMPOSE_CMD='docker compose'" > "$DOCKER_COMPOSE_CONFIG_FILE"
     log_info "Created docker-compose config file"
 fi
 
