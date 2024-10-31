@@ -20,7 +20,8 @@ _fzf_translate_main_funtion() {
 }
 
 _fzf_translate_gui() {
-    grep "^$PWD" "$FZF_TRANSLATE_HISTORY_FILE" | sed "s|^$PWD ~ ||" | awk -F " ~ " '{print $1}' | fzf-tmux --ansi -m -p80%,60% -- \
+    grep "^$PWD ~" "$FZF_TRANSLATE_HISTORY_FILE" | sed "s|^$PWD ~ ||" | awk -F " ~ " '{print $1}' | \
+    fzf-tmux --ansi -m -p80%,60% -- \
     --layout=reverse --multi --height=50% --min-height=20 --border \
     --border-label-pos=2 \
     --color='header:italic:underline,label:blue' \
@@ -29,5 +30,5 @@ _fzf_translate_gui() {
     --header="Select the message - CTRL+W: Translate query" \
     --preview="bash $__fzf_translate_script _preview_translation {}" \
     --preview-label 'English Translation' \
-    --bind "ctrl-w:execute-silent(bash $__fzf_translate_script _request_translation \"{q}\")+reload(grep \"^$PWD\" \"$FZF_TRANSLATE_HISTORY_FILE\" | sed \"s|^$PWD ~ ||\" | awk -F \" ~ \" '{print \$1}')"
+    --bind "ctrl-w:execute-silent(bash $__fzf_translate_script _request_translation \"{q}\")+reload(grep \"^$PWD ~\" \"$FZF_TRANSLATE_HISTORY_FILE\" | sed \"s|^$PWD ~ ||\" | awk -F \" ~ \" '{print \$1}')"
 }
