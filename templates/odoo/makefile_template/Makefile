@@ -31,6 +31,9 @@ update_module:
 	{{ cookiecutter.docker_compose_cmd }} restart
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
+update_only_view:
+	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
+	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
 remove_s3:
