@@ -17,7 +17,7 @@
 
     },
     'external_dependencies': {
-        'python':[{{ cookiecutter.external_dependencies }}],
+        'python':['{{ cookiecutter.external_dependencies }}'],
     },
     'license': '{{ cookiecutter.license }}',
     'installable': {{ cookiecutter.installable }},
