@@ -9,3 +9,4 @@
 [MERGE]: For merge commits used in forward port of bug fixes but also as main commit for feature involving several separated commits
 [CLA]: For signing the Odoo Individual Contributor License
 [I18N]: For changes in translation files
+[WIP]: For work in progress commits, indicating that the work is not yet complete
