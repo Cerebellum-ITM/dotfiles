@@ -19,6 +19,8 @@ restart:
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 logs:
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
+build_local_docker:
+	{{ cookiecutter.docker_compose_cmd }} build
 odoo_shell:
 	docker exec -it -u0 $(docker-container) bash -c "odoo shell -d $(db-name) -w odoo -r odoo --db_host db"
 docker_shell:
