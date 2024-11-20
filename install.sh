@@ -184,6 +184,24 @@ if ! command -v cookiecutter &> /dev/null; then
         log_error "Python3 is not installed. Please install Python3 and try again."
     fi
 fi
+
+#! Install pbcopy or xclip
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    log_info "Pbcopy is included in macOS by default and does not need to be installed."
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if command -v apt-get &> /dev/null; then
+        log_info "Installing xclip and xsel for Linux (Debian/Ubuntu)"
+        sudo apt-get update
+        sudo apt-get install -y xclip xsel
+    elif command -v yum &> /dev/null; then
+        log_info "Installing xclip and xsel for Linux (CentOS/RHEL)"
+        sudo yum install -y xclip xsel
+    elif command -v pacman &> /dev/null; then
+        log_info "Installing xclip and xsel for Linux (Arch)"
+        sudo pacman -Syu xclip xsel
+    fi
+fi
+
 #! Check for translation dependencies
 if ! command -v trans &> /dev/null; then
     log_debug "Installing trans"

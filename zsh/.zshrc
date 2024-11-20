@@ -255,3 +255,21 @@ fm() {
         select_or_history       
     fi
 }
+
+get_ip() {
+    local ip_address=$(hostname -I | awk '{print $1}')
+    blue_bold "The IP address is: $ip_address"
+    
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "$ip_address" | pbcopy
+        green_bold "The IP address has been copied to the clipboard."
+    elif command -v xclip &> /dev/null; then
+        echo "$ip_address" | xclip -selection clipboard
+        green_bold "The IP address has been copied to the clipboard."
+    elif command -v xsel &> /dev/null; then
+        echo "$ip_address" | xsel --clipboard --input
+        green_bold "The IP address has been copied to the clipboard."
+    else
+        red_bold "Could not copy the IP address to the clipboard."
+    fi
+}
