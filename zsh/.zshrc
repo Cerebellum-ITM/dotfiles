@@ -59,9 +59,10 @@ alias ls='ls --color'
 alias vim='nvim'
 alias cat='bat'
 alias f='fzf'
-alias fcode='code $(f)'
+alias fc='fzf-code'
+alias fm='fzf-make'
 alias fcat='bat $(f)'
-alias fg='fgit'
+alias fg='fzf-git'
 alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 # Shell integrations
@@ -164,7 +165,7 @@ fzf_select() {
     fi
 }
 
-fgit() {
+fzf-git() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
@@ -246,7 +247,7 @@ fgit() {
     fi
 }
 
-fm() {
+fzf-make() {
     if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
         execute_commands "$(grep "$(pwd)" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
@@ -271,5 +272,24 @@ get_ip() {
         green_bold "The IP address has been copied to the clipboard."
     else
         red_bold "Could not copy the IP address to the clipboard."
+    fi
+}
+
+fzf-code(){
+    local actual_path=$(pwd)
+    if [[ "$1" == "open-directory" || "$1" == "." ]]; then
+        code . -r
+    elif [[ "$1" == "new-window" || "$1" == "-nw" ]]; then
+        code .
+    elif [[ "$1" == "create" || "$1" == "-c" ]]; then
+        local file_name=$2
+        code $file_name
+    elif [[ "$1" == "open" || "$1" == "-o" ]]; then
+        local file_name=$(fzf_select)
+        code $file_name
+    elif [[ "$1" == "help" || "$1" == "-h" ]]; then
+        echo "List of available commands:\n- $(blue_bold 'open-directory') or $(purple_underlie '.')\n- $(green_bold 'new-window') or $(purple_underlie '-nw')\n- $(green_bold 'create') or $(purple_underlie '-c') $(purple_underlie '<file_name>')\n- $(green_bold 'open') or $(purple_underlie '-o')"
+    else
+        echo "For the list of available commands, run $(green_bold 'fcode help') or $(green_bold 'fcode -h')"
     fi
 }
