@@ -197,7 +197,9 @@ fzf-git() {
     elif [[ "$1" == "--delete-brnch" || "$1" == "-D" ]]; then
         git branch -D $(_fzf_git_branches)
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
-        git cherry-pick $(_fzf_git_hashes)
+        _fzf_git_hashes | while read -r hash; do
+            git cherry-pick "$hash"
+        done
     elif [[ "$1" == "remote" || "$1" == "-v" ]]; then
         _fzf_git_remotes
     elif [[ "$1" == "stash" ]]; then
