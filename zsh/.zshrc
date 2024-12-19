@@ -118,10 +118,10 @@ fzf_select() {
     
     while true; do
         if [[ "$mode" == "select" ]]; then
-            header="Modo: SELECT (ctrl-w para cambiar a PATH CHANGER)"
+            header="Modo: SELECT (ctrl-w para cambiar a PATH CHANGER) - CTRL-X (abort)"
             color="header:bright-green"
         else
-            header="Modo: PATH CHANGER (ctrl-s para cambiar a SELECT)"
+            header="Modo: PATH CHANGER (ctrl-s para cambiar a SELECT) - CTRL-X (abort)"
             color="header:bright-magenta"
         fi
 
@@ -131,6 +131,7 @@ fzf_select() {
                 --preview='[[ -d {} ]] && tree -L 1 {} || bat -n --color=always {}' \
                 --header='$header' \
                 --color='$color' \
+                --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \
                 --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
                 --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort'" \
             fzf $multi_select)
@@ -164,6 +165,13 @@ fzf_select() {
         fzf_select "$mode" $multi_select
     fi
 }
+fzf_git_check_abort(){
+    if [ -f /tmp/fzf_git_exit_code ] && [ "$(cat /tmp/fzf_git_exit_code)" -eq 130 ]; then
+        echo $(red_bold "Process aborted")
+        rm /tmp/fzf_git_exit_code
+        return 1
+    fi
+}
 
 fzf-git() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
@@ -172,10 +180,14 @@ fzf-git() {
         _fzf_git_files
     elif [[ "$1" == "commit" || "$1" == "-sc" ]]; then
         _fzf_git_files
+        fzf_git_check_abort || return 1
         local type_of_commit
-        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo {} | cut -f2" | cut -f1)
+        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo 'Select type of commit - CTRL-X (abort)' && echo {} | cut -f2" | cut -f1)
+        fzf_git_check_abort || return 1
         file_or_folder=$(fzf_select)
+        fzf_git_check_abort || return 1
         message=$(_fzf_translate_main_funtion)
+        fzf_git_check_abort || return 1
         print -z "git commit -m\"$type_of_commit $file_or_folder: $message\""
     elif [[ "$1" == "ammend" || "$1" == "-am" ]]; then
         _fzf_git_files
@@ -185,7 +197,7 @@ fzf-git() {
         git checkout $(_fzf_git_branches)
     elif [[ "$1" == "--checkout-new_branch" || "$1" == "-ckb" ]]; then
         if [[ -z "$2" ]]; then
-            echo "$(red 'Error: No branch name provided.')"
+            echo "$(red_bold 'Error: No branch name provided.')"
             echo "Usage: $(green_bold 'checkout new_branch') $(purple_underlie '<branch_name>') $(green_bold 'or') $(green_bold '-ckb') $(purple_underlie '<branch_name>')"
         else
             git checkout -b $2
