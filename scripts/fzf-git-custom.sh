@@ -76,6 +76,33 @@ fzf_git_check_abort(){
     fi
 }
 
+create_commit() {
+    local commit_file="/tmp/fzf_git_commit"
+    if [ -f "$commit_file" ]; then
+        confirmation=$(cat "$commit_file" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
+            --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
+            --bind "ctrl-e:execute-silent:code $commit_file" \
+            --bind "ctrl-r:reload(cat $commit_file)" \
+            --bind change:clear-query \
+            --preview-window='down,50%,border-top' \
+            --preview="echo -n 'git commit -m \"' && cat $commit_file && echo '\"'" \
+            --header="Enter (Create commit) - CTRL-E/R (Edit/Reload) - CTRL-X (Abort)" \
+            --expect=enter)
+
+        key=$(echo "$confirmation" | head -1)
+        if [[ "$key" == "enter" ]]; then
+            if [[ "$1" == "module" ]]; then
+                git commit -F "$commit_file"
+            elif [[ "$1" == "submodule" ]]; then
+                local base_dir=$(pwd)
+                local parent_dir=$(dirname "$base_dir")
+                git -C "$parent_dir" commit -F "$commit_file"
+            fi
+            rm "$commit_file"
+        fi
+    fi
+}
+
 fzf-git() {
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
@@ -91,7 +118,25 @@ fzf-git() {
         fzf_git_check_abort || return 1
         message=$(_fzf_translate_main_function)
         fzf_git_check_abort || return 1
-        print -z "git commit -m\"$type_of_commit $file_or_folder: $message\""
+        echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
+        create_commit module
+    elif [[ "$1" == "commit-submodule" || "$1" == "-scs" ]]; then
+        _fzf_git_files
+        fzf_git_check_abort || return 1
+        local type_of_commit
+        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo 'Select type of commit - CTRL-X (abort)' && echo {} | cut -f2" | cut -f1)
+        fzf_git_check_abort || return 1
+        file_or_folder=$(fzf_select)
+        fzf_git_check_abort || return 1
+        message=$(_fzf_translate_main_function)
+        fzf_git_check_abort || return 1
+        echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
+        create_commit module
+        fzf_git_check_abort || return 1
+        submodule_commit_type=$(echo "$type_of_commit" | sed 's/[^a-zA-Z]//g')
+        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+        create_commit submodule
+        fzf_git_check_abort || return 1
     elif [[ "$1" == "amend" || "$1" == "-am" ]]; then
         _fzf_git_files
         git commit --amend --no-edit
