@@ -14,7 +14,7 @@ if [[ "$1" == "_preview_translation" ]]; then
     exit 0
 fi
 
-_fzf_translate_main_funtion() {
+_fzf_translate_main_function() {
     entry=$(_fzf_translate_gui)
     echo $(grep "^$PWD ~ $entry" "$FZF_TRANSLATE_HISTORY_FILE" | awk -F " ~ " '{print $3}' | head -n 1)
 }

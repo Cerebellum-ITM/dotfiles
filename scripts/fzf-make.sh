@@ -82,3 +82,13 @@ select_or_history() {
         view_history
     fi
 }
+
+fzf-make() {
+    if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
+        execute_commands "$(grep "$(pwd)" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
+    elif [[ "$1" == "help" || "$1" == "-h" ]]; then
+        echo "List of available commands:\n- repeat or -r"
+    else
+        select_or_history       
+    fi
+}
