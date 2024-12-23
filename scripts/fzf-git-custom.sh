@@ -96,6 +96,7 @@ create_commit() {
             elif [[ "$1" == "submodule" ]]; then
                 local base_dir=$(pwd)
                 local parent_dir=$(dirname "$base_dir")
+                git add "$base_dir"
                 git -C "$parent_dir" commit -F "$commit_file"
             fi
             rm "$commit_file"
