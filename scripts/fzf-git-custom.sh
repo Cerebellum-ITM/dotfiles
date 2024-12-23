@@ -137,6 +137,15 @@ fzf-git() {
         echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
         create_commit submodule
         fzf_git_check_abort || return 1
+    elif [[ "$1" == "create-submodule-commit" || "$1" == "-csc" ]]; then
+        local commit_hash=$(_fzf_git_hashes)
+        commit_message=$(git log -1 --pretty=%B $commit_hash)
+        submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
+        file_or_folder=$(echo "$commit_message" | awk -F'[][]' '{print $2}' | awk -F' ' '{print $2}')
+        message=$(echo "$commit_message" | sed -n 's/^\[.*\] .*: \(.*\)/\1/p')
+        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+        create_commit submodule
+        fzf_git_check_abort || return 1
     elif [[ "$1" == "amend" || "$1" == "-am" ]]; then
         _fzf_git_files
         git commit --amend --no-edit
@@ -159,6 +168,17 @@ fzf-git() {
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
         _fzf_git_hashes | while read -r hash; do
             git cherry-pick "$hash"
+        done
+    elif [[ "$1" == "cherry-with-submodule" || "$1" == "-cws" ]]; then
+        _fzf_git_hashes | while read -r hash; do
+            git cherry-pick "$hash"
+            commit_message=$(git log -1 --pretty=%B $commit_hash)
+            submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
+            file_or_folder=$(echo "$commit_message" | awk -F'[][]' '{print $2}' | awk -F' ' '{print $2}')
+            message=$(echo "$commit_message" | sed -n 's/^\[.*\] .*: \(.*\)/\1/p')
+            echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+            create_commit submodule
+            fzf_git_check_abort || return 1
         done
     elif [[ "$1" == "remote" || "$1" == "-v" ]]; then
         _fzf_git_remotes
@@ -203,7 +223,7 @@ fzf-git() {
         done
         IFS=$original_ifs
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
-        echo "List of available commands:\n- $(blue_bold 'log') or $(purple_underlie '-l') (default)\n- $(red_bold 'cherry') or $(purple_underlie '-c')\n- $(green_bold 'status') or $(purple_underlie '-s')\n- $(green_bold 'commit') or $(purple_underlie '-sc')\n- $(green_bold 'ammend') or $(purple_underlie '-am')\n- $(yellow_bold 'checkout') or $(purple_underlie '-ck')\n- $(cyan_bold '--checkout-new_branch') or $(purple_underlie '-ckb')\n- $(cyan_bold '--checkout-remote-branch') or $(purple_underlie '-ckr')\n- $(red_bold '--delete-branch') or $(purple_underlie '-D')\n- $(purple_bold 'remote') or $(purple_underlie '-v')\n- $(blue_bold 'stash')\n- $(red_bold '--push-interactive') or $(purple_underlie '-pi')\n- $(green_bold '--push-interactive-upstream') or $(purple_underlie '-piu')\n- $(yellow_bold 'push') or $(purple_underlie '-p')\n- $(cyan_bold '--push-force') or $(purple_underlie '-pf')\n- $(purple_bold 'pull') or $(purple_underlie '-pl')\n- $(blue_bold '--assume-unchanged') or $(purple_underlie '-un')\n- $(red_bold '--no-assume-unchanged') or $(purple_underlie '-na')\n- $(purple_bold 'reset') or $(yellow_underlie '-r')"
+        echo "List of available commands:\n* $(blue_bold 'log') or $(purple_underlie '-l') (default) # Show commit logs\n* $(red_bold 'cherry') or $(purple_underlie '-c') # Cherry-pick commits\n* $(red_bold 'cherry-with-submodule') or $(purple_underlie '-cws') # Cherry-pick commits with submodule updates\n* $(yellow_bold 'status') or $(purple_underlie '-s') # Show the working tree status\n* $(green_bold 'commit') or $(purple_underlie '-sc') # Create a new commit\n* $(green_bold 'commit-submodule') or $(purple_underlie '-scs') # Create a new commit and update submodule\n* $(green_bold 'create-submodule-commit') or $(purple_underlie '-csc') # Create a commit in the submodule\n* $(yellow_bold 'amend') or $(purple_underlie '-am') # Amend the previous commit\n* $(cyan_bold 'checkout') or $(purple_underlie '-ck') # Switch branches or restore working tree files\n* $(cyan_bold '--checkout-new_branch') or $(purple_underlie '-ckb') $(purple_underlie '<branch_name>') # Create and switch to a new branch\n* $(cyan_bold '--checkout-remote-branch') or $(purple_underlie '-ckr') # Checkout a remote branch\n* $(red_bold '--delete-branch') or $(purple_underlie '-D') # Delete a branch\n* $(purple_bold 'remote') or $(purple_underlie '-v') # Manage set of tracked repositories\n* $(yellow_bold 'stash') # Stash the changes in a dirty working directory away\n* $(red_bold 'reset') or $(purple_underlie '-r') # Reset current HEAD to the specified state\n* $(blue_bold '--push-interactive') or $(purple_underlie '-pi') # Push changes interactively\n* $(blue_bold '--push-interactive-upstream') or $(purple_underlie '-piu') # Push changes interactively to upstream\n* $(blue_bold 'push') or $(purple_underlie '-p') # Push changes to the remote repository\n* $(red_bold '--push-force') or $(purple_underlie '-pf') # Force push changes to the remote repository\n* $(blue_bold 'pull') or $(purple_underlie '-pl') # Fetch from and integrate with another repository or a local branch\n* $(yellow_bold '--assume-unchanged') or $(purple_underlie '-un') # Mark files as assume unchanged\n* $(yellow_bold '--no-assume-unchanged') or $(purple_underlie '-na') # Uncheck files as assume unchanged"
     else
         echo "For the list of available commands, run $(green_bold 'fgit help') or $(green_bold 'fgit -h')"
     fi
