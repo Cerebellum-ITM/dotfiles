@@ -65,6 +65,7 @@ alias fcat='bat $(f)'
 alias fg='fzf-git'
 alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
+alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
