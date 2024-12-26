@@ -101,7 +101,7 @@ create_commit() {
                 git -C "$parent_dir" commit -F "$commit_file"
             fi
             if [[ -f /tmp/fzf_git_commit_options ]]; then
-                options=$(cat /tmp/fzf_git_commit_options)
+                commit_options=$(cat /tmp/fzf_git_commit_options)
                 rm /tmp/fzf_git_commit_options
                 if [[ "$options" -eq 200 ]]; then
                     local branch=$(git branch --show-current)
