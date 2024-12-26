@@ -83,10 +83,11 @@ create_commit() {
             --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
             --bind "ctrl-e:execute-silent:code $commit_file" \
             --bind "ctrl-r:reload(cat $commit_file)" \
+            --bind "ctrl-p:execute-silent:echo 200 > /tmp/fzf_git_commit_options" \
             --bind change:clear-query \
             --preview-window='down,50%,border-top' \
             --preview="echo -n 'git commit -m \"' && cat $commit_file && echo '\"'" \
-            --header="Enter (Create commit) - CTRL-E/R (Edit/Reload) - CTRL-X (Abort)" \
+            --header="Enter (Create commit) - CTRL-E/R (Edit/Reload) - CTRL-P (Mark to push) - CTRL-X (Abort)" \
             --expect=enter)
 
         key=$(echo "$confirmation" | head -1)
@@ -98,6 +99,15 @@ create_commit() {
                 local parent_dir=$(dirname "$base_dir")
                 git -C "$parent_dir" add "$base_dir"
                 git -C "$parent_dir" commit -F "$commit_file"
+            fi
+            if [[ -f /tmp/fzf_git_commit_options ]]; then
+                options=$(cat /tmp/fzf_git_commit_options)
+                rm /tmp/fzf_git_commit_options
+                if [[ "$options" -eq 200 ]]; then
+                    local branch=$(git branch --show-current)
+                    local remote=$(git remote)
+                    git push $remote $branch
+                fi
             fi
             rm "$commit_file"
         fi
