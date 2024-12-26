@@ -76,14 +76,26 @@ fzf_git_check_abort(){
     fi
 }
 
+_create_commit_options(){
+    local commit_options_file="/tmp/fzf_git_commit_options"
+    if [ -f "$commit_options_file" ]; then
+        rm "$commit_options_file"
+        echo "D $(cat /tmp/fzf_git_commit)" > /tmp/fzf_git_commit_preview
+    else
+        echo "200" > "$commit_options_file"
+        echo "P $(cat /tmp/fzf_git_commit)" > /tmp/fzf_git_commit_preview
+    fi
+}
+
 create_commit() {
     local commit_file="/tmp/fzf_git_commit"
+    local commit_preview_file="/tmp/fzf_git_commit_preview"
     if [ -f "$commit_file" ]; then
         confirmation=$(cat "$commit_file" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
             --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
             --bind "ctrl-e:execute-silent:code $commit_file" \
-            --bind "ctrl-r:reload(cat $commit_file)" \
-            --bind "ctrl-p:execute-silent:echo 200 > /tmp/fzf_git_commit_options" \
+            --bind "tab:execute-silent:zsh -i -c '_create_commit_options'" \
+            --bind "tab:+reload(cat $commit_preview_file)" \
             --bind change:clear-query \
             --preview-window='down,50%,border-top' \
             --preview="echo -n 'git commit -m \"' && cat $commit_file && echo '\"'" \
@@ -131,6 +143,7 @@ fzf-git() {
         fzf_git_check_abort || return 1
         echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
         create_commit module
+        fzf_git_check_abort || return 1
     elif [[ "$1" == "commit-submodule" || "$1" == "-scs" ]]; then
         _fzf_git_files
         fzf_git_check_abort || return 1
