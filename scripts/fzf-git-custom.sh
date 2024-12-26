@@ -115,6 +115,7 @@ create_commit() {
             if [[ -f /tmp/fzf_git_commit_options ]]; then
                 commit_options=$(cat /tmp/fzf_git_commit_options)
                 rm /tmp/fzf_git_commit_options
+                rm $commit_preview_file
                 if [[ "$commit_options" -eq 200 ]]; then
                     local branch=$(git branch --show-current)
                     local remote=$(git remote)
