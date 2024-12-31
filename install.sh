@@ -171,11 +171,14 @@ fi
 if ! command -v eza &> /dev/null; then
     log_debug "Installing eza"
     if [ "$os_name" = "Linux" ]; then
-        sudo wget https://github.com/eza-community/eza/releases/latest/download/eza-linux-x86_64 -O /usr/local/bin/eza
-        sudo chmod +x /usr/local/bin/eza
-    elif [ "$os_name" = "Debian GNU/Linux" ]; then
-        wget https://github.com/eza-community/eza/releases/latest/download/eza-linux-arm -O /usr/local/bin/eza
-        sudo chmod +x /usr/local/bin/eza
+        sudo apt update
+        sudo apt install -y gpg
+        sudo mkdir -p /etc/apt/keyrings
+        wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list
+        sudo chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list
+        sudo apt update
+        sudo apt install -y eza
     elif [ "$os_name" = "Darwin" ]; then
         brew install eza
     fi
