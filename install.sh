@@ -168,6 +168,23 @@ else
     log_info "bat is already installed"
 fi
 
+if ! command -v eza &> /dev/null; then
+    log_debug "Installing eza"
+    if [ "$os_name" = "Linux" ]; then
+        sudo wget https://github.com/eza-community/eza/releases/latest/download/eza-linux-x86_64 -O /usr/local/bin/eza
+        sudo chmod +x /usr/local/bin/eza
+    elif [ "$os_name" = "Debian GNU/Linux" ]; then
+        wget https://github.com/eza-community/eza/releases/latest/download/eza-linux-arm -O /usr/local/bin/eza
+        sudo chmod +x /usr/local/bin/eza
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install eza
+    fi
+else
+    log_info "eza is already installed"
+    log_debug "Updating eza"
+    sudo eza upgrade --force
+fi
+
 if ! command -v cookiecutter &> /dev/null; then
     if command -v python3 &> /dev/null; then
         if ! command -v pip &> /dev/null; then

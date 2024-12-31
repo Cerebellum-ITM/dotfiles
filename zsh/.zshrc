@@ -55,7 +55,7 @@ export FZF_CTRL_T_OPTS="
     --preview 'bat -n --color=always {}'
     --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 # Aliases
-alias ls='ls --color'
+alias ls='eza --color=always --long --git --icons=always'
 alias vim='nvim'
 alias cat='bat'
 alias f='fzf'
