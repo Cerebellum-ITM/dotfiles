@@ -12,6 +12,7 @@ fi
 
 source "${ZINIT_HOME}/zinit.zsh"
 
+export LC_ALL=en_US.UTF-8
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
