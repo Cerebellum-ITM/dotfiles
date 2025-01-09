@@ -27,7 +27,7 @@ _funtion_list() {
     execute_commands "$selected_commands"
 }
 
-view_history() {
+_view_history() {
     check_makefile || return 1
     if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
         echo "No history file found."
@@ -67,19 +67,61 @@ execute_commands() {
         log_history "$history_entry"
 
         for cmd in "${commands_array[@]}"; do
-            make "$cmd"
+            local target=$(echo "$cmd" | awk '{print $1}') #! The first element will always be the function to be executed
+            local args=$(echo "$cmd" | cut -d' ' -f2-)  
+            if [[ -z "$args" ]]; then
+                make "$target"
+            else
+                make "$target" $args
+            fi
         done
     fi
 }
 
-select_or_history() {
+_select_odoo_module() {
+    #* Find directories containing "addon", ignoring those in .git
+    local dir=$(find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
+        --prompt="Select a directory or press Ctrl+Z to include any directory: " \
+        --bind "ctrl-z:execute(find . -type d -not -path '*/.git/*' -print | fzf --header='Select any directory')")
+
+    #* Check if a directory was selected
+    if [[ -z "$dir" ]]; then
+        echo "No directory selected."
+        return 1
+    fi
+
+    #* List subdirectories in the selected directory
+    local subdir=$(find "$dir" -mindepth 1 -maxdepth 1 -type d | fzf --header="Select a subdirectory in '$dir'")
+
+    #* Check if a subdirectory was selected
+    if [[ -z "$subdir" ]]; then
+        echo "No subdirectory selected."
+        return 1
+    fi
+    #* Remove the path from the subdir
+    subdir=$(basename "$subdir")
+
+    #* Add a history entry
+    local history_entry=""
+    history_entry+="update_module module_name=$subdir"
+    history_entry="${history_entry%, }"
+    log_history "$history_entry"
+
+    make update_module module_name=$subdir
+}
+
+
+
+select_a_option() {
     check_makefile || return 1
-    local choice=$(echo -e "View history\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
+    local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
 
     if [[ "$choice" == "Select commands" ]]; then
         _funtion_list
     elif [[ "$choice" == "View history" ]]; then
-        view_history
+        _view_history
+    elif [[ "$choice" == "Update Odoo Module" ]]; then
+        _select_odoo_module
     fi
 }
 
@@ -89,6 +131,6 @@ fzf-make() {
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
         echo "List of available commands:\n- repeat or -r"
     else
-        select_or_history       
+        select_a_option       
     fi
 }
