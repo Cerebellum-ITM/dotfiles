@@ -21,6 +21,7 @@ _fzf_translate_main_function() {
 
 _fzf_translate_gui() {
     grep "^$PWD ~" "$FZF_TRANSLATE_HISTORY_FILE" | sed "s|^$PWD ~ ||" | awk -F " ~ " '{print $1}' | \
+    awk '{ lines[NR] = $0 } END { for (i = NR; i > 0; i--) print lines[i] }' | \
     fzf-tmux --ansi -m -p80%,60% -- \
     --layout=reverse --multi --height=50% --min-height=20 --border \
     --border-label-pos=2 \
