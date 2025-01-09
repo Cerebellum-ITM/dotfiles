@@ -30,9 +30,14 @@ db_conteiner_shell:
 postgres_shell:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql --host=localhost --username=odoo --dbname=$(db-name)"
 update_module:
+	@echo "Updating module: $(module_name)"
 	{{ cookiecutter.docker_compose_cmd }} restart
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
+	clear
+	$HOME/dotfiles/tools/odoo_logo.sh
+	sleep 2
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
+	$HOME/dotfiles/tools/odoo_logo.sh
 update_only_view:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
