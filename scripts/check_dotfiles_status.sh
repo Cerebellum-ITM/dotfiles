@@ -24,7 +24,7 @@ REMOTE_COMMIT=$(git rev-parse origin/main)
 LOCAL_COMMIT=$(git rev-parse main)
 
 if [ "$REMOTE_COMMIT" != "$LOCAL_COMMIT" ]; then
-    echo ""
+    echo "󰊢"
 else
-    echo "" 
+    echo "" 
 fi
