@@ -104,11 +104,11 @@ create_commit() {
 
         key=$(echo "$confirmation" | head -1)
         if [[ "$key" == "enter" ]]; then
+            local base_dir=$(pwd)
+            local parent_dir=$(dirname "$base_dir")
             if [[ "$1" == "module" ]]; then
                 git commit -F "$commit_file"
-            elif [[ "$1" == "submodule" ]]; then
-                local base_dir=$(pwd)
-                local parent_dir=$(dirname "$base_dir")
+            elif [[ "$1" == "submodule" ]]; then    
                 git -C "$parent_dir" add "$base_dir"
                 git -C "$parent_dir" commit -F "$commit_file"
             fi
@@ -117,9 +117,17 @@ create_commit() {
                 rm /tmp/fzf_git_commit_options
                 rm $commit_preview_file
                 if [[ "$commit_options" -eq 200 ]]; then
-                    local branch=$(git branch --show-current)
-                    local remote=$(git remote)
-                    git push $remote $branch
+                    if [[ "$1" == "module" ]]; then
+                        local branch=$(git branch --show-current)
+                        local remote=$(git remote)
+                        git push $remote $branch
+                    elif [[ "$1" == "submodule" ]]; then
+                        cd "$parent_dir"
+                        local branch=$(git branch --show-current)
+                        local remote=$(git remote)
+                        git push $remote $branch
+                        cd "$base_dir"
+                    fi
                 fi
             fi
             rm "$commit_file"
