@@ -51,6 +51,17 @@ final_space = true
       style = 'agnoster_short'
 
   [[blocks.segments]]
+    template = '{{ .Output }} '
+    foreground = '#FFEB3B'
+    background = 'transparent'
+    type = 'command'
+    style = 'plain'
+
+    [blocks.segments.properties]
+      command = '$HOME/dotfiles/scripts/check_dotfiles_status.sh'
+      cache_duration = '1s'
+
+  [[blocks.segments]]
     template = 'on {{ .UpstreamIcon }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
     type = 'git'
     style = 'powerline'
