@@ -30,8 +30,8 @@ fzf_select() {
 
         selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
             awk 'BEGIN {print ".."} {print}' | \
-            FZF_DEFAULT_OPTS="--height=50% --layout=reverse --border \
-                --preview='[[ -d {} ]] && tree -L 1 {} || bat -n --color=always {}' \
+            FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border \
+                --preview='[[ -d {} ]] && eza --tree --color=always {} || bat -n --color=always {}' \
                 --header='$header' \
                 --color='$color' \
                 --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \

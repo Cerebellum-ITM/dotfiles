@@ -150,11 +150,11 @@ if [[ $- =~ i ]]; then
 # Redefine this function to change the options
 _fzf_git_fzf() {
   fzf-tmux -p80%,60% -- \
-    --layout=reverse --multi --height=50% --min-height=20 --border \
+    --layout=reverse --multi --height=100% --min-height=20 --border \
     --border-label-pos=2 \
     --color='header:italic:underline,label:blue' \
-    --preview-window='right,50%,border-left' \
-    --bind='ctrl-/:change-preview-window(down,50%,border-top|hidden|)' "$@"
+    --preview-window='right,60%,border-left' \
+    --bind='ctrl-/:change-preview-window(right,90%,border-top|up,90%,border-top|right,20%,border-left|right,60%,border-left)' "$@"
 }
 
 _fzf_git_check() {
