@@ -29,15 +29,15 @@ fzf_select() {
         fi
 
         selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
-            awk 'BEGIN {print ".."} {print}' | \
-            FZF_DEFAULT_OPTS="--height=100% --layout=reverse --border \
-                --preview='[[ -d {} ]] && eza --tree --color=always {} || bat -n --color=always {}' \
-                --header='$header' \
-                --color='$color' \
+            awk 'BEGIN {print ".."} {print}' | fzf $multi_select \
+                --height=100% --layout=reverse --border \
+                --preview='[[ {} == ".." ]] && eza --tree --color=always ../ || [[ -d {} ]] && eza --tree --color=always {} || bat -n --color=always {}' \
+                --header="$header" \
+                --color="$color" \
                 --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \
                 --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
-                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort'" \
-            fzf $multi_select)
+                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
+            )
 
         if [[ -z "$selected" ]]; then
             break
