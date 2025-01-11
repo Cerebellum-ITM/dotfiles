@@ -55,7 +55,7 @@ export BAT_THEME=tokyonight_night
 export FZF_DEFAULT_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}'"
 export FZF_CTRL_T_OPTS="
     --walker-skip .git,node_modules,target
-    --preview 'bat -n --color=always {}'
+    --preview='[[ -d {} ]] && eza --tree --color=always --icons {} || bat -n --color=always {}'
     --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 # Aliases
 alias ls='eza --color=always --long --git --icons=always'
