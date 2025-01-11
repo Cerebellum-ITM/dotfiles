@@ -21,7 +21,7 @@ log_history() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $PWD - $selection" >> "$FZF_MAKE_HISTORY_FILE"
 }
 
-_funtion_list() {
+_function_list() {
     check_makefile || return 1
     local selected_commands=$(grep -E '^[^[:space:]]+:' Makefile | grep -v '^.PHONY' | cut -d: -f1 | _fzf_make_gui)
     execute_commands "$selected_commands"
@@ -117,7 +117,7 @@ select_a_option() {
     local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle)
 
     if [[ "$choice" == "Select commands" ]]; then
-        _funtion_list
+        _function_list
     elif [[ "$choice" == "View history" ]]; then
         _view_history
     elif [[ "$choice" == "Update Odoo Module" ]]; then
