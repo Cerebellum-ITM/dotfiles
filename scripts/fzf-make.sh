@@ -114,7 +114,7 @@ _select_odoo_module() {
 
 select_a_option() {
     check_makefile || return 1
-    local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always")
+    local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle)
 
     if [[ "$choice" == "Select commands" ]]; then
         _funtion_list
