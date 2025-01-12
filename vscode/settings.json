@@ -1,0 +1,355 @@
+{
+    "security.workspace.trust.untrustedFiles": "open",
+    "git.autofetch": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "editor.bracketPairColorization.enabled": true,
+    "files.autoSave": "onFocusChange",
+    "theme-by-language.themes": {
+        "xml": "Tokyo Night",
+        "python": "Tokyo Night",
+        "*": "Tokyo Night",
+        "typescript": "Tokyo Night",
+        "javascript": "Tokyo Night",
+        "latex": "Tokyo Night",
+        "sql": "Tokyo Night",
+        "shellscript": "Tokyo Night",
+        "jsonc": "Tokyo Night",
+        "gitignore": "Tokyo Night",
+        "yaml": "Tokyo Night",
+        "ignore": "Tokyo Night",
+        "git-commit": "Tokyo Night",
+        "ssh_config": "Tokyo Night",
+        "dockerfile": "Tokyo Night",
+        "dockercompose": "Tokyo Night",
+        "properties": "Tokyo Night",
+        "json": "Tokyo Night",
+        "makefile": "Tokyo Night",
+        "plaintext": "Tokyo Night",
+        "toml": "Tokyo Night"
+    },
+    "matlab.linterConfig": "",
+    "matlab.mlintpath": "/Applications/Matlab_R2020a.app/bin/maci64/mlint",
+    "matlab.matlabpath": "/Applications/Matlab_R2020a.app",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Tokyo Night",
+    "cSpell.language": "en,es-ES",
+    "editor.accessibilitySupport": "off",
+    "latex-workshop.chktex.convertOutput.column.enabled": false,
+    "latex-workshop.latex.autoBuild.run": "never",
+    "editor.wordWrap": "on",
+    "cSpell.userWords": [
+        "attf",
+        "cellspacing",
+        "CFDI",
+        "Chávez",
+        "colspan",
+        "convección",
+        "cookiecutter",
+        "CURP",
+        "darwin",
+        "descongelación",
+        "difusividad",
+        "dilatométricas",
+        "dilatométrico",
+        "dilatométricos",
+        "filestore",
+        "fullscreen",
+        "Github",
+        "iDesiIng",
+        "kanban",
+        "linux",
+        "loguru",
+        "matlab",
+        "monitoreo",
+        "Neftalí",
+        "odoo",
+        "onchange",
+        "ondelete",
+        "pacman",
+        "pgdata",
+        "pirómetro",
+        "postgresql",
+        "psql",
+        "TARETAN",
+        "tbody",
+        "Tekniu",
+        "TEKNIU",
+        "termofísicos",
+        "thead",
+        "tmpl",
+        "Uncategorized",
+        "valign",
+        "xclip",
+        "xsel"
+    ],
+    "remote.SSH.remotePlatform": {"74.208.183.109":"linux","iD-Desarrollo":"linux","coder-vscode--admin--TEST":"linux","coder-vscode--Admin--develop":"linux"},
+    "remote.SSH.defaultExtensions": [
+        "github.copilot",
+        "eamodio.gitlens",
+        "ms-python.python",
+        "redhat.vscode-xml",
+        "dotjoshjohnson.xml",
+        "github.copilot-chat",
+        "oderwat.indent-rainbow",
+        "mechatroner.rainbow-csv",
+        "jigar-patel.odoosnippets",
+        "ms-python.vscode-pylance",
+        "jzmstrjp.color-the-tag-name",
+        "christian-kohler.path-intellisense",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-spanish",
+
+    ],
+    "explorer.confirmDragAndDrop": false,
+    "kite.showWelcomeNotificationOnStartup": false,
+    "terminal.external.osxExec": "iterm.app",
+    "gitlens.hovers.currentLine.over": "line",
+    "githubPullRequests.pullBranch": "never",
+    "terminal.explorerKind": "external",
+    "terminal.integrated.defaultProfile.linux": "zsh (2)",
+    "terminal.integrated.profiles.linux": {
+        "bash": {
+            "path": "bash",
+            "icon": "terminal-bash"
+        },
+        "zsh": {
+            "path": "zsh"
+        },
+        "fish": {
+            "path": "fish"
+        },
+        "tmux": {
+            "path": "tmux",
+            "icon": "terminal-tmux"
+        },
+        "pwsh": {
+            "path": "pwsh",
+            "icon": "terminal-powershell"
+        },
+        "bash (2)": {
+            "path": "/usr/bin/bash"
+        },
+        "zsh (2)": {
+            "path": "/usr/bin/zsh"
+        }
+    },
+    "cSpell.enabledLanguageIds": [
+        "asciidoc",
+        "c",
+        "cpp",
+        "csharp",
+        "css",
+        "elixir",
+        "erlang",
+        "git-commit",
+        "go",
+        "graphql",
+        "handlebars",
+        "haskell",
+        "html",
+        "jade",
+        "java",
+        "javascript",
+        "javascriptreact",
+        "json",
+        "jsonc",
+        "jupyter",
+        "latex",
+        "less",
+        "markdown",
+        "php",
+        "plaintext",
+        "python",
+        "pug",
+        "restructuredtext",
+        "rust",
+        "scala",
+        "scss",
+        "scminput",
+        "swift",
+        "text",
+        "typescript",
+        "typescriptreact",
+        "vue",
+        "yaml",
+        "yml",
+        "xml"
+    ],
+    "editor.guides.bracketPairs": true,
+    "editor.indentSize": "tabSize",
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "peacock.favoriteColors": [
+        {
+            "name": "Angular Red",
+            "value": "#dd0531"
+        },
+        {
+            "name": "Azure Blue",
+            "value": "#007fff"
+        },
+        {
+            "name": "JavaScript Yellow",
+            "value": "#f9e64f"
+        },
+        {
+            "name": "Mandalorian Blue",
+            "value": "#1857a4"
+        },
+        {
+            "name": "Node Green",
+            "value": "#215732"
+        },
+        {
+            "name": "React Blue",
+            "value": "#61dafb"
+        },
+        {
+            "name": "Something Different",
+            "value": "#832561"
+        },
+        {
+            "name": "Svelte Orange",
+            "value": "#ff3d00"
+        },
+        {
+            "name": "Vue Green",
+            "value": "#42b883"
+        },
+        {
+            "name": "iDesiIng",
+            "value": "#2F0147"
+        },
+        {
+            "name": "Poduccion",
+            "value": "#8F0013"
+        },
+        {
+            "name": "Tekniu",
+            "value": "#26342F"
+        }
+    ],
+    "files.exclude": {
+        "": true,
+        "**/__pycache__": true
+    },
+    "markdown-preview-enhanced.automaticallyShowPreviewOfMarkdownBeingEdited": true,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.minimap.renderCharacters": false,
+    "editor.minimap.scale": 3,
+    "editor.minimap.autohide": true,
+    "editor.cursorBlinking": "phase",
+    "redhat.telemetry.enabled": false,
+    "material-icon-theme.folders.associations": {
+
+        "enterprise": "core",
+        "wizard": "interface",
+        "wizards": "interface",
+        "backups_config": "archive",
+        "config-addons": "Components",
+        "ssh_keys": "Keys",
+    },
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingImports": "none",
+        "reportMissingModuleSource": "none",
+    },
+    "cSpell.ignorePaths": [
+        "package-lock.json",
+        "node_modules",
+        "vscode-extension",
+        ".git/objects",
+        ".vscode",
+        ".vscode-insiders",
+        ".devcontainer"
+    ],
+    "explorer.compactFolders": false,
+    "workbench.sideBar.location": "right",
+    "window.confirmSaveUntitledWorkspace": false,
+    "arduino.useArduinoCli": true,
+    "jupyter.askForKernelRestart": false,
+    "material-icon-theme.files.associations": {
+        "*.yaml": "yaml",
+    },
+    "better-comments.tags": [
+
+
+        
+        {
+            "tag": "!",
+            "color": "#FF2D00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "?",
+            "color": "#3498DB",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+
+        {
+            "tag": "Dev:",
+            "color": "#3498DB",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+
+        {
+            "tag": "//",
+            "color": "#474747",
+            "strikethrough": true,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "todo",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "*",
+            "color": "#98C379",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        }
+    ],
+    "terminal.integrated.fontFamily": "JetBrainsMono Nerd Font",
+    "workbench.activityBar.location": "top",
+    "editor.fontFamily": "JetBrainsMono Nerd Font",
+    "remote.SSH.useExecServer": false,
+    "workbench.startupEditor": "none",
+    "window.newWindowDimensions": "maximized",
+    "editor.fontLigatures": true,
+    "vscodeGoogleTranslate.preferredLanguage": "English",
+    "markdown-preview-enhanced.previewTheme": "atom-dark.css",
+    "github.copilot.advanced": {
+
+    },
+    "github.copilot.enable": {
+        "*": false,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
+    },
+    "security.promptForRemoteFileProtocolHandling": false,
+}

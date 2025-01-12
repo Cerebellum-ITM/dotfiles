@@ -1,0 +1,10 @@
+{
+	"Generate Line": {
+		"prefix": "Odoo Security Line",
+		"body": [
+			"access_${1/(\\w+)(\\.|$)/${1:/downcase}${2:+_}/g},access.$1,model_${1/(\\w+)(\\.|$)/${1:/downcase}${2:+_}/g},,1,1,1,1"
+		],
+		"description": "Generate line for odoo securty file"
+	}
+	
+}
