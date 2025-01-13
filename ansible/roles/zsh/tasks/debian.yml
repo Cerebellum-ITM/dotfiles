@@ -1,0 +1,6 @@
+---
+- name: Install zsh on Debian-based systems
+  apt:
+    name: zsh
+    state: present
+  when: zsh_installed.rc != 0

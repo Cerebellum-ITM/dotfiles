@@ -1,0 +1,9 @@
+---
+- name: Check if stow is installed
+  command: stow --version
+  register: stow_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Include install tasks based on OS
+  include_tasks: "{{ os_family }}.yml"

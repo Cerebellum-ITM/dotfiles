@@ -1,0 +1,6 @@
+---
+- name: Install oh-my-posh on macOS
+  homebrew:
+    name: jandedobbeleer/oh-my-posh/oh-my-posh
+    state: present
+  when: posh_installed.rc != 0

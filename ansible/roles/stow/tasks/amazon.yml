@@ -1,0 +1,12 @@
+---
+- name: Install stow on Amazon Linux
+  shell: |
+    wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
+    tar -xzvf stow-latest.tar.gz
+    cd stow-*/
+    ./configure
+    make
+    sudo make install
+    sudo yum install perl-File-Copy
+    sudo yum install perl-core
+  when: stow_installed.rc != 0

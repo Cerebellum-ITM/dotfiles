@@ -3,6 +3,7 @@
   command: delta --version
   register: delta_installed
   ignore_errors: true
+  changed_when: false
 
 - name: Include install tasks based on OS
   include_tasks: "{{ os_family }}.yml"

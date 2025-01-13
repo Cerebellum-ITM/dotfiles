@@ -1,0 +1,6 @@
+---
+- name: Install stow on Debian-based systems
+  apt:
+    name: stow
+    state: present
+  when: stow_installed.rc != 0

@@ -1,0 +1,6 @@
+---
+- name: Install stow on macOS
+  homebrew:
+    name: stow
+    state: present
+  when: stow_installed.rc != 0

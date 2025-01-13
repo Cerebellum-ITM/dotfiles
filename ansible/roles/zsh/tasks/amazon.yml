@@ -1,0 +1,6 @@
+---
+- name: Install zsh on Amazon Linux
+  yum:
+    name: zsh
+    state: present
+  when: zsh_installed.rc != 0
