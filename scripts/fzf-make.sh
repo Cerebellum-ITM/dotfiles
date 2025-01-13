@@ -1,4 +1,4 @@
-FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
+FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 
 check_makefile() {
     if [ ! -f Makefile ]; then

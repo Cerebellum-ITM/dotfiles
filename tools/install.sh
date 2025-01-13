@@ -239,21 +239,21 @@ else
 fi
 
 #* Check if history files exist, if not, create them
-FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
+FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
     touch "$FZF_MAKE_HISTORY_FILE"
     log_info "Created history file for fzf-make"
 fi
 
 #* check if history files exist, if not, create them
-FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-translate_history.log"
+FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-translate_history.log"
 if [ ! -f "$FZF_TRANSLATE_HISTORY_FILE" ]; then
     touch "$FZF_TRANSLATE_HISTORY_FILE"
     log_info "Created history file for fzf-translate"
 fi
 
 #* check docker-compose config file exists, if not, create it
-DOCKER_COMPOSE_CONFIG_FILE="$HOME/dotfiles/zsh/.docker-compose-config"
+DOCKER_COMPOSE_CONFIG_FILE="$HOME/dotfiles/home/.config/.tmp/.docker-compose-config"
 if [ ! -f "$DOCKER_COMPOSE_CONFIG_FILE" ]; then
     touch "$DOCKER_COMPOSE_CONFIG_FILE"
     echo "export DOCKER_COMPOSE_CMD='docker compose'" > "$DOCKER_COMPOSE_CONFIG_FILE"

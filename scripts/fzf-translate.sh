@@ -1,5 +1,5 @@
 __fzf_translate_script=${BASH_SOURCE[0]:-${(%):-%x}}
-FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-translate_history.log"
+FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-translate_history.log"
 
 if [[ "$1" == "_request_translation" ]]; then
     commit_message="$2"

@@ -13,7 +13,7 @@ remove_if_exists() {
 # Desinstalar oh-my-posh
 if [ "STERM PROGRAM" != "Apple_Terminal" ]; then
     echo "Uninstalling oh-my-posh..."
-    remove_if_exists "$HOME/dotfiles/zsh/oh-my-posh/prompt_config.toml"
+    remove_if_exists "$HOME/dotfiles/stow/oh-my-posh/prompt_config.toml"
 fi
 
 # Desinstalar Zinit
@@ -46,11 +46,11 @@ remove_if_exists "/tmp/fzf_select_multi"
 
 # Eliminar archivos de historial de fzf-translate
 echo "Removing fzf-translate history..."
-remove_if_exists "$HOME/dotfiles/zsh/.fzf-translate_history.log"
+remove_if_exists "$HOME/dotfiles/stow/.config/.tmp/.fzf-translate_history.log"
 
 # Eliminar archivos de historial de fzf-make
 echo "Removing fzf-make history..."
-remove_if_exists "$HOME/dotfiles/zsh/.fzf-make_history.log"
+remove_if_exists "$HOME/dotfiles/stow/.config/.tmp/.fzf-make_history.log"
 
 # Eliminar scripts personalizados
 echo "Removing custom scripts..."

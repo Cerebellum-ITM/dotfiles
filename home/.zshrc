@@ -1,5 +1,5 @@
 if [ "STERM PROGRAM" != "Apple_Terminal" ]; then
-    eval "$(oh-my-posh init zsh --config $HOME/dotfiles/zsh/oh-my-posh/prompt_config.toml)"
+    eval "$(oh-my-posh init zsh --config $HOME/.oh-my-posh/prompt_config.toml)"
 fi
 
 
@@ -73,19 +73,16 @@ alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source <(fzf --zsh)
-source ~/dotfiles/scripts/tput-config.sh
-source ~/dotfiles/zsh/.docker-compose-config
+source ~/dotfiles/tools/tput-config.sh
+source ~/dotfiles/home/.config/.tmp/.docker-compose-config
 
-source ~/dotfiles/scripts/odoo.sh
-source ~/dotfiles/scripts/fzf-git.sh
-source ~/dotfiles/scripts/fzf-make.sh
-source ~/dotfiles/scripts/fzf-templates.sh
-source ~/dotfiles/scripts/fzf-translate.sh
-source ~/dotfiles/scripts/fzf-git-custom.sh
+for file in $HOME/dotfiles/scripts/*.sh; do
+    source "$file"
+done
 
 function history_clean() {
-    FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-translate_history.log"
-    FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/zsh/.fzf-make_history.log"
+    FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-translate_history.log"
+    FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
     tail -n 3000 "$FZF_TRANSLATE_HISTORY_FILE" > "$FZF_TRANSLATE_HISTORY_FILE.tmp" && mv "$FZF_TRANSLATE_HISTORY_FILE.tmp" "$FZF_TRANSLATE_HISTORY_FILE"
     tail -n 3000 "$FZF_MAKE_HISTORY_FILE" > "$FZF_MAKE_HISTORY_FILE.tmp" && mv "$FZF_MAKE_HISTORY_FILE.tmp" "$FZF_MAKE_HISTORY_FILE"
 }

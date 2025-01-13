@@ -80,7 +80,7 @@ final_space = true
         '{{if eq .Output "󰊢"}}p:error{{end}}'   # Green for up to date
       ]
     [blocks.segments.properties]
-      command = '$HOME/dotfiles/scripts/check_dotfiles_status.sh'
+      command = '$HOME/dotfiles/tools/check_dotfiles_status.sh'
       cache_duration = '1s'
 
   [[blocks.segments]]
