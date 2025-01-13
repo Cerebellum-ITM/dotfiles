@@ -87,16 +87,6 @@ function history_clean() {
     tail -n 3000 "$FZF_MAKE_HISTORY_FILE" > "$FZF_MAKE_HISTORY_FILE.tmp" && mv "$FZF_MAKE_HISTORY_FILE.tmp" "$FZF_MAKE_HISTORY_FILE"
 }
 
-
-function dotfiles_update() {
-    cd $HOME/dotfiles
-    git pull
-    ./install.sh --unattended
-    history_clean
-    source ~/.zshrc
-    cd -
-}
-
 get_ip() {
     local ip_address=$(hostname -I | awk '{print $1}')
     blue_bold "The IP address is: $ip_address"

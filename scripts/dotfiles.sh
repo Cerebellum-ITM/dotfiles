@@ -1,0 +1,19 @@
+function dotfiles_update() {
+    cd $HOME/dotfiles
+    git pull
+    ./install.sh --unattended
+    history_clean
+    source ~/.zshrc
+    cd -
+}
+
+function dotfiles() {
+    if [[ "$1" == "pull" || "$1" == "-pl" ]]; then
+        cd $HOME/dotfiles
+        git pull
+        source ~/.zshrc
+        cd -
+    elif [[ "$1" == "install" || "$1" == "-ins" ]]; then
+        ansible-playbook  $HOME/dotfiles/ansible/sites.yml -i ansible/inventory.ini --ask-become-pass
+    fi
+}
