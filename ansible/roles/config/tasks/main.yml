@@ -1,15 +1,15 @@
 ---
 - name: Check if the migrate flag was created
   stat:
-    path: $HOME/dotfiles/home/.tmp/migrate_dotfiles.flag
-    register: flag_migrate_dotfiles
+    path: "{{ lookup('env', 'HOME') }}/dotfiles/home/.tmp/migrate_dotfiles.flag"
+  register: flag_migrate_dotfiles
 
 - name: Migrate dotfiles from v1.0 to 1.1
-  shell: $HOME/dotfiles/tools/migrate_dotfiles.sh {{ os_family }}
-  when: not flag_check.stat.exists
+  shell: "{{ lookup('env', 'HOME') }}/dotfiles/tools/migrate_dotfiles.sh {{ os_family }}"
+  when: not flag_migrate_dotfiles.stat.exists
 
 - name: Create a flag file to indicate the migration task
   file:
-    path: $HOME/dotfiles/home/.tmp/migrate_dotfiles.flag
+    path: "{{ lookup('env', 'HOME') }}/dotfiles/home/.tmp/migrate_dotfiles.flag"
     state: touch
   when: not flag_migrate_dotfiles.stat.exists

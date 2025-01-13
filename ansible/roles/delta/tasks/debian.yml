@@ -1,6 +1,11 @@
 ---
 - name: Install delta on Debian-based systems
-  apt:
-    name: git-delta
-    state: present
+  shell: |
+    cd $HOME
+    wget https://github.com/dandavison/delta/releases/latest/download/delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz
+    tar -xzf delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz && rm -rf delta-0.18.2-x86_64-unknown-linux-gnu.tar.gz
+    cd delta-0.18.2-x86_64-unknown-linux-gnu
+    sudo chmod +x ./delta
+    sudo mv ./delta /usr/local/bin/
+    cd .. && rm -r delta-0.18.2-x86_64-unknown-linux-gnu
   when: delta_installed.rc != 0

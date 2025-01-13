@@ -2,7 +2,6 @@
 - name: DotFiles Config
   hosts: local
   gather_facts: yes
-  become: yes 
   roles:
     - role: bat
       vars:

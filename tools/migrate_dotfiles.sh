@@ -1,15 +1,14 @@
 #!/bin/bash
 
-source $HOME/dotfiles/tools/log_functions.sh
-
-local OSTYPE=$1
+OSTYPE=$1
+source "$HOME/dotfiles/tools/log_functions.sh"
 
 remove_if_exists() {
     if [ -e "$1" ]; then
         rm -rf "$1"
-        echo "Removed $1"
+        log_info "Removed $1"
     else
-        echo "$1 does not exist"
+        log_warning "$1 does not exist"
     fi
 }
 
@@ -18,13 +17,21 @@ remove_if_exists "$HOME/oh-my-posh"
 remove_if_exists "$HOME/.config/bat"
 remove_if_exists "$HOME/.config/.tmp"
 
-if [ "$1" == 'darwin' ]; then
+if [ "$OSTYPE" == 'darwin' ]; then
     remove_if_exists "$HOME/.config/karabiner"
     remove_if_exists "$HOME/.config/ghostty"
 fi
 
-mv $HOME/dotfiles/zsh/.fzf-translate_history.log $HOME/dotfiles/home/.config/.tmp/.
-mv $HOME/dotfiles/zsh/.fzf-make_history.log $HOME/dotfiles/home/.config/.tmp/.
-mv $HOME/dotfiles/zsh/.docker-compose-config $HOME/dotfiles/home/.config/.tmp/.
+cd "$HOME/dotfiles/home" && stow . --target="$HOME"
 
-cd $HOME/dotfiles/home && stow .
+mkdir -p $HOME/dotfiles/home/.config/.tmp
+remove_if_exists "$HOME/dotfiles/zsh/.fzf-translate_history.log"
+mv "$HOME/dotfiles/zsh/.fzf-translate_history.log" "$HOME/dotfiles/home/.config/.tmp/." 2>/dev/null || echo "File not found: $HOME/dotfiles/zsh/.fzf-translate_history.log"
+
+remove_if_exists "$HOME/dotfiles/zsh/.fzf-make_history.log"
+mv "$HOME/dotfiles/zsh/.fzf-make_history.log" "$HOME/dotfiles/home/.config/.tmp/." 2>/dev/null || echo "File not found: $HOME/dotfiles/zsh/.fzf-make_history.log"
+
+remove_if_exists "$HOME/dotfiles/zsh/.docker-compose-config"
+mv "$HOME/dotfiles/zsh/.docker-compose-config" "$HOME/dotfiles/home/.config/.tmp/." 2>/dev/null || echo "File not found: $HOME/dotfiles/zsh/.docker-compose-config"
+
+remove_if_exists "$HOME/dotfiles/zsh"

@@ -14,6 +14,6 @@ function dotfiles() {
         source ~/.zshrc
         cd -
     elif [[ "$1" == "install" || "$1" == "-ins" ]]; then
-        ansible-playbook  $HOME/dotfiles/ansible/sites.yml -i ansible/inventory.ini --ask-become-pass
+        ansible-playbook  $HOME/dotfiles/ansible/sites.yml -i $HOME/dotfiles/ansible/inventory.ini
     fi
 }
