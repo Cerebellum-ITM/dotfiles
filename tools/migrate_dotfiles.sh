@@ -23,4 +23,8 @@ if [ "$1" == 'darwin' ]; then
     remove_if_exists "$HOME/.config/ghostty"
 fi
 
+mv $HOME/dotfiles/zsh/.fzf-translate_history.log $HOME/dotfiles/home/.config/.tmp/.
+mv $HOME/dotfiles/zsh/.fzf-make_history.log $HOME/dotfiles/home/.config/.tmp/.
+mv $HOME/dotfiles/zsh/.docker-compose-config $HOME/dotfiles/home/.config/.tmp/.
+
 cd $HOME/dotfiles/home && stow .
