@@ -43,7 +43,7 @@ case "$OS" in
                 install_ansible_amazon
             else
                 # Check for Debian
-                if grep -q "Debian" /etc/os-release; then
+                if grep -q "ID_LIKE=debian" /etc/os-release; then
                     install_ansible_debian
                 else
                     echo "Unsupported Linux distribution. Please install Ansible manually."
