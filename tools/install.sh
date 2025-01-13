@@ -119,21 +119,6 @@ else
     log_info "fzf is already installed"
 fi
 
-if ! command -v tree &> /dev/null; then
-    log_debug "Installing tree"
-    if [ "$os_name" = "Linux" ]; then
-        if [ "$distribution" = "Ubuntu" ]; then
-            sudo apt-get install tree -y
-        elif [ "$distribution" = "Amazon Linux" ]; then
-            sudo yum install tree -y
-        fi
-    elif [ "$os_name" = "Darwin" ]; then
-        brew install tree
-    fi
-else
-    log_info "tree is already installed"
-fi
-
 if ! command -v zoxide &> /dev/null; then
     log_debug "Installing zoxide"
     if [ "$os_name" = "Linux" ]; then
@@ -166,6 +151,7 @@ if ! command -v bat &> /dev/null; then
     fi
 else
     log_info "bat is already installed"
+    bat cache --build
 fi
 
 if ! command -v eza &> /dev/null; then
@@ -236,6 +222,23 @@ if ! command -v trans &> /dev/null; then
     fi
 else
     log_info "trans is already installed"
+fi
+
+#! Install delta
+if ! command -v delta &> /dev/null; then
+    log_debug "Installing delta"
+    if [ "$os_name" = "Linux" ]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
+            sudo apt install git-delta
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            sudo yum install git-delta
+        fi
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install git-delta
+    fi
+    cat $HOME/dotfiles/git/delta_config.txt >> .gitconfig
+else
+    log_info "Delta is already installed"
 fi
 
 #* Check if history files exist, if not, create them
