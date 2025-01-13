@@ -1,0 +1,15 @@
+---
+- name: Check if the cache was created
+  stat:
+    path: /tmp/cache_build.flag
+    register: flag_check
+
+- name: Run bat cache build
+  command: bat cache --build
+  when: bat_installed.rc == 0 and not flag_check.stat.exists
+
+- name: Create a flag file to indicate the cache build
+  file:
+    path: /tmp/cache_build.flag
+    state: touch
+  when: not flag_check.stat.exists

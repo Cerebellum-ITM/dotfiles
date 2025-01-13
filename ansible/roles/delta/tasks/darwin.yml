@@ -1,0 +1,6 @@
+---
+- name: Install delta on macOS
+  homebrew:
+    name: git-delta
+    state: present
+  when: and delta_installed.rc != 0

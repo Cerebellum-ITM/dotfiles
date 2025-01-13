@@ -1,0 +1,8 @@
+---
+- name: Install bat on Amazon Linux
+  shell: |
+    curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.24.0/bat-v0.24.0-x86_64-unknown-linux-musl.tar.gz
+    tar -xvf bat.zip
+    mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
+    ln -s /usr/bin/batcat/bat ~/.local/bin/bat
+  when: bat_installed.rc != 0

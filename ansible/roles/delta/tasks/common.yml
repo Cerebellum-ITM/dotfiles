@@ -1,0 +1,8 @@
+---
+- name: Append delta configuration to .gitconfig
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.gitconfig"
+    line: "{{ item }}"
+    state: present
+  loop: "{{ lookup('file', ansible_env.HOME ~ '/dotfiles/git/delta_config.txt').splitlines() }}"
+  when: delta_installed.rc == 0

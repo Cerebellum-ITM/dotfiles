@@ -1,0 +1,12 @@
+---
+- name: Install bat on Debian-based systems
+  apt:
+    name: bat
+    state: present
+  when: bat_installed.rc != 0
+
+- name: Create the symbolic link
+  shell: |
+    mkdir -p ~/.local/bin
+    ln -s /usr/bin/batcat ~/.local/bin/bat
+  when: bat_installed.rc != 0

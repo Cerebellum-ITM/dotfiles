@@ -1,0 +1,6 @@
+---
+- name: Install bat on 'Darwin' systems
+  homebrew:
+    name: bat
+    state: present
+  when: bat_installed.rc != 0

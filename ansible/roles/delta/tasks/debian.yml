@@ -1,0 +1,6 @@
+---
+- name: Install delta on Debian-based systems
+  apt:
+    name: git-delta
+    state: present
+  when: delta_installed.rc != 0

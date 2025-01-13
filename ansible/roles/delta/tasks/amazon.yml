@@ -1,0 +1,6 @@
+---
+- name: Install delta on Amazon Linux
+  yum:
+    name: git-delta
+    state: present
+  when: delta_installed.rc != 0

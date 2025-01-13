@@ -1,0 +1,11 @@
+---
+- name: DotFiles Config
+  hosts: local
+  gather_facts: yes
+  roles:
+    - role: bat
+      vars:
+        os_family: "{{ ansible_os_family | lower }}"
+    - role: delta
+      vars:
+        os_family: "{{ ansible_os_family | lower }}"

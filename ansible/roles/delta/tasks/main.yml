@@ -1,0 +1,11 @@
+---
+- name: Check if delta is installed
+  command: delta --version
+  register: delta_installed
+  ignore_errors: true
+
+- name: Include install tasks based on OS
+  include_tasks: "{{ os_family }}.yml"
+
+- name: Include common tasks
+  include_tasks: "{{ os_family }}.yml"
