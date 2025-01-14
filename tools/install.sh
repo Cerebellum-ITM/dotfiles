@@ -1,11 +1,13 @@
 #!/bin/bash
 
+source "$HOME/dotfiles/tools/log_functions.sh"
+
 # Function to install Ansible on macOS
 install_ansible_darwin() {
-    echo "Installing Ansible on macOS..."
+    log_info "Installing Ansible on macOS..."
     # Install Homebrew if not installed
     if ! command -v brew &> /dev/null; then
-        echo "Homebrew not found. Installing Homebrew..."
+        log_info "Homebrew not found. Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     # Install Ansible using Homebrew
@@ -14,51 +16,40 @@ install_ansible_darwin() {
 
 # Function to install Ansible on Amazon Linux
 install_ansible_amazon() {
-    echo "Installing Ansible on Amazon Linux..."
+    log_info "Installing Ansible on Amazon Linux..."
     sudo yum update -y
     sudo amazon-linux-extras install ansible2 -y
 }
 
 # Function to install Ansible on Debian
 install_ansible_debian() {
-    echo "Installing Ansible on Debian..."
-    sudo apt update -y
-    sudo apt install software-properties-common -y
-    sudo add-apt-repository --yes ppa:ansible/ansible
-    sudo apt update -y
-    sudo apt install ansible -y
+    log_info "Installing Ansible on Debian..."
+    sudo apt update
+    sudo apt install pipx
+    pipx ensurepath
+    sudo pipx ensurepath --global
+    pipx install --include-deps ansible
 }
 
 # Detect the operating system
-OS=$(uname -s)
+os_name="$(uname -s)"
+if [ "$os_name" = "Linux" ]; then
+    distribution=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
+fi
 
-case "$OS" in
-    Darwin)
-        install_ansible_darwin
-        ;;
-    Linux)
-        # Further check for Amazon Linux
-        if [ -f /etc/system-release ]; then
-            if grep -q "Amazon Linux" /etc/system-release; then
-                install_ansible_amazon
-            else
-                # Check for Debian
-                if grep -q "ID_LIKE=debian" /etc/os-release; then
-                    install_ansible_debian
-                else
-                    echo "Unsupported Linux distribution. Please install Ansible manually."
-                    exit 1
-                fi
-            fi
-        else
-            echo "Unsupported Linux distribution. Please install Ansible manually."
-            exit 1
+if ! command -v ansible &> /dev/null; then
+    log_debug "Installing Ansible"
+    if [ "$os_name" = "Linux" ]; then
+        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
+            install_ansible_debian
+        elif [ "$distribution" = "Amazon Linux" ]; then
+            install_ansible_amazon
         fi
-        ;;
-    *)
-        echo "Unsupported operating system. Please install Ansible manually."
-        exit 1
-        ;;
-esac
+    elif [ "$os_name" = "Darwin" ]; then
+        install_ansible_darwin
+    fi
+else
+    log_info "bat is already installed"
+fi
 
-echo "Ansible installation completed successfully!"
+log_info "Ansible installation completed successfully!"

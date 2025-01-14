@@ -7,6 +7,8 @@
 
 - name: Create the symbolic link
   shell: |
-    mkdir -p ~/.local/bin
-    ln -s /usr/bin/batcat ~/.local/bin/bat
+    if ! command -v bat &> /dev/null; then
+      mkdir -p ~/.local/bin
+      ln -s /usr/bin/batcat ~/.local/bin/bat
+    fi
   when: bat_installed.rc != 0

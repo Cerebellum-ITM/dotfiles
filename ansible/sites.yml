@@ -25,6 +25,9 @@
     - role: stow
       vars:
         os_family: "{{ ansible_os_family | lower }}"
+    - role: zoxide
+      vars:
+        os_family: "{{ ansible_os_family | lower }}"
     - role: zsh
       vars:
         os_family: "{{ ansible_os_family | lower }}"
