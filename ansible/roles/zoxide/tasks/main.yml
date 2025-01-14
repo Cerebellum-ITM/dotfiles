@@ -1,0 +1,9 @@
+---
+- name: Check if zoxide is installed
+  command: zoxide --version
+  register: zoxide_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install zoxide based on OS
+  include_tasks: "{{ os_family }}.yml"

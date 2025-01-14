@@ -1,11 +1,11 @@
-- name: Check if bat is installed
+- name: Check if Bat is installed
   command: bat --version
   register: bat_installed
   ignore_errors: true
   changed_when: false
 
-- name: Include install tasks based on OS
+- name: Install Bat based on OS
   include_tasks: "{{ os_family }}.yml"
 
-- name: Include common tasks
+- name: Common tasks
   include_tasks: "{{ os_family }}.yml"

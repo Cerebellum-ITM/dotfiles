@@ -5,8 +5,8 @@
   ignore_errors: true
   changed_when: false
 
-- name: Include install tasks based on OS
+- name: Install delta based on OS
   include_tasks: "{{ os_family }}.yml"
 
-- name: Include common tasks
-  include_tasks: "{{ os_family }}.yml"
+- name: Common tasks
+  include_tasks: "common.yml"

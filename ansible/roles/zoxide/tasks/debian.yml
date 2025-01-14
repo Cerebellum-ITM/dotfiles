@@ -1,0 +1,5 @@
+---
+- name: Install zoxide on Debian
+  shell: |
+    shell: curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+  when: zoxide_installed.rc != 0

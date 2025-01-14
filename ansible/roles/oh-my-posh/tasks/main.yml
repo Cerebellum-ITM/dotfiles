@@ -5,10 +5,6 @@
   ignore_errors: true
   changed_when: false
 
-- name: Include install tasks based on darwin
-  include_tasks: "darwin.yml"
-  when: ansible_os_family == "Darwin"
-
-- name: Include install tasks based on linux distributions
-  include_tasks: "linux.yml"
-  when: posh_installed.rc != 0 and ansible_os_family == "amazon" or ansible_os_family == "debian"
+- name: Install oh-my-posh based on OS
+  include_tasks: "{{ os_family }}.yml"
+  when: posh_installed.rc != 0

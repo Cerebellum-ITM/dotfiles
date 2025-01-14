@@ -1,0 +1,12 @@
+---
+- name: Install Docker on macOS
+  homebrew:
+    name: docker
+    state: present
+  when: docker_installed.rc != 0
+
+- name: Install Docker Compose on macOS
+  homebrew:
+    name: docker-compose
+    state: present
+  when: docker_installed.rc != 0

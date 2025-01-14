@@ -1,0 +1,14 @@
+---
+- name: Install oh-my-posh on Debian GNU/Linux Aarch64
+  get_url:
+    url: https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-arm
+    dest: /usr/local/bin/oh-my-posh
+    mode: '0755'
+  when: posh_installed.rc != 0 and os_architecture == "aarch64"
+
+- name: Install oh-my-posh on Debian x86_64
+  get_url:
+    url: https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64
+    dest: /usr/local/bin/oh-my-posh
+    mode: '0755'
+  when: posh_installed.rc != 0 and os_architecture == "x86_64"

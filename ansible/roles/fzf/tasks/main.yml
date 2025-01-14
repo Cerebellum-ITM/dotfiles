@@ -1,10 +1,10 @@
 ---
-- name: Check if fzf is installed
+- name: Check if FZF is installed
   command: fzf --version
   register: fzf_installed
   ignore_errors: true
   changed_when: false
 
 
-- name: Include install tasks based on OS
+- name: Install FZF based on OS
   include_tasks: "{{ os_family }}.yml"
