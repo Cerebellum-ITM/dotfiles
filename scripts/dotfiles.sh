@@ -11,6 +11,7 @@ function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
         shift
         cd $HOME/dotfiles || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
+        git stash
         git pull || { echo "Failed to pull from git"; return 1; }
         source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
         cd - > /dev/null 2>&1 || { echo "Failed to return to previous directory"; return 1; }
