@@ -77,9 +77,10 @@ execute_commands() {
             local target=$(echo "$cmd" | awk '{print $1}') #! The first element will always be the function to be executed
             local args=$(echo "$cmd" | cut -d' ' -f2-)  
             if [[ -z "$args" ]]; then
-                (cd $working_dir && make "$target" > /dev/null 2>&1 | grep -v "Nothing to be done for")
+                
+                make -C "$working_dir" "$target"
             else
-                (cd $working_dir && make "$target" $args > /dev/null 2>&1 | grep -v "Nothing to be done for")
+                make -C "$working_dir" "$target" $args
             fi
         done
     fi
