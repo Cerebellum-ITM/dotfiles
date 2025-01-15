@@ -90,7 +90,7 @@ _select_odoo_module() {
     local dir=$(cd $working_dir && find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
         --prompt="Select a directory or press Ctrl+Z to include any directory: " \
         --preview="eza --tree --color=always --icons {} | head -200" \
-        --bind "ctrl-z:execute(fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . -type d -not -path '*/.git/*'))")
+        --bind "ctrl-z:execute(cd $working_dir && fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . -type d -not -path '*/.git/*'))")
 
     #* Check if a directory was selected
     if [[ -z "$dir" ]]; then
@@ -99,7 +99,7 @@ _select_odoo_module() {
     fi
 
     #* List subdirectories in the selected directory
-    local subdir=$(find "$dir" -mindepth 1 -maxdepth 1 -type d | fzf --header="Select a subdirectory in '$dir'" --preview='eza --tree --color=always --icons {} | head -200')
+    local subdir=$(cd $working_dir && find "$dir" -mindepth 1 -maxdepth 1 -type d | fzf --header="Select a subdirectory in '$dir'" --preview='eza --tree --color=always --icons {} | head -200')
 
     #* Check if a subdirectory was selected
     if [[ -z "$subdir" ]]; then
