@@ -9,6 +9,7 @@ function dotfiles_update() {
 
 function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
+        shift
         cd $HOME/dotfiles || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
         git pull || { echo "Failed to pull from git"; return 1; }
         source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
