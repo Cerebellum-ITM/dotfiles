@@ -77,6 +77,7 @@ eval "$(zoxide init zsh --cmd cd)"
 source <(fzf --zsh)
 source ~/dotfiles/tools/tput-config.sh
 source ~/dotfiles/home/.config/.tmp/.docker-compose-config
+source ~/dotfiles/tools/gum_log_functions.sh
 
 for file in $HOME/dotfiles/scripts/*.sh; do
     source "$file"

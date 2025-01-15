@@ -1,11 +1,19 @@
+working_dir=""
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 
 check_makefile() {
-    if [ ! -f Makefile ]; then
-        [[ -n $TMUX ]] && tmux display-message "No Makefile found"
+    #* Check for Makefile in the current directory
+    if [ -f Makefile ]; then
+        working_dir="$(pwd)"
+    #* Check for Makefile in the parent directory
+    elif [ -f "../Makefile" ]; then
+        working_dir="$(cd .. && pwd)"
+    else
+        gum_log_warning "No Makefile found in current or parent directory"
         return 1
     fi
 }
+
 _fzf_make_gui() {
     fzf-tmux --ansi	-m -p80%,60% -- \
         --layout=reverse --multi --height=50% --min-height=20 --border \
@@ -13,17 +21,17 @@ _fzf_make_gui() {
         --color='header:italic:underline,label:blue' \
         --preview-window='right,80%,border-left' \
         --header='Select the commands to run' \
-        --preview="awk '/^{}[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' Makefile | sed 's/^\t//' | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh"
+        --preview="awk '/^{}[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $working_dir/Makefile | sed 's/^\t//' | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh"
 }
 
 log_history() {
     local selection="$1"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $PWD - $selection" >> "$FZF_MAKE_HISTORY_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $working_dir - $selection" >> "$FZF_MAKE_HISTORY_FILE"
 }
 
 _function_list() {
     check_makefile || return 1
-    local selected_commands=$(grep -E '^[^[:space:]]+:' Makefile | grep -v '^.PHONY' | cut -d: -f1 | _fzf_make_gui)
+    local selected_commands=$(grep -E '^[^[:space:]]+:' $working_dir/Makefile | grep -v '^.PHONY' | cut -d: -f1 | _fzf_make_gui)
     execute_commands "$selected_commands"
 }
 
@@ -34,13 +42,12 @@ _view_history() {
         return 1
     fi
 
-    local current_dir="$PWD"
     local selected_history=$(
-        grep " - $current_dir -" "$FZF_MAKE_HISTORY_FILE" | \
+        grep " - $working_dir -" "$FZF_MAKE_HISTORY_FILE" | \
         awk -F' - ' '{print $1 " - " $3}' | \
         sort -rk1,1 | \
         fzf --layout=reverse --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
-        while read cmd; do awk '/^'\"\$cmd\"'[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $current_dir/Makefile | sed 's/^\t//'; done | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh" \
+        while read cmd; do awk '/^'\"\$cmd\"'[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $working_dir/Makefile | sed 's/^\t//'; done | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh" \
         --preview-window=down:60%:wrap
     )
     execute_commands "$(echo "$selected_history" | awk -F' - ' '{print $2}' | sed 's/ *, */,/g' | tr ',' '\n')"
@@ -70,9 +77,9 @@ execute_commands() {
             local target=$(echo "$cmd" | awk '{print $1}') #! The first element will always be the function to be executed
             local args=$(echo "$cmd" | cut -d' ' -f2-)  
             if [[ -z "$args" ]]; then
-                make "$target"
+                (cd $working_dir && make "$target" > /dev/null 2>&1 | grep -v "Nothing to be done for")
             else
-                make "$target" $args
+                (cd $working_dir && make "$target" $args > /dev/null 2>&1 | grep -v "Nothing to be done for")
             fi
         done
     fi
@@ -80,7 +87,7 @@ execute_commands() {
 
 _select_odoo_module() {
     #* Find directories containing "addon", ignoring those in .git
-    local dir=$(find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
+    local dir=$(find $working_dir -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
         --prompt="Select a directory or press Ctrl+Z to include any directory: " \
         --preview="eza --tree --color=always --icons {} | head -200" \
         --bind "ctrl-z:execute(fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . -type d -not -path '*/.git/*'))")
@@ -128,7 +135,8 @@ select_a_option() {
 
 fzf-make() {
     if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
-        execute_commands "$(grep "$(pwd)" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
+        check_makefile
+        execute_commands "$(grep "$working_dir" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
         echo "List of available commands:\n- repeat or -r"
     else
