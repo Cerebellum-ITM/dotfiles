@@ -186,11 +186,23 @@
         "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
     },
     {
-        "key": "ctrl+shift+alt+cmd+tab",
-        "command": "workbench.action.gotoLine"
-    },
-    {
         "key": "ctrl+g",
         "command": "-workbench.action.gotoLine"
+    },
+    {
+        "key": "ctrl+shift+alt+cmd+tab",
+        "command": "go-to-relative.goToLine"
+    },
+    {
+        "key": "cmd+g",
+        "command": "-go-to-relative.goToLine"
+    },
+    {
+        "key": "ctrl+shift+alt+cmd+`",
+        "command": "go-to-relative.goToLineNegative"
+    },
+    {
+        "key": "shift+cmd+g",
+        "command": "-go-to-relative.goToLineNegative"
     }
 ]
