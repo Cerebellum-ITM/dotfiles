@@ -38,7 +38,7 @@ _function_list() {
 _view_history() {
     check_makefile || return 1
     if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
-        echo "No history file found."
+        gum_log_warning "No history file found."
         return 1
     fi
 
@@ -122,7 +122,7 @@ _select_odoo_module() {
 
 select_a_option() {
     check_makefile || return 1
-    local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle)
+    local choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=40% --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat $working_dir/Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle)
 
     if [[ "$choice" == "Select commands" ]]; then
         _function_list
