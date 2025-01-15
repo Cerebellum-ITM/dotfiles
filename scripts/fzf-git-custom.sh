@@ -192,8 +192,9 @@ fzf-git() {
         cd "$parent_dir"
         local branch=$(git branch --show-current)
         local remote=$(git remote)
+        _fzf_git_files
         git commit --amend --no-edit
-        git push $remote $branch
+        git push -f $remote $branch
         cd "$base_dir"
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
         git checkout $(_fzf_git_branches)
