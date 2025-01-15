@@ -135,8 +135,17 @@ select_a_option() {
 
 fzf-make() {
     if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
-        check_makefile
+        check_makefile || return 1
         execute_commands "$(grep "$working_dir" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
+    elif [[ "$1" == "-edit" || "$1" == "-e" ]]; then
+        check_makefile || return 1
+        if command -v code &> /dev/null; then
+            code $working_dir/Makefile
+        elif command -v nano &> /dev/null; then
+            nano $working_dir/Makefile
+        else
+            gum_log_warning "The command code or nano is not available in the shell."
+        fi
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
         echo "List of available commands:\n- repeat or -r"
     else
