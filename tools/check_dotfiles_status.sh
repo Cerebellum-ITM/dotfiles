@@ -15,7 +15,7 @@ cd "$REPO_PATH" || exit
 #! Check for internet connectivity
 
 if ! check_internet; then
-    echo "NO"
+    echo "󱛅"
     exit 0
 fi
 
