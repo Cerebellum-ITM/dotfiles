@@ -1,6 +1,25 @@
 #!/bin/bash
 
-source $HOME/dotfiles/tools/gum_log_functions.sh
+os_name="$(uname -s)"
+if [ "$os_name" = "Linux" ]; then
+    distribution=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
+fi
+
+if ! command -v gum &> /dev/null; then
+    echo "Installing gum"
+    if [ "$os_name" = "Linux" ]; then
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
+        sudo apt update && sudo apt install gum
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install gum
+    fi
+else
+    echo "gum is already installed"
+fi
+# shellcheck source=/dev/null
+source "$HOME"/dotfiles/tools/gum_log_functions.sh
 
 
 # Ask Y/n
@@ -16,27 +35,8 @@ function ask() {
     [ "$response_lc" = "y" ]
 }
 
-if ! command -v gum &> /dev/null; then
-    echo "Installing gum"
-    if [ "$os_name" = "Linux" ]; then
-        sudo mkdir -p /etc/apt/keyrings
-        curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
-        echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list
-        sudo apt update && sudo apt install gum
-    elif [ "$os_name" = "Darwin" ]; then
-        brew install gum
-    fi
-else
-    echo "gum is already installed"
-fi
-
 gum_log_info "Check for dependencies"
 # install all dependencies
-os_name="$(uname -s)"
-if [ "$os_name" = "Linux" ]; then
-    distribution=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
-fi
-
 
 if [ "$os_name" = "Linux" ]; then   
     if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
@@ -75,7 +75,7 @@ if ! command -v stow &> /dev/null; then
         elif [ "$distribution" = "Amazon Linux" ]; then
             wget http://ftp.gnu.org/gnu/stow/stow-latest.tar.gz
             tar -xzvf stow-latest.tar.gz
-            cd stow-*/
+            cd stow-*/ || exit
             ./configure
             make
             sudo make install
@@ -95,7 +95,7 @@ if ! command -v oh-my-posh &> /dev/null; then
     if [ "$os_name" = "Linux" ]; then
         sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
         sudo chmod +x /usr/local/bin/oh-my-posh
-    elif [ "$os_name" = "Debian GNU/Linux"]; then
+    elif [ "$os_name" = "Debian GNU/Linux" ]; then
         wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-arm -O /usr/local/bin/oh-my-posh
         sudo chmod +x /usr/local/bin/oh-my-posh
     elif [ "$os_name" = "Darwin" ]; then
@@ -104,7 +104,7 @@ if ! command -v oh-my-posh &> /dev/null; then
 else
     gum_log_info "oh-my-posh is already installed"
     gum_log_debug "Updating oh-my-posh"
-    sudo oh-my-posh upgrade --force
+    # sudo oh-my-posh upgrade --force
 fi
 
 if ! command -v fzf &> /dev/null; then
@@ -150,24 +150,24 @@ if ! command -v bat &> /dev/null; then
         brew install bat
     fi
 else
-    local BAT_MIN_VERSION="0.24.0"
-    CURRENT_VERSION=$(bat --version | awk '{print $2}')
-    if [ "$(printf '%s\n' "$MIN_VERSION" "$CURRENT_VERSION" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
-    gum_log_warning "The installed version of bat is lower than the minimum required version" CURRENT_VERSION $CURRENT_VERSION BAT_MIN_VERSION $BAT_MIN_VERSION
+    BAT_MIN_VERSION="0.24.0"
+    BAT_CURRENT_VERSION=$(bat --version | awk '{print $2}')
+    if [ "$(printf '%s\n' "$BAT_MIN_VERSION" "$BAT_CURRENT_VERSION" | sort -V | head -n1)" != "$BAT_MIN_VERSION" ]; then
+    gum_log_warning "The installed version of bat is lower than the minimum required version" CURRENT_VERSION "$BAT_CURRENT_VERSION" BAT_MIN_VERSION $BAT_MIN_VERSION
         if [ "$os_name" = "Linux" ]; then
-            if [ "$distribution" = "Ubuntu" ] then
-                gum_gum_log_debug "Installing for distribution:" $distribution
+            if [ "$distribution" = "Ubuntu" ]; then
+                gum_gum_log_debug "Installing for distribution:" "$distribution"
                 wget https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb
                 sudo dpkg -i bat_0.25.0_amd64.deb
                 rm -rf bat_0.25.0_amd64.deb
             elif [ "$distribution" = "Debian GNU/Linux" ]; then
-                gum_gum_log_debug "Installing for distribution:" $distribution
+                gum_gum_log_debug "Installing for distribution:" "$distribution"
                 curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-aarch64-unknown-linux-gnu.tar.gz
                 tar -xvf bat.zip
                 mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
                 ln -s /usr/bin/batcat/bat ~/.local/bin/bat 
             elif [ "$distribution" = "Amazon Linux" ]; then
-                gum_gum_log_debug "Installing for distribution:" $distribution
+                gum_gum_log_debug "Installing for distribution:" "$distribution"
                 curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz
                 tar -xvf bat.zip
                 mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
@@ -176,12 +176,12 @@ else
         elif [ "$os_name" = "Darwin" ]; then
             brew install bat
         fi
-        gum_gum_log_info "bat has been updated to the latest version."
+        gum_log_debug "bat has been updated to the latest version."
     else
-        gum_gum_log_info "The installed version of bat ($CURRENT_VERSION) is sufficient."
+        gum_log_debug "The installed version of bat ($BAT_CURRENT_VERSION) is sufficient."
     fi
 
-    gum_gum_log_info "bat is already installed"
+    gum_log_debug "bat is already installed"
     bat cache --build
 fi
 
@@ -239,21 +239,21 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     fi
 fi
 
-local GIT_MIN_VERSION="2.5.0"
-CURRENT_VERSION=$(git --version | awk '{print $3}')
-if [ "$(printf '%s\n' "$MIN_VERSION" "$CURRENT_VERSION" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
-gum_log_warning "The installed version of git is lower than the minimum required version" CURRENT_VERSION $CURRENT_VERSION BAT_MIN_VERSION $BAT_MIN_VERSION
+GIT_MIN_VERSION="2.5.0"
+GIT_CURRENT_VERSION=$(git --version | awk '{print $3}')
+if [ "$(printf '%s\n' "$GIT_MIN_VERSION" "$GIT_CURRENT_VERSION" | sort -V | head -n1)" != "$GIT_MIN_VERSION" ]; then
+gum_log_warning "The installed version of git is lower than the minimum required version" CURRENT_VERSION "$GIT_CURRENT_VERSION" BAT_MIN_VERSION "$GIT_MIN_VERSION"
     if [ "$os_name" = "Linux" ]; then
-        gum_gum_log_debug "Installing for distribution:" $distribution
+        gum_log_debug "Installing for distribution:" "$distribution"
         sudo add-apt-repository ppa:git-core/ppa
         sudo apt update
         sudo apt install git
     elif [ "$os_name" = "Darwin" ]; then
         brew install git
     fi
-    gum_gum_log_info "Git has been updated to the latest version."
+    gum_log_debug "Git has been updated to the latest version."
 else
-    gum_gum_log_info "The installed version of Git is sufficient." CURRENT_VERSION $CURRENT_VERSION
+    gum_log_debug "The installed version of Git is sufficient." CURRENT_VERSION "$GIT_CURRENT_VERSION"
 fi
 
 #! Check for translation dependencies
@@ -276,16 +276,29 @@ fi
 if ! command -v delta &> /dev/null; then
     gum_log_debug "Installing delta"
     if [ "$os_name" = "Linux" ]; then
-        if [ "$distribution" = "Ubuntu" ] || [ "$distribution" = "Debian GNU/Linux" ]; then
-            sudo apt install git-delta
-        elif [ "$distribution" = "Amazon Linux" ]; then
-            sudo yum install git-delta
-        fi
+        wget https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_amd64.deb
+        sudo dpkg -i git-delta_0.18.2_amd64.deb
+        rm -rf git-delta_0.18.2_amd64.deb
     elif [ "$os_name" = "Darwin" ]; then
         brew install git-delta
     fi
-    cat $HOME/dotfiles/git/delta_config.txt >> .gitconfig
+    cat "$HOME"/dotfiles/git/delta_config.txt >> .gitconfig
 else
+    DELTA_MIN_VERSION="0.24.0"
+    DELTA_CURRENT_VERSION=$(bat --version | awk '{print $2}')
+    if [ "$(printf '%s\n' "$DELTA_MIN_VERSION" "$DELTA_CURRENT_VERSION" | sort -V | head -n1)" != "$DELTA_MIN_VERSION" ]; then
+    gum_log_warning "The installed version of Delta is lower than the minimum required version" DELTA_CURRENT_VERSION "$DELTA_CURRENT_VERSION" DELTA_MIN_VERSION $DELTA_MIN_VERSION
+        if [ "$os_name" = "Linux" ]; then
+            wget https://github.com/dandavison/delta/releases/download/0.18.2/git-delta_0.18.2_amd64.deb
+            sudo dpkg -i git-delta_0.18.2_amd64.deb
+            rm -rf git-delta_0.18.2_amd64.deb
+        elif [ "$os_name" = "Darwin" ]; then
+            brew install delta
+        fi
+        gum_log_debug "Delta has been updated to the latest version."
+    else
+        gum_log_debug "The installed version of Delta ($DELTA_CURRENT_VERSION) is sufficient."
+    fi
     gum_log_info "Delta is already installed"
 fi
 
@@ -322,7 +335,7 @@ if [ "$UNATTENDED_INSTALLATION" == false ]; then
         if ask "Do you want to remove previous oh-my-zsh installation?"; then
             gum_log_debug "Removing oh-my-zsh"
             rm -f ~/.p10k.zsh
-            rm -rf -- ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+            rm -rf -- "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
             sh ~/.oh-my-zsh/tools/uninstall.sh -y
             rm -rf ~/.oh-my-zsh
             rm ~/.zshrc
@@ -339,7 +352,14 @@ if [ "$UNATTENDED_INSTALLATION" == false ]; then
     gum_log_info "Which files should be sourced?"
     for folder in *; do
         if [ -d "$folder" ]; then
-            if [[ ! " ${exclude_folders[@]} " =~ " ${folder} " ]]; then
+            exclude=false
+            for exclude_folder in "${exclude_folders[@]}"; do
+                if [[ "$folder" == "$exclude_folder" ]]; then
+                    exclude=true
+                    break
+                fi
+            done
+            if [ "$exclude" = false ]; then
                 filename=$(basename "$folder")
                 if ask "${filename}?"; then
                     stow -R "$folder"
