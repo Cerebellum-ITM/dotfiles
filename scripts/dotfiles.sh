@@ -8,7 +8,7 @@ function dotfiles_update() {
 }
 
 function dotfiles() {
-    if [[ "$1" == "pull" || "$1" == "-pl" ]]; then
+    if [[ "$1" == "update" || "$1" == "-u" ]]; then
         cd $HOME/dotfiles
         git pull
         source ~/.zshrc
