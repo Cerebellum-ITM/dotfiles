@@ -150,7 +150,38 @@ if ! command -v bat &> /dev/null; then
         brew install bat
     fi
 else
-    log_info "bat is already installed"
+    local BAT_MIN_VERSION="0.24.0"
+    CURRENT_VERSION=$(bat --version | awk '{print $2}')
+    if [ "$(printf '%s\n' "$MIN_VERSION" "$CURRENT_VERSION" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
+    gum_log_warning "The installed version of bat is lower than the minimum required version" CURRENT_VERSION $CURRENT_VERSION BAT_MIN_VERSION $BAT_MIN_VERSION
+        if [ "$os_name" = "Linux" ]; then
+            if [ "$distribution" = "Ubuntu" ] then
+                gum_gum_log_debug "Installing for distribution:" $distribution
+                wget https://github.com/sharkdp/bat/releases/download/v0.25.0/bat_0.25.0_amd64.deb
+                sudo dpkg -i bat_0.25.0_amd64.deb
+                rm -rf bat_0.25.0_amd64.deb
+            elif [ "$distribution" = "Debian GNU/Linux" ]; then
+                gum_gum_log_debug "Installing for distribution:" $distribution
+                curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-aarch64-unknown-linux-gnu.tar.gz
+                tar -xvf bat.zip
+                mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
+                ln -s /usr/bin/batcat/bat ~/.local/bin/bat 
+            elif [ "$distribution" = "Amazon Linux" ]; then
+                gum_gum_log_debug "Installing for distribution:" $distribution
+                curl -o bat.zip -L https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz
+                tar -xvf bat.zip
+                mv bat-v0.24.0-x86_64-unknown-linux-musl /usr/bin/batcat
+                ln -s /usr/bin/batcat/bat ~/.local/bin/bat 
+            fi
+        elif [ "$os_name" = "Darwin" ]; then
+            brew install bat
+        fi
+        gum_gum_log_info "bat has been updated to the latest version."
+    else
+        gum_gum_log_info "The installed version of bat ($CURRENT_VERSION) is sufficient."
+    fi
+
+    gum_gum_log_info "bat is already installed"
     bat cache --build
 fi
 
@@ -206,6 +237,23 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         gum_log_info "Installing xclip and xsel for Linux (Arch)"
         sudo pacman -Syu xclip xsel
     fi
+fi
+
+local GIT_MIN_VERSION="2.5.0"
+CURRENT_VERSION=$(git --version | awk '{print $3}')
+if [ "$(printf '%s\n' "$MIN_VERSION" "$CURRENT_VERSION" | sort -V | head -n1)" != "$MIN_VERSION" ]; then
+gum_log_warning "The installed version of git is lower than the minimum required version" CURRENT_VERSION $CURRENT_VERSION BAT_MIN_VERSION $BAT_MIN_VERSION
+    if [ "$os_name" = "Linux" ]; then
+        gum_gum_log_debug "Installing for distribution:" $distribution
+        sudo add-apt-repository ppa:git-core/ppa
+        sudo apt update
+        sudo apt install git
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install git
+    fi
+    gum_gum_log_info "Git has been updated to the latest version."
+else
+    gum_gum_log_info "The installed version of Git is sufficient." CURRENT_VERSION $CURRENT_VERSION
 fi
 
 #! Check for translation dependencies
