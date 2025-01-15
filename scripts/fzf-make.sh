@@ -87,7 +87,7 @@ execute_commands() {
 
 _select_odoo_module() {
     #* Find directories containing "addon", ignoring those in .git
-    local dir=$(find $working_dir -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
+    local dir=$(cd $working_dir && find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
         --prompt="Select a directory or press Ctrl+Z to include any directory: " \
         --preview="eza --tree --color=always --icons {} | head -200" \
         --bind "ctrl-z:execute(fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . -type d -not -path '*/.git/*'))")
@@ -114,8 +114,7 @@ _select_odoo_module() {
     history_entry+="update_module module_name=$subdir"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
-
-    make update_module module_name=$subdir
+    (cd $working_dir && make update_module module_name=$subdir > /dev/null 2>&1 | grep -v "Nothing to be done for")
 }
 
 
