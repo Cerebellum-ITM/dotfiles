@@ -154,9 +154,9 @@ create_commit() {
                         remote=$(git remote)
                         if git push "$remote" "$branch"
                             then
-                                gum_log_info "󰊢 - The commit was made successfully."
+                                gum_log_info "$(git_strong_red 󰊢) - The commit was made $(git_green_light  "successfully")."
                             else
-                                gum_log_info "󰊢 - There was a problem when making the commit."
+                                gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit in the $(gum_blue_bold_underline parent) repository."
                                 exit
                         fi
                     elif [[ "$1" == "submodule" ]]; then
@@ -167,9 +167,9 @@ create_commit() {
                         remote=$(git remote)
                         if git push "$remote" "$branch"
                             then
-                                gum_log_info "󰊢 - The commit was made successfully in the parent repository."
+                                gum_log_info "$(git_strong_red 󰊢) - The commit was made $(git_green_light  "successfully")."
                             else
-                                gum_log_info "󰊢 - There was a problem when making the commit in the parent repository."
+                                gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit in the $(gum_blue_bold_underline parent) repository."
                                 exit
                         fi
                         cd "$base_dir" || exit
