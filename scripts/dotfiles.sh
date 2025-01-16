@@ -13,8 +13,8 @@ function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
         shift
         local stash_output stash_message pull_output
-        gum_log_info "$(gum_yellow " ") DotFiles $(gum_blue_bold "Update")"
-        gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_green_underline "dotfiles") repository has begun $(git_strong_red  )" -- sleep 1
+        gum_log_info "$(git_strong_white_dark " ") dotfiles $(git_green "Update")"
+        gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_strong_white_dark "dotfiles") repository has begun $(git_strong_white_dark  )" -- sleep 1
         cd "$HOME/dotfiles" || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
         stash_output=$(git stash 2>&1) 
         if [[ "$stash_output" != *"No local changes to save"* ]]; then
@@ -23,7 +23,7 @@ function dotfiles() {
         else 
             gum_log_info "No local $(gum_yellow_bold "changes") to save."
         fi
-        pull_output=$(git pull2>&1)
+        pull_output=$(git pull 2>&1)
         if [[ "$pull_output" != *"Already up to date"* ]]; then
             gum_log_info "$(gum_green "") $(gum_yellow_bold "New") code download completed"
         else 
@@ -32,7 +32,7 @@ function dotfiles() {
         # shellcheck source=/dev/null
         source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
         cd - > /dev/null 2>&1 || { echo "Failed to return to previous directory"; return 1; }
-        gum_log_info "$(gum_yellow " ") DotFiles $(gum_blue_bold "Update")"
+        gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_green "complete")"
     elif [[ "$1" == "install" || "$1" == "-ins" ]]; then
         ansible-playbook "$HOME/dotfiles/ansible/sites.yml" -i "$HOME/dotfiles/ansible/inventory.ini" || { echo "Ansible playbook failed"; return 1; }
     fi
