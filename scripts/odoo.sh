@@ -1,12 +1,17 @@
-odoo() {
-    CADDYFILE_PATH="/etc/caddy/Caddyfile"
+# shellcheck shell=bash
+CADDY_FILE_PATH="/etc/caddy/Caddyfile"
 
-    if [ ! -f "$CADDYFILE_PATH" ]; then
-        echo "No Caddyfile configured at  $(purple_underlie $CADDYFILE_PATH)"
+_check_for_caddy_file(){
+    if [ ! -f "$CADDY_FILE_PATH" ]; then
+        gum_log_warning "No Caddyfile configured at" CADDY_FILE_PATH $CADDY_FILE_PATH
         return 1
     fi
+}
 
-    if [[ "$1" == "-p" && -n "$2" ]]; then
+
+odoo() {
+    if [[ "$1" == "--search-odoo-port" && -n "$2" || "$1" == "-p" && -n "$2" ]]; then
+        _check_for_caddy_file || return 1
         port=$2
         #* Search for the port in the Caddyfile
         url=$(awk -v port="$port" '
@@ -17,18 +22,32 @@ odoo() {
                 }
             }
             { prev = $0 }
-        ' "$CADDYFILE_PATH")
+        ' "$CADDY_FILE_PATH")
         
         if [[ -n "$url" ]]; then
-            echo "The URL for the port $(purple $port) is: $(blue_bold_underlie $url)"
+            echo "The URL for the port $(gum_blue_dark_bold_underline "$port") is: $(gum_blue_bold_underline "$url")"
         else
-            echo "There is no URL for the port $(red_bold $port)"
+            echo "There is no URL for the port $(git_strong_red "$port")"
         fi
-    elif [[ "$1" == "-l" ]]; then
-        cat "$CADDYFILE_PATH"
-    elif [[ "$1" == "-c" ]]; then
-        code "$CADDYFILE_PATH"
+    elif [[ "$1" == "--show-CaddyFile" || "$1" == "-sw" ]]; then
+        cat "$CADDY_FILE_PATH"
+    elif [[ "$1" == "--edit-CaddyFile" || "$1" == "-c" ]]; then
+        code "$CADDY_FILE_PATH"
     else
-        echo "List of available commands:\n Search for the URL of a port: $(green_bold '-p') $(purple_underlie '<port>'), Exmaple: $(blue_underlie 'odoo -p 8069')\n Print the $(yellow 'Caddyfile'): $(green_bold '-l')\n Open the $(cyan 'Caddyfile') in $(blue 'VSCode'): $(green_bold '-c')"
+        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md"
+        gum confirm "Search the commands" --timeout=3s && CONTINUE=true
+        if [[ $CONTINUE == "true" ]]; then
+            odoo_port=''
+            cmd_options=$(echo -e "--search-odoo-port\n--show-CaddyFile\n--edit-CaddyFile" | gum filter)
+            if [[ $cmd_options == '--search-odoo-port' ]]; then
+                odoo_port=$(gum input --cursor.foreground "#FF0" \
+                --prompt.foreground "#0FF" \
+                --prompt "* Witch Odoo port: " \
+                --placeholder "8080" \
+                --width 80
+                )
+                odoo "$cmd_options" "$odoo_port"
+            fi
+        fi
     fi
 }
