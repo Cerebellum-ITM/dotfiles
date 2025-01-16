@@ -8,19 +8,19 @@ _check_for_caddy_file(){
     fi
 }
 
-_create_a_change_log(){
+_create_a_changelog(){
     gum_log_info "$(gum_blue " ") $(git_strong_gray_light "Creating a ChangeLog.md file for the Odoo project.")"
     if [ -f "docker-compose.yml" ] || [ -f "docker-compose.yaml" ]; then
         local base_dir
         base_dir=$(pwd)
 
         if [ -f "$base_dir/CHANGELOG.md" ]; then
-            gum_log_warning "A CHANGELOG.md file already exists in the directory... discarding task"
+            gum_log_warning "$(gum_yellow_dark "A CHANGELOG.md file already exists in the directory... discarding task")"
             return 1
         fi
         
-        git -C "$base_dir" add "CHANGELOG.md"
         touch CHANGELOG.md
+        git add "CHANGELOG.md"
         git commit -m "[ADD] CHANGELOG.md: a file was added to keep track of changes in Odoo modules"
         gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
         gum_log_info "$(gum_cyan_dark "") $(git_strong_white_light "Task complete.")"
@@ -33,7 +33,7 @@ odoo() {
     if [[ "$1" == "--tools" || "$1" == "-t" ]]; then
         cmd_options=$(echo -e "ChangeLog: Add changelog to project" | gum filter)
         if [[ $cmd_options == *'ChangeLog'* ]]; then
-            _create_a_change_log
+            _create_a_changelog
         fi
     elif [[ "$1" == "--search-odoo-port" && -n "$2" || "$1" == "-p" && -n "$2" ]]; then
         _check_for_caddy_file || return 1
