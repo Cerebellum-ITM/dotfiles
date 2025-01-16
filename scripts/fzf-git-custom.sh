@@ -151,7 +151,7 @@ _force_push_to_repository(){
 # shellcheck disable=SC2120
 _push_to_repository(){
     declare -A args
-    local branch remote submodule flag
+    local cmd branch remote submodule flag
 
     for arg in "$@"; do
         key="${arg%%=*}"     
@@ -168,7 +168,11 @@ _push_to_repository(){
         submodule_message=$(gum_blue_bold_underline " in the $(gum_blue_bold_underline parent) repository")
     fi
 
-    if git push "$flag" "$remote" "$branch"
+    cmd=("git" "push")
+    cmd+=("$remote" "$branch")
+    [[ -n "$flag" ]] && cmd+=("$flag")
+
+    if "${cmd[@]}";
         then
             gum_log_info "$(git_strong_red 󰊢) - The commit has been uploaded $(git_green_light  "successfully")$submodule_message."
         else
@@ -356,7 +360,7 @@ fzf-git() {
         local remote branch
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
-        _push_to_repository "remote=$remote" "branch=$branch" "flag=u"
+        _push_to_repository "remote=$remote" "branch=$branch" "flag=-u"
     elif [[ "$1" == "--push" || "$1" == "-p" ]]; then
         _push_to_repository  
     elif [[ "$1" == "--push-force" || "$1" == "-pf" ]]; then
