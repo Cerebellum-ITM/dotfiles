@@ -87,6 +87,24 @@ _create_commit_options(){
     fi
 }
 
+_check_for_changelog(){
+    if [ -f "../CHANGELOG.md" ]; then
+        changelog_exists=true
+    fi
+}
+
+_write_in_changelog(){
+    local last_commit_info="$1"
+    local module_list="$2"
+    local changelog_path="../CHANGELOG.md"
+    {
+        echo "$last_commit_info"
+        echo $module_list | while read -r module; do
+            echo "  - Module: $module"
+        done
+    } >> "$changelog_path"
+}
+
 create_commit() {
     local commit_file="/tmp/fzf_git_commit"
     local commit_preview_file="/tmp/fzf_git_commit_preview"
@@ -107,9 +125,20 @@ create_commit() {
             local base_dir=$(pwd)
             local parent_dir=$(dirname "$base_dir")
             if [[ "$1" == "module" ]]; then
+                if [[ "$changelog_exists" ]]; then
+                    gum_log_info "Creating a change record in the Docker repository  " "changelog_exists" $changelog_exists
+                    module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
+                fi
                 git commit -F "$commit_file"
+                if [[ "$changelog_exists" ]]; then
+                    last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
+                    _write_in_changelog $last_commit_info $module_list
+                fi
             elif [[ "$1" == "submodule" ]]; then    
                 git -C "$parent_dir" add "$base_dir"
+                if [[ "$changelog_exists" ]]; then
+                    git -C "$parent_dir" add "CHANGELOG.md"
+                fi
                 git -C "$parent_dir" commit -F "$commit_file"
             fi
             if [[ -f /tmp/fzf_git_commit_options ]]; then
@@ -136,6 +165,9 @@ create_commit() {
 }
 
 fzf-git() {
+    module_list=''
+    changelog_exists=false
+    
     if [[ "$1" == "log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "status" || "$1" == "-s" ]]; then
@@ -154,6 +186,7 @@ fzf-git() {
         create_commit module
         fzf_git_check_abort || return 1
     elif [[ "$1" == "commit-submodule" || "$1" == "-scs" ]]; then
+        _check_for_changelog
         _fzf_git_files
         fzf_git_check_abort || return 1
         local type_of_commit
