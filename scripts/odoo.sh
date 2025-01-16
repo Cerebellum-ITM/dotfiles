@@ -34,8 +34,8 @@ odoo() {
     elif [[ "$1" == "--edit-CaddyFile" || "$1" == "-c" ]]; then
         code "$CADDY_FILE_PATH"
     else
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md"
-        gum confirm "Search the commands" --timeout=3s && CONTINUE=true
+        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md" | gum pager
+        gum confirm "Search the commands" && CONTINUE=true || CONTINUE=false
         if [[ $CONTINUE == "true" ]]; then
             odoo_port=''
             cmd_options=$(echo -e "--search-odoo-port\n--show-CaddyFile\n--edit-CaddyFile" | gum filter)
