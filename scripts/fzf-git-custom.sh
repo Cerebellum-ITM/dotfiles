@@ -215,13 +215,15 @@ fzf-git() {
         fzf_git_check_abort || return 1
         echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
         create_commit module
+        gum spin --spinner dot --title "$(git_strong_red ) Starting the $(git_strong_red commit) process in the $(gum_blue_bold_underline parent) repository" -- sleep 1.5
         fzf_git_check_abort || return 1
         submodule_commit_type=$(echo "$type_of_commit" | sed 's/[^a-zA-Z]//g')
         echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
         create_commit submodule
         fzf_git_check_abort || return 1
     elif [[ "$1" == "create-submodule-commit" || "$1" == "-csc" ]]; then
-        local commit_hash=$(_fzf_git_hashes)
+        local commit_hash
+        commit_hash=$(_fzf_git_hashes)
         commit_message=$(git log -1 --pretty=%B $commit_hash)
         submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
         file_or_folder=$(echo "$commit_message" | awk -F'[][]' '{print $2}' | awk -F' ' '{print $2}')
@@ -234,20 +236,24 @@ fzf-git() {
         git commit --amend --no-edit
         git push -f
     elif [[ "$1" == "-amend-submodule" || "$1" == "-ams" ]]; then
-        local base_dir=$(pwd)
-        local parent_dir=$(dirname "$base_dir")
+        local base_dir
+        local parent_dir
+        base_dir=$(pwd)
+        parent_dir=$(dirname "$base_dir")
         _fzf_git_files
         git commit --amend --no-edit
         git push -f
-        cd "$parent_dir"
-        local branch=$(git branch --show-current)
-        local remote=$(git remote)
+        cd "$parent_dir" || exit
+        local branch
+        local remote
+        branch=$(git branch --show-current)
+        remote=$(git remote)
         _fzf_git_files
         git commit --amend --no-edit
         git push -f $remote $branch
-        cd "$base_dir"
+        cd "$base_dir" || exit
     elif [[ "$1" == "checkout" || "$1" == "-ck" ]]; then
-        git checkout $(_fzf_git_branches)
+        git checkout "$(_fzf_git_branches)"
     elif [[ "$1" == "--checkout-new_branch" || "$1" == "-ckb" ]]; then
         if [[ -z "$2" ]]; then
             echo "$(red_bold 'Error: No branch name provided.')"
