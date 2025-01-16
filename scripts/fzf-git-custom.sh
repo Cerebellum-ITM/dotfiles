@@ -142,9 +142,9 @@ _force_push_to_repository(){
 
     if git push -f "$remote" "$branch"
         then
-            gum_log_info "$(git_strong_red 󰊢) - The commit was $(gum_red_underline "forced") into the repository $(git_green_light  "successfully")." "remote" "$remote" "branch" "$branch"
+            gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") was $(gum_red_underline "forced") into the repository $(git_green_light  "successfully")." "remote" "$remote" "branch" "$branch"
         else
-            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit in the $(gum_blue_bold_underline parent) repository."
+            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit") in the $(gum_blue_bold_underline parent) repository."
     fi
 }
 
@@ -174,9 +174,9 @@ _push_to_repository(){
 
     if "${cmd[@]}";
         then
-            gum_log_info "$(git_strong_red 󰊢) - The commit has been uploaded $(git_green_light  "successfully")$submodule_message."
+            gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") has been uploaded $(git_green_light  "successfully")$submodule_message."
         else
-            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit$submodule_message."
+            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit")$submodule_message."
     fi
 }
 
@@ -206,6 +206,7 @@ create_commit() {
                     module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
                 fi
                 git commit -F "$commit_file"
+                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
                 if [[ "$changelog_exists" ]]; then
                     last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
                     _write_in_changelog "$last_commit_info $module_list"
@@ -216,6 +217,7 @@ create_commit() {
                     git -C "$parent_dir" add "CHANGELOG.md"
                 fi
                 git -C "$parent_dir" commit -F "$commit_file"
+                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully") in the $(gum_blue_bold_underline parent) repository."
             fi
             if [[ -f /tmp/fzf_git_commit_options ]]; then
                 commit_options=$(cat /tmp/fzf_git_commit_options)
