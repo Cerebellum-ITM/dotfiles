@@ -115,7 +115,6 @@ _check_remote_source(){
         remote=$(git remote | gum choose)
     elif [[ "$remote_count" -eq 0 ]];then
         gun_log_fatal "$(git_strong_red 󱓌) - $(git_strong_red_bold "Error") There is no $(gum_cyan_bold "branch") to make the $(gum_yellow_underline "commit") in the repository."
-        exit
     else 
         remote=$(git remote)
     fi
@@ -146,7 +145,6 @@ _force_push_to_repository(){
             gum_log_info "$(git_strong_red 󰊢) - The commit was $(gum_red_underline "forced") into the repository $(git_green_light  "successfully")." "remote" "$remote" "branch" "$branch"
         else
             gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit in the $(gum_blue_bold_underline parent) repository."
-            exit
     fi
 }
 
@@ -175,7 +173,6 @@ _push_to_repository(){
             gum_log_info "$(git_strong_red 󰊢) - The commit has been uploaded $(git_green_light  "successfully")$submodule_message."
         else
             gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the commit$submodule_message."
-            exit
     fi
 }
 
