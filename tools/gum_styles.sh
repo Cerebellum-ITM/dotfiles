@@ -311,6 +311,78 @@ git_strong_red_dark_underline() {
     gum style --foreground="#B22222" --underline "$1"  # Underlined Firebrick Red
 }
 
+git_strong_gray() {
+    gum style --foreground="#808080" "$1"  # Strong Gray (Base)
+}
+
+git_strong_gray_light() {
+    gum style --foreground="#A9A9A9" "$1"  # Light Gray
+}
+
+git_strong_gray_dark() {
+    gum style --foreground="#696969" "$1"  # Dark Gray
+}
+
+git_strong_gray_bold() {
+    gum style --foreground="#808080" --bold "$1"  # Bold Strong Gray
+}
+
+git_strong_gray_light_bold() {
+    gum style --foreground="#A9A9A9" --bold "$1"  # Bold Light Gray
+}
+
+git_strong_gray_dark_bold() {
+    gum style --foreground="#696969" --bold "$1"  # Bold Dark Gray
+}
+
+git_strong_gray_underline() {
+    gum style --foreground="#808080" --underline "$1"  # Underlined Strong Gray
+}
+
+git_strong_gray_light_underline() {
+    gum style --foreground="#A9A9A9" --underline "$1"  # Underlined Light Gray
+}
+
+git_strong_gray_dark_underline() {
+    gum style --foreground="#696969" --underline "$1"  # Underlined Dark Gray
+}
+
+# Functions for git colors using neon white
+git_strong_white() {
+    gum style --foreground="#FFFFFF" "$1"  # Strong White (Base)
+}
+
+git_strong_white_light() {
+    gum style --foreground="#F5F5F5" "$1"  # Light White (Very Light Gray)
+}
+
+git_strong_white_dark() {
+    gum style --foreground="#DCDCDC" "$1"  # Dark White (Gainsboro)
+}
+
+git_strong_white_bold() {
+    gum style --foreground="#FFFFFF" --bold "$1"  # Bold Strong White
+}
+
+git_strong_white_light_bold() {
+    gum style --foreground="#F5F5F5" --bold "$1"  # Bold Light White
+}
+
+git_strong_white_dark_bold() {
+    gum style --foreground="#DCDCDC" --bold "$1"  # Bold Dark White
+}
+
+git_strong_white_underline() {
+    gum style --foreground="#FFFFFF" --underline "$1"  # Underlined Strong White
+}
+
+git_strong_white_light_underline() {
+    gum style --foreground="#F5F5F5" --underline "$1"  # Underlined Light White
+}
+
+git_strong_white_dark_underline() {
+    gum style --foreground="#DCDCDC" --underline "$1"  # Underlined Dark White
+}
 
 #* Function to print all styles
 gum_print_styles() {
@@ -389,4 +461,22 @@ gum_print_styles() {
     echo "git_strong_red_underline: $(git_strong_red_underline "This is Underlined Strong Red text.")"
     echo "git_strong_red_light_underline: $(git_strong_red_light_underline "This is Underlined Light Strong Red text.")"
     echo "git_strong_red_dark_underline: $(git_strong_red_dark_underline "This is Underlined Firebrick Red text.")"
+    echo "git_strong_gray: $(git_strong_gray "This is Strong Gray text.")"
+    echo "git_strong_gray_light: $(git_strong_gray_light "This is Light Gray text.")"
+    echo "git_strong_gray_dark: $(git_strong_gray_dark "This is Dark Gray text.")"
+    echo "git_strong_gray_bold: $(git_strong_gray_bold "This is Bold Strong Gray text.")"
+    echo "git_strong_gray_light_bold: $(git_strong_gray_light_bold "This is Bold Light Gray text.")"
+    echo "git_strong_gray_dark_bold: $(git_strong_gray_dark_bold "This is Bold Dark Gray text.")"
+    echo "git_strong_gray_underline: $(git_strong_gray_underline "This is Underlined Strong Gray text.")"
+    echo "git_strong_gray_light_underline: $(git_strong_gray_light_underline "This is Underlined Light Gray text.")"
+    echo "git_strong_gray_dark_underline: $(git_strong_gray_dark_underline "This is Underlined Dark Gray text.")"
+    echo "git_strong_white: $(git_strong_white "This is Strong White text.")"
+    echo "git_strong_white_light: $(git_strong_white_light "This is Light White text.")"
+    echo "git_strong_white_dark: $(git_strong_white_dark "This is Dark White text.")"
+    echo "git_strong_white_bold: $(git_strong_white_bold "This is Bold Strong White text.")"
+    echo "git_strong_white_light_bold: $(git_strong_white_light_bold "This is Bold Light White text.")"
+    echo "git_strong_white_dark_bold: $(git_strong_white_dark_bold "This is Bold Dark White text.")"
+    echo "git_strong_white_underline: $(git_strong_white_underline "This is Underlined Strong White text.")"
+    echo "git_strong_white_light_underline: $(git_strong_white_light_underline "This is Underlined Light White text.")"
+    echo "git_strong_white_dark_underline: $(git_strong_white_dark_underline "This is Underlined Dark White text.")"
 }
