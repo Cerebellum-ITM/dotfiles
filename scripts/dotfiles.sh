@@ -11,11 +11,17 @@ function dotfiles_update() {
 
 function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
+        local stash_output stash_message
         gum_log_info "$(gum_yellow " ") DotFiles $(gum_blue_bold "Update")"
         gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_green_underline "dotfiles") repository has begun $(git_strong_red  )" -- sleep 1
         shift
         cd "$HOME/dotfiles" || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
-        git stash
+        stash_output=$(git stash 2>&1) 
+        if [[ "$stash_output" != *"No local changes to save"* ]]; then
+            stash_message=$(git stash list -1)
+            gum_log_warning "$(gum_green "󱣫") There were $(gum_yellow_bold "changes") in the repository; these can be found in $stash_message"
+        fi
+        gum_log_info "$(gum_yellow " ") DotFiles $(gum_blue_bold "Update")"
         git pull || { echo "Failed to pull from git"; return 1; }
         # shellcheck source=/dev/null
         source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
