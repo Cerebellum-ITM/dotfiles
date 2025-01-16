@@ -13,7 +13,13 @@ _create_a_change_log(){
     if [ -f "docker-compose.yml" ] || [ -f "docker-compose.yaml" ]; then
         local base_dir
         base_dir=$(pwd)
-        git  "$base_dir" add "CHANGELOG.md"
+
+        if [ -f "$base_dir/CHANGELOG.md" ]; then
+            gum_log_warning "A CHANGELOG.md file already exists in the directory... discarding task"
+            return 1
+        fi
+        
+        git -C "$base_dir" add "CHANGELOG.md"
         touch CHANGELOG.md
         git commit -m "[ADD] CHANGELOG.md: a file was added to keep track of changes in Odoo modules"
         gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
