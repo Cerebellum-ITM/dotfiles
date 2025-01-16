@@ -26,6 +26,11 @@ function dotfiles() {
         pull_output=$(git pull 2>&1)
         if [[ "$pull_output" != *"Already up to date"* ]]; then
             gum_log_info "$(gum_green "") $(gum_yellow_bold "New") code download completed"
+        elif [[ "$pull_output" == *"fatal: Need to specify how to reconcile divergent branches."* ]]; then
+            gum_log_warning "$(gum_green "") $(gum_yellow_dark "It seems that there is a divergence when trying again using git reset.")"
+            git reset HEAD~1
+            git pull
+            gum_log_info "$(gum_red "") $(gum_yellow_bold "New") code download completed"
         else 
             gum_log_debug "$(git_strong_gray_light "$pull_output")"
         fi
