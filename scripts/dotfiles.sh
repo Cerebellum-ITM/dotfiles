@@ -20,6 +20,8 @@ function dotfiles() {
         if [[ "$stash_output" != *"No local changes to save"* ]]; then
             stash_message=$(git stash list -1)
             gum_log_warning "$(gum_green "󱣫") There were $(gum_yellow_bold "changes") in the repository; these can be found in $stash_message"
+        else 
+            gum_log_info "No local $(gum_yellow_bold "changes") to save."
         fi
         gum_log_info "$(gum_yellow " ") DotFiles $(gum_blue_bold "Update")"
         git pull || { echo "Failed to pull from git"; return 1; }
