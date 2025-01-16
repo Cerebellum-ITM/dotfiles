@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 fzf_select() {
     trap 'rm -f /tmp/initial_path' EXIT
 
@@ -15,7 +16,7 @@ fzf_select() {
     fi
     
     if [[ ! -f /tmp/initial_path ]]; then
-        echo $PWD > /tmp/initial_path
+        echo "$PWD" > /tmp/initial_path
     fi
     
     
@@ -45,10 +46,10 @@ fzf_select() {
 
         if [[ "$selected" == ".." ]]; then
             cd ..
-            fzf_select "$mode" $multi_select
+            fzf_select "$mode" "$multi_select"
         elif [[ "$mode" == "path_changer" && -d "$selected" ]]; then
-            cd "$selected"
-            fzf_select "select" $multi_select
+            cd "$selected" || exit
+            fzf_select "select" "$multi_select"
         else
             if [[ -n "$multi_select" ]]; then
                 echo $selected
@@ -56,7 +57,7 @@ fzf_select() {
                 echo "$(basename "$selected")"
             fi
             initial_path=$(cat /tmp/initial_path)
-            cd $initial_path
+            cd "$initial_path" || exit
             rm /tmp/initial_path
         fi
         break
@@ -70,7 +71,7 @@ fzf_select() {
 }
 fzf_git_check_abort(){
     if [ -f /tmp/fzf_git_exit_code ] && [ "$(cat /tmp/fzf_git_exit_code)" -eq 130 ]; then
-        echo $(red_bold "Process aborted")
+        echo "$(red_bold "Process aborted")"
         rm /tmp/fzf_git_exit_code
         return 1
     fi
@@ -125,14 +126,14 @@ create_commit() {
             local base_dir=$(pwd)
             local parent_dir=$(dirname "$base_dir")
             if [[ "$1" == "module" ]]; then
-                if [[ "$changelog_exists" ]]; then
-                    gum_log_info "Creating a change record in the Docker repository  " "changelog_exists" $changelog_exists
+                if [[ "$changelog_exists" == "true" ]]; then
+                    gum_log_info "Creating a change record in the Docker repository  " "changelog_exists" "$changelog_exists"
                     module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
                 fi
                 git commit -F "$commit_file"
                 if [[ "$changelog_exists" ]]; then
                     last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
-                    _write_in_changelog $last_commit_info $module_list
+                    _write_in_changelog "$last_commit_info $module_list"
                 fi
             elif [[ "$1" == "submodule" ]]; then    
                 git -C "$parent_dir" add "$base_dir"
@@ -147,15 +148,31 @@ create_commit() {
                 rm $commit_preview_file
                 if [[ "$commit_options" -eq 200 ]]; then
                     if [[ "$1" == "module" ]]; then
-                        local branch=$(git branch --show-current)
-                        local remote=$(git remote)
-                        git push $remote $branch
+                        local branch
+                        local remote
+                        branch=$(git branch --show-current)
+                        remote=$(git remote)
+                        if git push "$remote" "$branch"
+                            then
+                                gum_log_info "󰊢 - The commit was made successfully."
+                            else
+                                gum_log_info "󰊢 - There was a problem when making the commit."
+                                exit
+                        fi
                     elif [[ "$1" == "submodule" ]]; then
-                        cd "$parent_dir"
-                        local branch=$(git branch --show-current)
-                        local remote=$(git remote)
-                        git push $remote $branch
-                        cd "$base_dir"
+                        cd "$parent_dir" || exit
+                        local branch
+                        local remote
+                        branch=$(git branch --show-current)
+                        remote=$(git remote)
+                        if git push "$remote" "$branch"
+                            then
+                                gum_log_info "󰊢 - The commit was made successfully in the parent repository."
+                            else
+                                gum_log_info "󰊢 - There was a problem when making the commit in the parent repository."
+                                exit
+                        fi
+                        cd "$base_dir" || exit
                     fi
                 fi
             fi

@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 log_info() {
     echo -e "\033[32m$1\033[0m"

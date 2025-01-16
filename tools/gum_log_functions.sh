@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 gum_log_debug() {
     gum log --structured --time TimeOnly --level debug "$@"

@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 #Dev: tput config file
 
 blue() {

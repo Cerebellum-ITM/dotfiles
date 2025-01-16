@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 _fzf_templates_gui() {
     fzf-tmux --ansi	-m -p80%,60% -- \
         --layout=reverse --multi --height=50% --min-height=20 --border \
@@ -12,7 +13,7 @@ _odoo_template_list() {
     BASE_DIR="$HOME/dotfiles/templates/odoo"
     SELECTED_DIR=$(find "$BASE_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | _fzf_templates_gui)
     if [ -z "$DOCKER_COMPOSE_CMD" ]; then
-        echo $(red_bold 'DOCKER_COMPOSE_CMD is not set in ~/.docker-compose-config')
+        echo "$(red_bold 'DOCKER_COMPOSE_CMD is not set in ~/.docker-compose-config')"
         read -n 1 -s -r -p "Press any key to continue"
         exit 1
     fi
@@ -39,6 +40,6 @@ _odoo_template_list() {
         OUTPUT_FILE="Makefile"
         cp "$TEMPLATE_FILE" "$OUTPUT_FILE"
     else
-        cookiecutter $HOME/dotfiles/templates/odoo/$SELECTED_DIR
+        cookiecutter "$HOME/dotfiles/templates/odoo/$SELECTED_DIR"
     fi
 }

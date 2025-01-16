@@ -1,4 +1,4 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 gum_custom_color_style() {
     text=$1
@@ -202,6 +202,116 @@ gum_cyan_dark_bold_underline() {
     gum style --foreground="#008B8B" --bold --underline "$1"  # Dark Cyan Bold and Underlined
 }
 
+git_red_orange() {
+    gum style --foreground="#F14E32" "$1"  # Base Color (Red Orange)
+}
+
+git_red_orange_light() {
+    gum style --foreground="#FF7F5A" "$1"  # Light Red Orange
+}
+
+git_red_orange_dark() {
+    gum style --foreground="#C6391E" "$1"  # Dark Red Orange
+}
+
+git_red_orange_bold() {
+    gum style --foreground="#F14E32" --bold "$1"  # Bold Red Orange
+}
+
+git_red_orange_light_bold() {
+    gum style --foreground="#FF7F5A" --bold "$1"  # Bold Light Red Orange
+}
+
+git_red_orange_dark_bold() {
+    gum style --foreground="#C6391E" --bold "$1"  # Bold Dark Red Orange
+}
+
+git_red_orange_underline() {
+    gum style --foreground="#F14E32" --underline "$1"  # Underlined Red Orange
+}
+
+git_red_orange_light_underline() {
+    gum style --foreground="#FF7F5A" --underline "$1"  # Underlined Light Red Orange
+}
+
+git_red_orange_dark_underline() {
+    gum style --foreground="#C6391E" --underline "$1"  # Underlined Dark Red Orange
+}
+
+# Functions for git colors using green shades
+git_green() {
+    gum style --foreground="#32CD32" "$1"  # Lime Green (Base)
+}
+
+git_green_light() {
+    gum style --foreground="#66FF66" "$1"  # Light Green (Lighter Variant)
+}
+
+git_green_dark() {
+    gum style --foreground="#228B22" "$1"  # Forest Green (Darker Variant)
+}
+
+git_green_bold() {
+    gum style --foreground="#32CD32" --bold "$1"  # Lime Green Bold
+}
+
+git_green_light_bold() {
+    gum style --foreground="#66FF66" --bold "$1"  # Light Green Bold
+}
+
+git_green_dark_bold() {
+    gum style --foreground="#228B22" --bold "$1"  # Forest Green Bold
+}
+
+git_green_underline() {
+    gum style --foreground="#32CD32" --underline "$1"  # Lime Green Underlined
+}
+
+git_green_light_underline() {
+    gum style --foreground="#66FF66" --underline "$1"  # Light Green Underlined
+}
+
+git_green_dark_underline() {
+    gum style --foreground="#228B22" --underline "$1"  # Forest Green Underlined
+}
+
+git_strong_red() {
+    gum style --foreground="#FF0000" "$1"  # Strong Red (Base)
+}
+
+git_strong_red_light() {
+    gum style --foreground="#FF4D4D" "$1"  # Light Strong Red
+}
+
+git_strong_red_dark() {
+    gum style --foreground="#B22222" "$1"  # Firebrick Red (Darker Variant)
+}
+
+git_strong_red_bold() {
+    gum style --foreground="#FF0000" --bold "$1"  # Bold Strong Red
+}
+
+git_strong_red_light_bold() {
+    gum style --foreground="#FF4D4D" --bold "$1"  # Bold Light Strong Red
+}
+
+git_strong_red_dark_bold() {
+    gum style --foreground="#B22222" --bold "$1"  # Bold Firebrick Red
+}
+
+git_strong_red_underline() {
+    gum style --foreground="#FF0000" --underline "$1"  # Underlined Strong Red
+}
+
+git_strong_red_light_underline() {
+    gum style --foreground="#FF4D4D" --underline "$1"  # Underlined Light Strong Red
+}
+
+git_strong_red_dark_underline() {
+    gum style --foreground="#B22222" --underline "$1"  # Underlined Firebrick Red
+}
+
+
 #* Function to print all styles
 gum_print_styles() {
     echo "gum_blue: $(gum_blue "Neon Blue text")"
@@ -252,4 +362,31 @@ gum_print_styles() {
     echo "gum_purple_dark_bold_underline: $(gum_purple_dark_bold_underline "Darker Purple bold and underlined text")"
     echo "gum_cyan_bold_underline: $(gum_cyan_bold_underline "Neon Cyan bold and underlined text")"
     echo "gum_cyan_dark_bold_underline: $(gum_cyan_dark_bold_underline "Darker Cyan bold and underlined text")"
+    echo "git_red_orange: $(git_red_orange "This is Red Orange text.")"
+    echo "git_red_orange_light: $(git_red_orange_light "This is Light Red Orange text.")"
+    echo "git_red_orange_dark: $(git_red_orange_dark "This is Dark Red Orange text.")"
+    echo "git_red_orange_bold: $(git_red_orange_bold "This is Bold Red Orange text.")"
+    echo "git_red_orange_light_bold: $(git_red_orange_light_bold "This is Bold Light Red Orange text.")"
+    echo "git_red_orange_dark_bold: $(git_red_orange_dark_bold "This is Bold Dark Red Orange text.")"
+    echo "git_red_orange_underline: $(git_red_orange_underline "This is Underlined Red Orange text.")"
+    echo "git_red_orange_light_underline: $(git_red_orange_light_underline "This is Underlined Light Red Orange text.")"
+    echo "git_red_orange_dark_underline: $(git_red_orange_dark_underline "This is Underlined Dark Red Orange text.")"
+    echo "git_green: $(git_green "This is Lime Green text.")"
+    echo "git_green_light: $(git_green_light "This is Light Green text.")"
+    echo "git_green_dark: $(git_green_dark "This is Dark Forest Green text.")"
+    echo "git_green_bold: $(git_green_bold "This is Bold Lime Green text.")"
+    echo "git_green_light_bold: $(git_green_light_bold "This is Bold Light Green text.")"
+    echo "git_green_dark_bold: $(git_green_dark_bold "This is Bold Dark Forest Green text.")"
+    echo "git_green_underline: $(git_green_underline "This is Underlined Lime Green text.")"
+    echo "git_green_light_underline: $(git_green_light_underline "This is Underlined Light Green text.")"
+    echo "git_green_dark_underline: $(git_green_dark_underline "This is Underlined Dark Forest Green text.")"
+    echo "git_strong_red: $(git_strong_red "This is Strong Red text.")"
+    echo "git_strong_red_light: $(git_strong_red_light "This is Light Strong Red text.")"
+    echo "git_strong_red_dark: $(git_strong_red_dark "This is Dark Firebrick Red text.")"
+    echo "git_strong_red_bold: $(git_strong_red_bold "This is Bold Strong Red text.")"
+    echo "git_strong_red_light_bold: $(git_strong_red_light_bold "This is Bold Light Strong Red text.")"
+    echo "git_strong_red_dark_bold: $(git_strong_red_dark_bold "This is Bold Firebrick Red text.")"
+    echo "git_strong_red_underline: $(git_strong_red_underline "This is Underlined Strong Red text.")"
+    echo "git_strong_red_light_underline: $(git_strong_red_light_underline "This is Underlined Light Strong Red text.")"
+    echo "git_strong_red_dark_underline: $(git_strong_red_dark_underline "This is Underlined Firebrick Red text.")"
 }

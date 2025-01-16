@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2296
 __fzf_translate_script=${BASH_SOURCE[0]:-${(%):-%x}}
 FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-translate_history.log"
 
@@ -16,7 +18,7 @@ fi
 
 _fzf_translate_main_function() {
     entry=$(_fzf_translate_gui)
-    echo $(grep "^$PWD ~ $entry" "$FZF_TRANSLATE_HISTORY_FILE" | awk -F " ~ " '{print $3}' | head -n 1)
+    echo "$(grep "^$PWD ~ $entry" "$FZF_TRANSLATE_HISTORY_FILE" | awk -F " ~ " '{print $3}' | head -n 1)"
 }
 
 _fzf_translate_gui() {

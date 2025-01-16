@@ -19,8 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
+# shellcheck shell=bash
 # shellcheck disable=SC2039
+# shellcheck disable=SC2296
 [[ $0 = - ]] && return
 
 __fzf_git_color() {

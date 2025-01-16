@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 working_dir=""
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 
