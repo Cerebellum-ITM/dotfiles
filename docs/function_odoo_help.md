@@ -3,17 +3,37 @@
 This document lists the available commands and their usage.
 
 ## Command Options
+-   ## Command Options
 
--  **Search for the URL of a port**: 
-  - Herramientas de odoo:
-    - Use `-tools` or `-t` then select de tool
-      - ChangeLog: Adds a CHANGELOG.md file to the project to keep track of changes in the system.
-      
-  - Use `-p <port>` to specify the port.
-  - Example: `odoo -p 8069`
+-  ### **Tools**: The command has a number of options
+    - Commands: `< --tools >` or `< -t >`
+    - Usage: 
+        - If the subcommand ChangeLog: Create a CHANGELOG.md file in the folder provided you have a docker-compose file The rest of the operation is in `_create_a_changelog`
+        - Example: 
+          ```bash 
+          if [[ $cmd_options == *'ChangeLog'* ]]; then
+              _create_a_changelog
+          fi
+          ```
 
--  **Print the** `Caddyfile`:
-  - Use `-l` to print the Caddyfile.
+-   ### **Search for the URL of a port**: 
+    - **Description**: Search for the URL associated with a specific Odoo port.
+    - **Flags**: 
+      - `< --search-odoo-port >` or `< -p >`
+    - **Usage**: 
+      - Use `-p < port >` to specify the port.
+      - Example: `odoo -p 8069`
 
--  **Open the** `Caddyfile` **in** `VSCode`:
-  - Use `-c` to open the Caddyfile in Visual Studio Code.
+-   ### **Print the Caddyfile**:
+    - **Description**: Print the contents of the Caddyfile.
+    - **Flags**: 
+      - `< --show-CaddyFile >` or `< -sw >`
+    - **Usage**: 
+      - Use `-l` to print the Caddyfile.
+
+-   ### **Open the Caddyfile in VSCode**:
+    - **Description**: Open the Caddyfile for editing in Visual Studio Code.
+    - **Flags**: 
+      - `< --edit-CaddyFile >` or `< -c >`
+    - **Usage**: 
+      - Use `-c` to open the Caddyfile in VSCode

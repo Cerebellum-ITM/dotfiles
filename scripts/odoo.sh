@@ -62,6 +62,7 @@ odoo() {
         gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md" | gum pager
         gum confirm "Search the commands" && CONTINUE=true || CONTINUE=false
         if [[ $CONTINUE == "true" ]]; then
+            local cmd_options odoo_port
             odoo_port=''
             cmd_options=$(echo -e "--search-odoo-port\n--show-CaddyFile\n--edit-CaddyFile" | gum filter)
             if [[ $cmd_options == '--search-odoo-port' ]]; then
@@ -71,8 +72,8 @@ odoo() {
                 --placeholder "8080" \
                 --width 80
                 )
-                odoo "$cmd_options" "$odoo_port"
             fi
+            odoo "$cmd_options" "$odoo_port"
         fi
     fi
 }
