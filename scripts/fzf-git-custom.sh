@@ -207,13 +207,13 @@ create_commit() {
                 fi
                 git commit -F "$commit_file"
                 gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
-                if [[ "$changelog_exists" ]]; then
+                if [[ "$changelog_exists" == "true" ]]; then
                     last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
                     _write_in_changelog "$last_commit_info $module_list"
                 fi
             elif [[ "$1" == "submodule" ]]; then    
                 git -C "$parent_dir" add "$base_dir"
-                if [[ "$changelog_exists" ]]; then
+                if [[ "$changelog_exists" == "true" ]]; then
                     git -C "$parent_dir" add "CHANGELOG.md"
                 fi
                 git -C "$parent_dir" commit -F "$commit_file"
@@ -239,9 +239,6 @@ create_commit() {
 }
 
 fzf-git() {
-    module_list=''
-    changelog_exists=false
-    
     if [[ "$1" == "--log" || "$1" == "-l" ]]; then
         _fzf_git_hashes 
     elif [[ "$1" == "--status" || "$1" == "-s" ]]; then
@@ -260,7 +257,9 @@ fzf-git() {
         create_commit module
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--commit-submodule" || "$1" == "-scs" ]]; then
-        _check_for_changelog
+        local module_list changelog_exists
+        module_list=''
+        changelog_exists=false
         _fzf_git_files
         fzf_git_check_abort || return 1
         local type_of_commit
@@ -271,8 +270,9 @@ fzf-git() {
         message=$(_fzf_translate_main_function)
         fzf_git_check_abort || return 1
         echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
+        _check_for_changelog
         create_commit module
-        gum spin --spinner dot --title "$(git_strong_red ) Starting the $(git_strong_red commit) process in the $(gum_blue_bold_underline parent) repository" -- sleep 1.5
+        gum spin --spinner dot --title "$(git_strong_red ) Starting the $(git_strong_red commit) process in the $(gum_blue_bold_underline parent) repository" -- sleep 0.5
         fzf_git_check_abort || return 1
         submodule_commit_type=$(echo "$type_of_commit" | sed 's/[^a-zA-Z]//g')
         echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
