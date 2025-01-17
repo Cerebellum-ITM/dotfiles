@@ -35,7 +35,7 @@ run_and_pipe_output_to_gum_log(){
 
     cmd_output=$($cmd 2>&1)
     echo "$cmd_output" | while IFS= read -r line; do
-        $function_log "$line"
+        $function_log "$(git_strong_gray_light "$line")"
     done
 }
 
@@ -53,6 +53,6 @@ pipe_output_to_gum_log(){
     function_log="${args["function_log"]:-""}"
 
     echo "$cmd_output" | while IFS= read -r line; do
-        $function_log "$line"
+        $function_log "$(git_strong_gray_light "$line")"
     done
 }
