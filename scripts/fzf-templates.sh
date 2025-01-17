@@ -6,12 +6,12 @@ _fzf_templates_gui() {
         --color='header:italic:underline,label:blue' \
         --preview-window='right,80%,border-left' \
         --header='Select the template to use' \
-        --preview="tree -C $HOME/dotfiles/templates/odoo/{}"
+        --preview="eza --tree --color=always --icons $HOME/dotfiles/templates/odoo/{}"
 }
 
 _odoo_template_list() {
     BASE_DIR="$HOME/dotfiles/templates/odoo"
-    SELECTED_DIR=$(find "$BASE_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | _fzf_templates_gui)
+    SELECTED_DIR=$(find "$BASE_DIR" -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | _fzf_templates_gui) || return 1
     if [ -z "$DOCKER_COMPOSE_CMD" ]; then
         echo "$(red_bold 'DOCKER_COMPOSE_CMD is not set in ~/.docker-compose-config')"
         read -n 1 -s -r -p "Press any key to continue"
