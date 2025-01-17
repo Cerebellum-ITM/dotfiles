@@ -24,12 +24,13 @@ function dotfiles() {
             gum_log_info "No local $(gum_yellow_bold "changes") to save."
         fi
         pull_output=$(git pull 2>&1)
+        pipe_output_to_gum_log "cmd_output=$pull_output" "function_log=gum_log_debug"
         if [[ "$pull_output" != *"Already up to date"* ]]; then
             gum_log_info "$(gum_green "") $(gum_yellow_bold "New") code download completed"
         elif [[ "$pull_output" == *"fatal: Need to specify how to reconcile divergent branches."* ]]; then
             gum_log_warning "$(gum_green "") $(gum_yellow_dark "It seems that there is a divergence when trying again using git reset.")"
-            git reset HEAD~1
-            git pull
+            pipe_output_to_gum_log "cmd=git reset HEAD~1" "function_log=gum_log_debug"
+            pipe_output_to_gum_log "cmd=git pull" "function_log=gum_log_debug"
             gum_log_info "$(gum_red "") $(gum_yellow_bold "New") code download completed"
         else 
             gum_log_debug "$(git_strong_gray_light "$pull_output")"
