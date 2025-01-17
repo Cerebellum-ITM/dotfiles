@@ -100,7 +100,7 @@ _write_in_changelog(){
     last_commit_info="$1"
     module_list="$2"
     changelog_path="../CHANGELOG.md"
-
+    
     {
         echo "$last_commit_info"
         echo "$module_list" | while read -r module; do
@@ -209,7 +209,7 @@ create_commit() {
                 gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
                 if [[ "$changelog_exists" == "true" ]]; then
                     last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
-                    _write_in_changelog "$last_commit_info $module_list"
+                    _write_in_changelog "$last_commit_info" "$module_list"
                 fi
             elif [[ "$1" == "submodule" ]]; then    
                 git -C "$parent_dir" add "$base_dir"
