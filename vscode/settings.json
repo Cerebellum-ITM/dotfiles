@@ -354,4 +354,7 @@
     },
     "security.promptForRemoteFileProtocolHandling": false,
     "editor.lineNumbers": "relative",
+    "editor.minimap.enabled": false,
+    "editor.rulers": [
+    ],
 }

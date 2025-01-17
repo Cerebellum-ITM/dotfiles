@@ -396,12 +396,12 @@ fzf-git() {
         hash2=$(echo "$hashes" | sed -n '2p')
         git diff "$hash1" "$hash2"
     elif [[ "$1" == "--help" || "$1" == "-h" ]]; then
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager
+        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
     else
         local cmd_options branch_name
         branch_name=""
 
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager
+        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
         gum confirm "Search the commands" && CONTINUE=true || CONTINUE=false
         if [[ $CONTINUE == "true" ]]; then
             cmd_options=$(echo -e "--log\n--cherry\n--cherry-with-submodule\n--status\n--commit\n--commit-submodule\n--create-submodule-commit\n--amend\n--amend-submodule\n--checkout\n--checkout-new_branch\n--checkout-remote-branch\n--delete-branch\n--remote\n--stash\n--reset\n--push-interactive\n--push-interactive-upstream\n--push\n--push-force\n--pull\n--assume-unchanged\n--no-assume-unchanged\n--diff" | gum filter)

@@ -59,7 +59,7 @@ odoo() {
     elif [[ "$1" == "--edit-CaddyFile" || "$1" == "-c" ]]; then
         code "$CADDY_FILE_PATH"
     else
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md" | gum pager
+        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md" | gum pager --soft-wrap=false
         gum confirm "Search the commands" && CONTINUE=true || CONTINUE=false
         if [[ $CONTINUE == "true" ]]; then
             local cmd_options odoo_port

@@ -8,7 +8,8 @@ This document lists the available commands and their usage.
 -  ### **Tools**: The command has a number of options
     - Commands: `< --tools >` or `< -t >`
     - Usage: 
-        - If the subcommand ChangeLog: Create a CHANGELOG.md file in the folder provided you have a docker-compose file The rest of the operation is in `_create_a_changelog`
+        - If the subcommand ChangeLog: Create a CHANGELOG.md file in the folder provided you have a 
+        docker-compose file The rest of the operation is in `_create_a_changelog`
         - Example: 
           ```bash 
           if [[ $cmd_options == *'ChangeLog'* ]]; then
