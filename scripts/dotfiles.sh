@@ -12,7 +12,8 @@ function dotfiles_update() {
 function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
         shift
-        local stash_output stash_message pull_output
+        local stash_output stash_message pull_output pull_successful
+        pull_successful=false
         gum_log_info "$(git_strong_white_dark " ") dotfiles $(git_green "Update")"
         gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_strong_white_dark "dotfiles") repository has begun $(git_strong_white_dark  )" -- sleep 1
         cd "$HOME/dotfiles" || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
@@ -25,15 +26,19 @@ function dotfiles() {
         fi
         pull_output=$(git pull 2>&1)
         if [[ "$pull_output" != *"Already up to date"* ]]; then
+            pull_successful=true
             pipe_output_to_gum_log "cmd_output=$pull_output" "function_log=gum_log_debug"
             gum_log_info "$(gum_green "") $(gum_yellow_bold "New") code download completed"
-        elif [[ "$pull_output" == *"fatal: Need to specify how to reconcile divergent branches."* ]]; then
+        fi
+
+        if [[ "$pull_successful" == 'false' ]]; then
             gum_log_warning "$(gum_green "") $(gum_yellow_dark "It seems that there is a divergence when trying again using git reset.")"
-            git reset HEAD~1
+            git reset --hard HEAD~1
             pull_output=$(git pull 2>&1)
             pipe_output_to_gum_log "cmd_output=$pull_output" "function_log=gum_log_debug"
             gum_log_info "$(gum_red "") $(gum_yellow_bold "New") code download completed"
         fi
+
         # shellcheck source=/dev/null
         source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
         cd - > /dev/null 2>&1 || { echo "Failed to return to previous directory"; return 1; }
