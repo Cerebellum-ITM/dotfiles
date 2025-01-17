@@ -28,13 +28,11 @@ This document lists the available commands and their usage.
 -   ### **Print the Caddyfile**:
     - **Description**: Print the contents of the Caddyfile.
     - **Flags**: 
-      - `< --show-CaddyFile >` or `< -sw >`
-    - **Usage**: 
-      - Use `-l` to print the Caddyfile.
+      - `< --show-CaddyFile >` or `< -sh >`
 
 -   ### **Open the Caddyfile in VSCode**:
     - **Description**: Open the Caddyfile for editing in Visual Studio Code.
     - **Flags**: 
-      - `< --edit-CaddyFile >` or `< -c >`
+      - `< --edit-CaddyFile >` or `< -e >`
     - **Usage**: 
       - Use `-c` to open the Caddyfile in VSCode

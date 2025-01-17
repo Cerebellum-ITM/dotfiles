@@ -35,7 +35,11 @@ odoo() {
         if [[ $cmd_options == *'ChangeLog'* ]]; then
             _create_a_changelog
         fi
-    elif [[ "$1" == "--search-odoo-port" && -n "$2" || "$1" == "-p" && -n "$2" ]]; then
+    elif [[ "$1" == "--search-odoo-port"  || "$1" == "-p" ]]; then
+        if [[ ! "$2" ]]; then
+            gun_log_fatal "$(gum_red "") $(git_strong_red_dark "You did not enter the port you want to search for.")"
+            return 1
+        fi
         _check_for_caddy_file || return 1
         port=$2
         #* Search for the port in the Caddyfile
@@ -54,9 +58,9 @@ odoo() {
         else
             echo "There is no URL for the port $(git_strong_red "$port")"
         fi
-    elif [[ "$1" == "--show-CaddyFile" || "$1" == "-sw" ]]; then
+    elif [[ "$1" == "--show-CaddyFile" || "$1" == "-sh" ]]; then
         cat "$CADDY_FILE_PATH"
-    elif [[ "$1" == "--edit-CaddyFile" || "$1" == "-c" ]]; then
+    elif [[ "$1" == "--edit-CaddyFile" || "$1" == "-e" ]]; then
         code "$CADDY_FILE_PATH"
     else
         gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_odoo_help.md" | gum pager --soft-wrap=false
