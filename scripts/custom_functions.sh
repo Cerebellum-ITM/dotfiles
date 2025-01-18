@@ -10,7 +10,7 @@ fzf_select() {
     local directories multi_select mode new_mode
     
     multi_select=""
-    mode="${1:-select}"
+    mode="${1:-"path_changer"}"
     if [[ "$1" == "-m" ]]; then
         multi_select="-m"
         mode="select"
