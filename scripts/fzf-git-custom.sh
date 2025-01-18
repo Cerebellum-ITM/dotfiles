@@ -1,9 +1,10 @@
 # shellcheck shell=bash
 fzf_select() {
     trap 'rm -f /tmp/initial_path' EXIT
-
-    local multi_select=""
-    local mode="${1:-select}"
+    local directories multi_select mode new_mode
+    
+    multi_select=""
+    mode="${1:-select}"
     if [[ "$1" == "-m" ]]; then
         multi_select="-m"
         mode="select"
@@ -22,10 +23,10 @@ fzf_select() {
     
     while true; do
         if [[ "$mode" == "select" ]]; then
-            header="Modo: SELECT (ctrl-w para cambiar a PATH CHANGER) - CTRL-X (abort)"
+            header="MODE: SELECT (Press TAB to change to PATH CHANGER) - CTRL-X (abort)"
             color="header:bright-green"
         else
-            header="Modo: PATH CHANGER (ctrl-s para cambiar a SELECT) - CTRL-X (abort)"
+            header="MODE: PATH CHANGER (Press Shift-TAB to change to SELECT) - CTRL-X (abort)"
             color="header:bright-magenta"
         fi
 
@@ -36,10 +37,10 @@ fzf_select() {
                 --header="$header" \
                 --color="$color" \
                 --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \
-                --bind 'ctrl-w:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
-                --bind 'ctrl-s:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
+                --bind 'tab:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
+                --bind 'shift-tab:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
             )
-
+        
         if [[ -z "$selected" ]]; then
             break
         fi
@@ -48,16 +49,25 @@ fzf_select() {
             cd ..
             fzf_select "$mode" "$multi_select"
         elif [[ "$mode" == "path_changer" && -d "$selected" ]]; then
-            cd "$selected" || exit
-            fzf_select "select" "$multi_select"
+            cd "$selected" || return 1
+
+            directories=$(find . -maxdepth 1 -type d ! -name '.')
+            if [[ -n "$directories" ]]; then
+                new_mode="path_changer"
+            else
+                new_mode="select"
+            fi
+
+            fzf_select "$new_mode" "$multi_select"
         else
+            #? REMOVE?
             if [[ -n "$multi_select" ]]; then
                 echo $selected
             else
                 echo "$(basename "$selected")"
             fi
             initial_path=$(cat /tmp/initial_path)
-            cd "$initial_path" || exit
+            cd "$initial_path" || return 1
             rm /tmp/initial_path
         fi
         break
@@ -66,12 +76,13 @@ fzf_select() {
     if [[ -f /tmp/fzf_mode ]]; then
         mode=$(cat /tmp/fzf_mode)
         rm /tmp/fzf_mode
-        fzf_select "$mode" $multi_select
+        fzf_select "$mode" "$multi_select"
     fi
 }
+
 fzf_git_check_abort(){
     if [ -f /tmp/fzf_git_exit_code ] && [ "$(cat /tmp/fzf_git_exit_code)" -eq 130 ]; then
-        echo "$(red_bold "Process aborted")"
+        gun_log_fatal "Process aborted by the user"
         rm /tmp/fzf_git_exit_code
         return 1
     fi
