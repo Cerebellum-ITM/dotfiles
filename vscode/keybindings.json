@@ -208,5 +208,15 @@
     {
         "key": "shift+alt+tab",
         "command": "workbench.action.gotoLine"
+    },
+    {
+        "key": "cmd+k cmd+o",
+        "command": "editor.toggleFold",
+        "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "cmd+k cmd+l",
+        "command": "-editor.toggleFold",
+        "when": "editorTextFocus && foldingEnabled"
     }
 ]
