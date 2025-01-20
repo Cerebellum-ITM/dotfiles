@@ -218,5 +218,27 @@
         "key": "cmd+k cmd+l",
         "command": "-editor.toggleFold",
         "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "cmd+k r",
+        "command": "editor.action.rename",
+        "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "f2",
+        "command": "-editor.action.rename",
+        "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k ,",
+        "command": "workbench.action.keybindingsReference"
+    },
+    {
+        "key": "cmd+k cmd+r",
+        "command": "-workbench.action.keybindingsReference"
+    },
+    {
+        "key": "cmd+k r",
+        "command": "-workbench.action.files.revealActiveFileInWindows"
     }
 ]
