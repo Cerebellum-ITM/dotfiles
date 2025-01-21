@@ -64,6 +64,11 @@ fzf_select() {
                 new_mode="select"
             fi
 
+            CURRENT_DIR_NAME=$(basename "$PWD")
+            if [[ "$CURRENT_DIR_NAME" == *addons* ]]; then
+                new_mode="select"
+            fi
+
             fzf_select "$new_mode" "$multi_select"
         else
             #? REMOVE?
