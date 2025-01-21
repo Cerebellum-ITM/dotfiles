@@ -7,6 +7,27 @@ fzf_git_check_abort(){
     fi
 }
 
+_check_for_git_repository(){
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        gun_log_fatal "There is no $(git_strong_red "git repository") in this $(git_strong_white "directory")."
+        return 1
+    fi
+}
+
+_check_for_git_repository_and_submodule(){
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        gun_log_fatal "There is no $(git_strong_red "git repository") in this $(git_strong_white "directory")."
+        return 1
+    fi
+    cd .. || return 1
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        gun_log_fatal "There is no $(git_strong_red "git repository") in the $(gum_blue "parent") $(git_strong_white "directory")."
+        cd - > /dev/null 2>&1 || return 1
+        return 1
+    fi
+    cd - > /dev/null 2>&1 || return 1
+}
+
 _create_fzf_select(){
     local mode
     mode=""
@@ -180,10 +201,13 @@ create_commit() {
 
 fzf-git() {
     if [[ "$1" == "--log" || "$1" == "-l" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_hashes 
     elif [[ "$1" == "--status" || "$1" == "-s" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_files
     elif [[ "$1" == "--commit" || "$1" == "-sc" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_files
         fzf_git_check_abort || return 1
         local type_of_commit
@@ -198,6 +222,7 @@ fzf-git() {
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--commit-submodule" || "$1" == "-scs" ]]; then
         local module_list changelog_exists
+        _check_for_git_repository_and_submodule || return 1
         module_list=''
         changelog_exists=false
         _fzf_git_files
@@ -220,8 +245,9 @@ fzf-git() {
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--create-submodule-commit" || "$1" == "-csc" ]]; then
         local commit_hash
+        _check_for_git_repository_and_submodule || return 1
         commit_hash=$(_fzf_git_hashes)
-        commit_message=$(git log -1 --pretty=%B $commit_hash)
+        commit_message=$(git log -1 --pretty=%B "$commit_hash")
         submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
         file_or_folder=$(echo "$commit_message" | awk -F'[][]' '{print $2}' | awk -F' ' '{print $2}')
         message=$(echo "$commit_message" | sed -n 's/^\[.*\] .*: \(.*\)/\1/p')
@@ -229,11 +255,13 @@ fzf-git() {
         create_commit submodule
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--amend" || "$1" == "-am" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_files
         git commit --amend --no-edit
         _force_push_to_repository
     elif [[ "$1" == "--amend-submodule" || "$1" == "-ams" ]]; then
         local base_dir parent_dir branch remote
+        _check_for_git_repository || return 1
         base_dir=$(pwd)
         parent_dir=$(dirname "$base_dir")
         _fzf_git_files
@@ -247,8 +275,10 @@ fzf-git() {
         _force_push_to_repository "remote=$remote" "branch=$branch" "submodule=true"
         cd "$base_dir" || exit
     elif [[ "$1" == "--checkout" || "$1" == "-ck" ]]; then
+        _check_for_git_repository || return 1
         git checkout "$(_fzf_git_branches)"
     elif [[ "$1" == "--checkout-new_branch" || "$1" == "-ckb" ]]; then
+        _check_for_git_repository || return 1
         if [[ -z "$2" ]]; then
             gun_log_fatal "$(gum_red_bold 'Error'): No $(gum_green_bold_underline "branch name") provided"
             gum_log_warning "$(gum_yellow_underline "Usage"): $(gum_blue_underline '󰘳 --checkout-new_branch') $(gum_red_bold '<branch_name>') $(gum_yellow_underline 'or') $(gum_blue_underline '󰘳 -ckb') $(gum_red_bold '<branch_name>')"
@@ -258,18 +288,22 @@ fzf-git() {
         fi
     elif [[ "$1" == "--checkout-remote-branch" || "$1" == "-ckr" ]]; then
         local branch branch_name
+        _check_for_git_repository || return 1
         branch=$(_fzf_git_branches)
         branch_name=$(echo "$branch" | cut -d'/' -f2)
         git checkout -b "$branch_name" "$branch"
         gum_log_info "$(gum_green_bold_underline "") checkout to $branch_name $branch $(gum_green_bold "completed") successfully."
     elif [[ "$1" == "--delete-branch" || "$1" == "-D" ]]; then
+        _check_for_git_repository || return 1
         git branch -D "$(_fzf_git_branches)"
     elif [[ "$1" == "cherry" || "$1" == "-c" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_hashes | while read -r hash; do
             git cherry-pick "$hash"
             gum_log_info "$(gum_green_bold_underline "") checkout to $branch_name $branch $(gum_green_bold "completed") successfully."
         done
     elif [[ "$1" == "--cherry-with-submodule" || "$1" == "-cws" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_hashes | while read -r hash; do
             git cherry-pick "$hash"
             commit_message=$(git log -1 --pretty=%B "$commit_hash")
@@ -281,11 +315,14 @@ fzf-git() {
             fzf_git_check_abort || return 1
         done
     elif [[ "$1" == "--remote" || "$1" == "-v" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_remotes
     elif [[ "$1" == "--stash" || "$1" == "-sh" ]]; then
+        _check_for_git_repository || return 1
         _fzf_git_stashes
     elif [[ "$1" == "--reset" || "$1" == "-r" ]]; then
         local commit_hash
+        _check_for_git_repository || return 1
         commit_hash=$(_fzf_git_hashes)
         if [[ -n "$commit_hash" ]]; then
             git reset --hard "$commit_hash"
@@ -295,23 +332,29 @@ fzf-git() {
         fi
     elif [[ "$1" == "--push-interactive" || "$1" == "-pi" ]]; then
         local remote branch
+        _check_for_git_repository || return 1
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
         _push_to_repository "remote=$remote" "branch=$branch" 
     elif [[ "$1" == "--push-interactive-upstream" || "$1" == "-piu" ]]; then
         local remote branch
+        _check_for_git_repository || return 1
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
         _push_to_repository "remote=$remote" "branch=$branch" "flag=-u"
     elif [[ "$1" == "--push" || "$1" == "-p" ]]; then
+        _check_for_git_repository || return 1
         _push_to_repository  
     elif [[ "$1" == "--push-force" || "$1" == "-pf" ]]; then
+        _check_for_git_repository || return 1
         _force_push_to_repository
     elif [[ "$1" == "--pull" || "$1" == "-pl" ]]; then
+        _check_for_git_repository || return 1
         git pull
         gum_log_info "$(git_strong_red 󰊢) - The repository was updated $(git_green_light "successfully")."
     elif [[ "$1" == "--assume-unchanged" || "$1" == "-un" ]]; then
         local file_or_files
+        _check_for_git_repository || return 1
         file_or_files=$(fzf_select -m)
         original_ifs=$IFS
         IFS=$'\n'
@@ -322,6 +365,7 @@ fzf-git() {
         IFS=$original_ifs
     elif [[ "$1" == "--no-assume-unchanged" || "$1" == "-na" ]]; then
         local file_or_files
+        _check_for_git_repository || return 1
         file_or_files=$(fzf_select -m)
         original_ifs=$IFS
         IFS=$'\n'
@@ -331,6 +375,7 @@ fzf-git() {
         done
         IFS=$original_ifs
     elif [[ "$1" == "--diff" || "$1" == "-df" ]]; then
+        _check_for_git_repository || return 1
         hashes=$(_fzf_git_hashes)
         hash1=$(echo "$hashes" | sed -n '1p')
         hash2=$(echo "$hashes" | sed -n '2p')
