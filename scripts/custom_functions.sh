@@ -29,19 +29,20 @@ fzf_select() {
     
     while true; do
         if [[ "$mode" == "select" ]]; then
-            header="MODE: SELECT (Press TAB to change to PATH CHANGER) - CTRL-X (abort)"
+            header="MODE: SELECT (Press 󰌒 to change to PATH CHANGER) - 󰘴 + X (abort) -  󰘴 + 󱁐 Select item"
             color="header:bright-green"
         else
-            header="MODE: PATH CHANGER (Press Shift-TAB to change to SELECT) - CTRL-X (abort)"
+            header="MODE: PATH CHANGER (Press 󰘶 + 󰌒 to change to SELECT) - 󰘴 + X (abort) -  󰘴 + 󱁐 Select item"
             color="header:bright-magenta"
         fi
 
         selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
-            awk 'BEGIN {print ".."} {print}' | fzf $multi_select \
+            awk 'BEGIN {print ".."} {print}' | fzf "$multi_select" \
                 --height=100% --layout=reverse --border \
                 --preview='[[ {} == ".." ]] && eza --tree --color=always --icons ../ || [[ -d {} ]] && eza --tree --color=always --icons {} || bat -n --color=always {}' \
                 --header="$header" \
                 --color="$color" \
+                --bind 'ctrl-space:toggle' \
                 --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \
                 --bind 'shift-tab:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
                 --bind 'tab:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
