@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 fzf_git_check_abort(){
     if [ -f /tmp/fzf_git_exit_code ] && [ "$(cat /tmp/fzf_git_exit_code)" -eq 130 ]; then
-        gun_log_fatal "Process aborted by the user"
+        gun_log_fatal "Process aborted by the $(git_strong_white "user")"
         rm /tmp/fzf_git_exit_code
         return 1
     fi
