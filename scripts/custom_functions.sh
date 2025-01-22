@@ -36,8 +36,9 @@ fzf_select() {
             color="header:bright-magenta"
         fi
 
+        # shellcheck disable=SC2086
         selected=$(find . -maxdepth 1 -mindepth 1 -type d -o -type f 2> /dev/null | \
-            awk 'BEGIN {print ".."} {print}' | fzf "$multi_select" \
+            awk 'BEGIN {print ".."} {print}' | fzf $multi_select \
                 --height=100% --layout=reverse --border \
                 --preview='[[ {} == ".." ]] && eza --tree --color=always --icons ../ || [[ -d {} ]] && eza --tree --color=always --icons {} || bat -n --color=always {}' \
                 --header="$header" \
