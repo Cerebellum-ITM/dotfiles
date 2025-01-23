@@ -220,18 +220,9 @@
         "when": "editorTextFocus && foldingEnabled"
     },
     {
-        "key": "cmd+k r",
-        "command": "editor.action.rename",
-        "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-    },
-    {
         "key": "f2",
         "command": "-editor.action.rename",
         "when": "editorHasRenameProvider && editorTextFocus && !editorReadonly"
-    },
-    {
-        "key": "cmd+k ,",
-        "command": "workbench.action.keybindingsReference"
     },
     {
         "key": "cmd+k cmd+r",
@@ -240,5 +231,30 @@
     {
         "key": "cmd+k r",
         "command": "-workbench.action.files.revealActiveFileInWindows"
+    },
+    {
+        "key": "cmd+k r",
+        "command": "editor.action.changeAll",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+f2",
+        "command": "-editor.action.changeAll",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "cmd+k cmd+r",
+        "command": "editor.action.rename",
+        "when": "editorFocus"
+    },
+    {
+        "key": "cmd+k /",
+        "command": "references-view.findReferences",
+        "when": "editorHasReferenceProvider"
+    },
+    {
+        "key": "shift+alt+f12",
+        "command": "-references-view.findReferences",
+        "when": "editorHasReferenceProvider"
     }
 ]
