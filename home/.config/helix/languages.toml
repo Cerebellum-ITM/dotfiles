@@ -1,0 +1,52 @@
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "py(thon)?"
+file-types = ["py", "pyi", "py3", "pyw", "ptl", "rpy", "cpy", "ipy", "pyt", { glob = ".python_history" }, { glob = ".pythonstartup" }, { glob = ".pythonrc" }, { glob = "SConstruct" }, { glob = "SConscript" }]
+shebangs = ["python", "uv"]
+roots = ["pyproject.toml", "setup.py", "poetry.lock", "pyrightconfig.json"]
+comment-token = "#"
+language-servers = ["ruff", "jedi", "pylsp"]
+# TODO: pyls needs utf-8 offsets
+indent = { tab-width = 4, unit = "    " }
+
+[[grammar]]
+name = "python"
+source = { git = "https://github.com/tree-sitter/tree-sitter-python", rev = "4bfdd9033a2225cc95032ce77066b7aeca9e2efc" }
+
+[[language]]
+name = "dockerfile"
+scope = "source.dockerfile"
+injection-regex = "docker|dockerfile"
+roots = ["Dockerfile", "Containerfile"]
+file-types = [
+  "Dockerfile",
+  { glob = "Dockerfile" },
+  { glob = "Dockerfile.*" },
+  "dockerfile",
+  { glob = "dockerfile" },
+  { glob = "dockerfile.*" },
+  "Containerfile",
+  { glob = "Containerfile" },
+  { glob = "Containerfile.*" },
+  "containerfile",
+  { glob = "containerfile" },
+  { glob = "containerfile.*" },
+]
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+language-servers = [ "docker-langserver" ]
+
+[[grammar]]
+name = "dockerfile"
+source = { git = "https://github.com/camdencheek/tree-sitter-dockerfile", rev = "087daa20438a6cc01fa5e6fe6906d77c869d19fe" }
+
+[[language]]
+name = "docker-compose"
+scope = "source.yaml.docker-compose"
+roots = ["docker-compose.yaml", "docker-compose.yml"]
+language-servers = [ "docker-compose-langserver", "yaml-language-server" ]
+file-types = [{ glob = "docker-compose.yaml" }, { glob = "docker-compose.yml" }]
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+grammar = "yaml"

@@ -2,3 +2,7 @@ theme = "tokyonight"
 
 [editor]
 line-number = "relative"
+end-of-line-diagnostics = "hint"
+
+[editor.inline-diagnostics]
+cursor-line="error"
