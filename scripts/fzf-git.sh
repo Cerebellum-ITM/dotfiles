@@ -22,6 +22,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2039
 # shellcheck disable=SC2296
+
 [[ $0 = - ]] && return
 
 __fzf_git_color() {
@@ -59,16 +60,16 @@ __fzf_git_pager() {
 
 if [[ $# -eq 1 ]]; then
   branches() {
-    git branch "$@" --sort=-committerdate --sort=-HEAD --format=$'%(HEAD) %(color:yellow)%(refname:short) %(color:green)(%(committerdate:relative))\t%(color:blue)%(subject)%(color:reset)' --color=$(__fzf_git_color) | column -ts$'\t'
+    git branch "$@" --sort=-committerdate --sort=-HEAD --format=$'%(HEAD) %(color:yellow)%(refname:short) %(color:green)(%(committerdate:relative))\t%(color:blue)%(subject)%(color:reset)' --color="$(__fzf_git_color)" | column -ts$'\t'
   }
   refs() {
-    git for-each-ref --sort=-creatordate --sort=-HEAD --color=$(__fzf_git_color) --format=$'%(refname) %(color:green)(%(creatordate:relative))\t%(color:blue)%(subject)%(color:reset)' |
+    git for-each-ref --sort=-creatordate --sort=-HEAD --color="$(__fzf_git_color)" --format=$'%(refname) %(color:green)(%(creatordate:relative))\t%(color:blue)%(subject)%(color:reset)' |
       eval "$1" |
       sed 's#^refs/remotes/#\x1b[95mremote-branch\t\x1b[33m#; s#^refs/heads/#\x1b[92mbranch\t\x1b[33m#; s#^refs/tags/#\x1b[96mtag\t\x1b[33m#; s#refs/stash#\x1b[91mstash\t\x1b[33mrefs/stash#' |
       column -ts$'\t'
   }
   hashes() {
-    git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color=$(__fzf_git_color) "$@"
+    git log --date=short --format="%C(green)%C(bold)%cd %C(auto)%h%d %s (%an)" --graph --color="$(__fzf_git_color)" "$@"
   }
   case "$1" in
     branches)
@@ -106,6 +107,8 @@ elif [[ $# -gt 1 ]]; then
     branch=$(git describe --exact-match --tags 2> /dev/null || git rev-parse --short HEAD)
   fi
 
+  # shellcheck disable=SC2001
+  # shellcheck disable=SC2295
   # Only supports GitHub for now
   case "$1" in
     commit)
@@ -174,7 +177,7 @@ _fzf_git_files() {
   root=$(git rev-parse --show-toplevel)
   [[ $root != "$PWD" ]] && query='!../ '
 
-  (git -c color.status=$(__fzf_git_color) status --short --no-branch
+  (git -c color.status="$(__fzf_git_color)" status --short --no-branch
    git ls-files "$root" | grep -vxFf <(git status -s | grep '^[^?]' | cut -c4-; echo :) | sed 's/^/   /') |
   _fzf_git_fzf -m --ansi --nth 2..,.. \
     --border-label '📁 Files' \
@@ -258,7 +261,7 @@ _fzf_git_stashes() {
 
 _fzf_git_lreflogs() {
   _fzf_git_check || return
-  git reflog --color=$(__fzf_git_color) --format="%C(blue)%gD %C(yellow)%h%C(auto)%d %gs" | _fzf_git_fzf --ansi \
+  git reflog --color="$(__fzf_git_color)" --format="%C(blue)%gD %C(yellow)%h%C(auto)%d %gs" | _fzf_git_fzf --ansi \
     --border-label '📒 Reflogs' \
     --preview "git show --color=$(__fzf_git_color .) {1} | $(__fzf_git_pager)" "$@" |
   awk '{print $1}'
@@ -295,7 +298,7 @@ _fzf_git_worktrees() {
     " "$@" |
   awk '{print $1}'
 }
-
+# shellcheck disable=SC2086
 if [[ -n "${BASH_VERSION:-}" ]]; then
   __fzf_git_init() {
     bind -m emacs-standard '"\er":  redraw-current-line'
@@ -315,9 +318,10 @@ if [[ -n "${BASH_VERSION:-}" ]]; then
     done
   }
 elif [[ -n "${ZSH_VERSION:-}" ]]; then
+  # shellcheck disable=SC2034
   __fzf_git_join() {
     local item
-    while read item; do
+    while read -r item; do 
       echo -n "${(q)item} "
     done
   }
