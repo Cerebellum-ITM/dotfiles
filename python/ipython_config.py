@@ -8,7 +8,7 @@ except:
     print("pyfzf is not installed. Please install to enable fzf Ctrl-R search")
     exit()
 
-ipython = get_ipython()
+ipython = get_ipython()  # type: ignore
 fzf = pyfzf.FzfPrompt()
 
 def is_in_empty_line(buf):
