@@ -16,8 +16,12 @@ y = "yank_joined_to_clipboard"
 space.y = "yank"
 space.p = "paste_after"
 p = "paste_clipboard_after"
+C-d = "kill_to_line_end"
+tab = "indent"
+S-tab = "unindent"
 
 [keys.insert]
 C-left = "goto_line_start"
 C-right = "goto_line_end_newline"
 C-v = "select_mode"
+S-tab = "unindent"
