@@ -256,5 +256,13 @@
         "key": "shift+alt+f12",
         "command": "-references-view.findReferences",
         "when": "editorHasReferenceProvider"
+    },
+    {
+        "key": "ctrl+shift+alt+cmd+]",
+        "command": "editor.action.toggleTabFocusMode"
+    },
+    {
+        "key": "ctrl+shift+m",
+        "command": "-editor.action.toggleTabFocusMode"
     }
 ]

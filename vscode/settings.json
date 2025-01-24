@@ -360,4 +360,7 @@
     "editor.minimap.enabled": false,
     "editor.rulers": [
     ],
+    "extensions.experimental.affinity": {
+        "jasew.vscode-helix-emulation": 1
+    }
 }
