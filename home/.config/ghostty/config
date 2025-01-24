@@ -1,3 +1,4 @@
 theme = tokyonight
 shell-integration = zsh
 shell-integration-features = sudo
+unfocused-split-opacity = 0.85
