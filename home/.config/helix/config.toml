@@ -12,7 +12,7 @@ select = "underline"
 
 
 [keys.normal]
-y = "yank_joined_to_clipboard"
+y = "yank_to_clipboard"
 space.y = "yank"
 space.p = "paste_after"
 p = "paste_clipboard_after"
