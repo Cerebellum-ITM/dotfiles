@@ -2,10 +2,11 @@ theme = "tokyonight"
 
 [editor]
 line-number = "relative"
-# end-of-line-diagnostics = "hint"
+end-of-line-diagnostics = "hint"
 
-# [editor.inline-diagnostics]
-# cursor-line="error"
+[editor.inline-diagnostics]
+cursor-line="error"
+
 [editor.cursor-shape]
 insert = "bar"
 select = "underline" 
@@ -21,7 +22,7 @@ tab = "indent"
 S-tab = "unindent"
 S-down = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 S-up = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
-Cmd-c = "copy_selection_on_prev_line"
+# Cmd-c = "copy_selection_on_prev_line"
 
 [keys.insert]
 C-left = "goto_line_start"
