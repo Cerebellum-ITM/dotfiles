@@ -4,3 +4,4 @@
 *.log
 *.flag
 .docker-compose-config
+home/.config/karabiner/automatic_backups/**
