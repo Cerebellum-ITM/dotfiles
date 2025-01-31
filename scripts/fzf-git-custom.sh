@@ -126,7 +126,7 @@ _push_to_repository(){
     flag="${args["flag"]:-""}"
 
     if [[ "$submodule" == 'true' ]]; then 
-        submodule_message="in the $(gum_blue_bold_underline parent) repository"
+        submodule_message=" in the $(gum_blue_bold_underline parent) repository"
     fi
 
     cmd=("git" "push")
