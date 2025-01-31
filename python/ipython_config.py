@@ -48,6 +48,7 @@ if getattr(ipython, 'pt_app', None):
 del DEFAULT_BUFFER, Keys, HasFocus, HasSelection
 del fzf_i_search
 
+
 def _print_all_items(odoo_object, key):
-	for item in odoo_object:
-		print(getattr(item,key))
+    for item in odoo_object:
+        print(getattr(item, key))
