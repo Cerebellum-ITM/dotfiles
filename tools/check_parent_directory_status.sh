@@ -42,7 +42,7 @@ else
                 if [ "$REMOTE_COMMIT" != "$LOCAL_COMMIT" ]; then
                     PROMPT+=""
                 else
-                    PROMPT+="" 
+                    PROMPT+="" 
                 fi
             fi
         fi
