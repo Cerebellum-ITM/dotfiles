@@ -18,7 +18,7 @@ _create_a_changelog(){
             gum_log_warning "$(gum_yellow_dark "A CHANGELOG.md file already exists in the directory... discarding task")"
             return 1
         fi
-        
+
         touch CHANGELOG.md
         git add "CHANGELOG.md"
         git commit -m "[ADD] CHANGELOG.md: a file was added to keep track of changes in Odoo modules"
@@ -52,7 +52,7 @@ odoo() {
             }
             { prev = $0 }
         ' "$CADDY_FILE_PATH")
-        
+
         if [[ -n "$url" ]]; then
             echo "The URL for the port $(gum_blue_dark_bold_underline "$port") is: $(gum_blue_bold_underline "$url")"
         else
