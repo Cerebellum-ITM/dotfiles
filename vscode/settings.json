@@ -237,7 +237,8 @@
     ],
     "files.exclude": {
         "": true,
-        "**/__pycache__": true
+        "**/__pycache__": true,
+        "**/.mypy_cache": true
     },
     "markdown-preview-enhanced.automaticallyShowPreviewOfMarkdownBeingEdited": true,
     "diffEditor.ignoreTrimWhitespace": false,
@@ -362,5 +363,6 @@
     ],
     "extensions.experimental.affinity": {
         "jasew.vscode-helix-emulation": 1
-    }
+    },
+    "terminal.integrated.fontLigatures": true
 }
