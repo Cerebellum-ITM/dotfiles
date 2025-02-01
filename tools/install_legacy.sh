@@ -324,6 +324,21 @@ if [ ! -f "$DOCKER_COMPOSE_CONFIG_FILE" ]; then
     gum_log_info "Created docker-compose config file"
 fi
 
+
+if ! command -v hx &> /dev/null; then
+    gum_log_debug "Installing Helix"
+    if [ "$os_name" = "Linux" ]; then        
+        curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64-linux.tar.xz
+        tar -xf helix-25.01.1-x86_64-linux.tar.xz
+        cd helix-25.01.1-x86_64-linux && mv -f hx /usr/local/bin/ && mv -f runtime/ /usr/local/bin/
+        cd .. && rm -rf helix-25.01.1-x86_64-linux
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install helix
+    fi
+else
+    gum_log_info "Helix is already installed"
+fi
+
 UNATTENDED_INSTALLATION=false
 if [ "$1" == "--unattended" ]; then
     UNATTENDED_INSTALLATION=true
