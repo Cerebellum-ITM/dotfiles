@@ -204,8 +204,7 @@ fzf-git() {
         _check_for_git_repository || return 1
         _fzf_git_hashes 
     elif [[ "$1" == "--status" || "$1" == "-s" ]]; then
-        _check_for_git_repository || return 1
-        _fzf_git_files
+        lazygit
     elif [[ "$1" == "--commit" || "$1" == "-sc" ]]; then
         _check_for_git_repository || return 1
         _fzf_git_files
