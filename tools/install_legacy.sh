@@ -331,7 +331,7 @@ if ! command -v hx &> /dev/null; then
         curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64-linux.tar.xz
         tar -xf helix-25.01.1-x86_64-linux.tar.xz
         cd helix-25.01.1-x86_64-linux && mv -f hx /usr/local/bin/ && mv -f runtime/ /usr/local/bin/
-        cd .. && rm -rf helix-25.01.1-x86_64-linux
+        cd .. && rm -rf helix-25.01.1-x86_64-linux && rm -rf helix-25.01.1-x86_64-linux.tar.xz
     elif [ "$os_name" = "Darwin" ]; then
         brew install helix
     fi
