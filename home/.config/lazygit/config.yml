@@ -1,3 +1,29 @@
+gui:
+  border: 'rounded'
+  nerdFontsVersion: "3"
+  theme:
+    activeBorderColor:
+      - yellow
+      - bold
+    searchingActiveBorderColor:
+      - '#55583A'
+      - bold
+    inactiveBorderColor:
+      - white
+    optionsTextColor:
+      - blue
+    selectedLineBgColor:
+      - '#5A5A5A'
+    selectedRangeBgColor:
+      - '#5A5A5A'
+    cherryPickedCommitBgColor:
+      - '#EDB6A3'
+    cherryPickedCommitFgColor:
+      - blue
+    unstagedChangesColor:
+      - red
+    defaultFgColor:
+      - default
 git:
   paging:
     colorArg: always
