@@ -339,6 +339,20 @@ else
     gum_log_info "Helix is already installed"
 fi
 
+if ! command -v lazygit &> /dev/null; then
+    gum_log_debug "Installing lazygit"
+    if [ "$os_name" = "Linux" ]; then        
+        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar xf lazygit.tar.gz lazygit
+        sudo install lazygit -D -t /usr/local/bin/
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install jesseduffield/lazygit/lazygit
+    fi
+else
+    gum_log_info "Helix is already installed"
+fi
+
 UNATTENDED_INSTALLATION=false
 if [ "$1" == "--unattended" ]; then
     UNATTENDED_INSTALLATION=true
