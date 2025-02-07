@@ -32,6 +32,6 @@ git:
 customCommands:
  - key: 'c'
    context: 'files'
-   command: "~/git_commit.sh"
+   command: "$HOME/dotfiles/tools/lazygit-custom-commit-workflow.sh"
    subprocess: true
-   description: 'Run the tool to create a commit'
+   description: 'Run the script to create a commit'
