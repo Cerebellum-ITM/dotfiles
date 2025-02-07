@@ -71,6 +71,7 @@ alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
 alias s='source ~/.zshrc'
+alias c="printf '\n%.0s' {1..100}"
 
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
@@ -128,3 +129,5 @@ fzf-code(){
         echo "For the list of available commands, run $(green_bold 'fcode help') or $(green_bold 'fcode -h')"
     fi
 }
+
+printf '\n%.0s' {1..100}
