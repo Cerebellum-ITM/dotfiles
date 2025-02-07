@@ -30,6 +30,11 @@ git:
     pager: delta --dark --paging=never
 
 customCommands:
+ - key: 'A'
+   context: 'files'
+   command: "$HOME/dotfiles/tools/lazygit-custom-amment-commit.sh"
+   subprocess: true
+   description: 'Run the script to amment the last commit'
  - key: 'c'
    context: 'files'
    command: "$HOME/dotfiles/tools/lazygit-custom-commit-workflow.sh"
