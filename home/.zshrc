@@ -74,7 +74,7 @@ alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
 alias s='source ~/.zshrc'
-alias c="printf '\n%.0s' {1..100}"
+alias kk="printf '\n%.0s' {1..100}"
 
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
