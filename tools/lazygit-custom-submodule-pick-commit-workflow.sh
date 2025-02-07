@@ -12,7 +12,7 @@ source "$HOME/dotfiles/scripts/fzf-translate.sh"
 read -r commit_hash
 parent_folder=$(basename "$(dirname "$PWD")")
 _check_for_git_repository_and_submodule || return 1
-echo "creating a commit in the repository $(gum_blue "$parent_folder") with the commit: $(gum_yellow_bold_underline "${commit_hash}")"
+echo " creating a commit in the repository $(gum_blue "$parent_folder") with the commit: $(gum_yellow_bold_underline "${commit_hash}")"
 
 commit_message=$(git log -1 --pretty=%B "$commit_hash")
 submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')

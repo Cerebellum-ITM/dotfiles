@@ -10,7 +10,7 @@ source "$HOME/dotfiles/scripts/fzf-git-custom.sh"
 source "$HOME/dotfiles/scripts/fzf-translate.sh"
 
 repository_name=$(basename "$PWD")
-echo "creating a commit in the repository $(gum_blue "$repository_name")"
+echo " creating a commit in the repository $(gum_blue "$repository_name")"
 
 type_of_commit=$(_fzf_commit_type_selector)
 fzf_git_check_abort || return 1

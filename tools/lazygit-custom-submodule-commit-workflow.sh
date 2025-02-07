@@ -11,7 +11,7 @@ source "$HOME/dotfiles/scripts/fzf-git-custom.sh"
 source "$HOME/dotfiles/scripts/fzf-translate.sh"
 
 repository_name=$(basename "$PWD")
-echo "creating a commit in the repository $(gum_blue "$repository_name")"
+echo " creating a commit in the repository $(gum_blue "$repository_name")"
 
 _check_for_git_repository_and_submodule || return 1
 module_list=''
