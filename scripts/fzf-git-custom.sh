@@ -238,7 +238,7 @@ fzf-git() {
         create_commit module
         gum spin --spinner dot --title "$(git_strong_red ) Starting the $(git_strong_red commit) process in the $(gum_blue_bold_underline parent) repository" -- sleep 0.5
         fzf_git_check_abort || return 1
-        submodule_commit_type=$(echo "$type_of_commit" | sed 's/[^a-zA-Z]//g')
+        submodule_commit_type=$(echo "$type_of_commit" | sed 's/[^a-zA-Z0-9]//g')
         echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
         create_commit submodule
         fzf_git_check_abort || return 1
