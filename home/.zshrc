@@ -30,8 +30,11 @@ zinit light Aloxaf/fzf-tab
 autoload -Uz compinit && compinit
 
 # Keybindings
-bindkey '^p' history-search-backward
-bindkey '^n' history-search-forward
+bindkey '^[OA' history-search-backward
+bindkey '^[OB' history-search-forward
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
+
 
 HISTSIZE=10000
 HISTFILE=~/.zsh_history
