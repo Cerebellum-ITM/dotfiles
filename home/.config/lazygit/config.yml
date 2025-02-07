@@ -35,3 +35,13 @@ customCommands:
    command: "$HOME/dotfiles/tools/lazygit-custom-commit-workflow.sh"
    subprocess: true
    description: 'Run the script to create a commit'
+ - key: '<c-c>'
+   context: 'files'
+   command: "$HOME/dotfiles/tools/lazygit-custom-submodule-commit-workflow.sh"
+   subprocess: true
+   description: 'Run the script to create a commit current repository and parent repository'
+ - key: 'c'
+   context: 'commits'
+   command: " echo '{{ .SelectedCommit.Sha }}' | $HOME/dotfiles/tools/lazygit-custom-submodule-pick-commit-workflow.sh"
+   subprocess: true
+   description: 'Run the script to create a commit in the parent directory (submodule)'
