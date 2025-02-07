@@ -184,7 +184,7 @@ _fzf_git_files() {
     --header $'CTRL-O (open in 🌐) ╱ CTRL-E (open in 💻)/ CTRL-A (add to staged) / CTRL-S (Restore file) / CTRL-X (abort)\n\n' \
     --bind "ctrl-o:execute-silent:bash $__fzf_git file {-1}" \
     --bind "ctrl-e:execute-silent:${EDITOR:-code} {-1}" \
-    --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
+    --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
     --bind "ctrl-a:execute-silent:git add {-1}" \
     --bind "ctrl-s:execute-silent:git restore --staged {-1}" \
     --bind "ctrl-a:+reload(git -c color.status=$(__fzf_git_color) status --short --no-branch; git ls-files \"$root\" | grep -vxFf <(git status -s | grep '^[^?]' | cut -c4-; echo :) | sed 's/^/   /')" \

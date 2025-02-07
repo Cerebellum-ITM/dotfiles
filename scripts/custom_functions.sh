@@ -44,7 +44,7 @@ fzf_select() {
                 --header="$header" \
                 --color="$color" \
                 --bind 'ctrl-space:toggle' \
-                --bind 'ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code' \
+                --bind 'ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort' \
                 --bind 'shift-tab:execute-silent(echo path_changer > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
                 --bind 'tab:execute-silent(echo select > /tmp/fzf_mode && echo $multi_select > /tmp/fzf_select_multi)+abort' \
             )

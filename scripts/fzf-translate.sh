@@ -33,6 +33,6 @@ _fzf_translate_gui() {
     --header="Select the message - CTRL+W: Translate query - CTRL-X (abort)" \
     --preview="bash $__fzf_translate_script _preview_translation {}" \
     --preview-label 'English Translation' \
-    --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
+    --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
     --bind "ctrl-w:execute-silent(bash $__fzf_translate_script _request_translation \"{q}\")+reload(grep \"^$PWD ~\" \"$FZF_TRANSLATE_HISTORY_FILE\" | sed \"s|^$PWD ~ ||\" | awk -F \" ~ \" '{print \$1}')"
 }

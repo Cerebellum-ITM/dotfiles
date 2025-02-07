@@ -38,6 +38,15 @@ _create_fzf_select(){
     fzf_select $mode
 }
 
+_fzf_commit_type_selector(){
+    awk -F': ' '{print $1 "\t" $2}' "$HOME/dotfiles/git/commits_guide_lines.txt" | \
+    fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
+        --color=fg:yellow,hl:green,preview-fg:white \
+        --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
+        --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 \
+        --preview="echo 'Select type of commit - 󰘴-X (abort)' && echo {} | cut -f2" | cut -f1
+}
+
 _create_commit_options(){
     local commit_options_file="/tmp/fzf_git_commit_options"
     if [ -f "$commit_options_file" ]; then
@@ -146,7 +155,7 @@ create_commit() {
     local commit_preview_file="/tmp/fzf_git_commit_preview"
     if [ -f "$commit_file" ]; then
         confirmation=$(cat "$commit_file" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
-            --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" \
+            --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
             --bind "ctrl-e:execute-silent:code $commit_file" \
             --bind "tab:execute-silent:zsh -i -c '_create_commit_options'" \
             --bind "tab:+reload(cat $commit_preview_file)" \
@@ -210,7 +219,7 @@ fzf-git() {
         _fzf_git_files
         fzf_git_check_abort || return 1
         local type_of_commit
-        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' "$HOME/dotfiles/git/commits_guide_lines.txt" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo 'Select type of commit - CTRL-X (abort)' && echo {} | cut -f2" | cut -f1)
+        type_of_commit=$(_fzf_commit_type_selector)
         fzf_git_check_abort || return 1
         file_or_folder=$(_create_fzf_select)
         fzf_git_check_abort || return 1
@@ -227,7 +236,7 @@ fzf-git() {
         _fzf_git_files
         fzf_git_check_abort || return 1
         local type_of_commit
-        type_of_commit=$(awk -F': ' '{print $1 "\t" $2}' $HOME/dotfiles/git/commits_guide_lines.txt | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 --color=fg:yellow,hl:green,preview-fg:white --bind "ctrl-x:abort+execute-silent:echo 130 > /tmp/fzf_git_exit_code" --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 --preview="echo 'Select type of commit - CTRL-X (abort)' && echo {} | cut -f2" | cut -f1)
+        type_of_commit=$(_fzf_commit_type_selector)
         fzf_git_check_abort || return 1
         file_or_folder=$(_create_fzf_select)
         fzf_git_check_abort || return 1
