@@ -223,21 +223,21 @@ if ! command -v cookiecutter &> /dev/null; then
 fi
 
 #! Install pbcopy or xclip
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    gum_log_info "Pbcopy is included in macOS by default and does not need to be installed."
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    if command -v apt-get &> /dev/null; then
-        gum_log_info "Installing xclip and xsel for Linux (Debian/Ubuntu)"
-        sudo apt-get update
-        sudo apt-get install -y xclip xsel
-    elif command -v yum &> /dev/null; then
-        gum_log_info "Installing xclip and xsel for Linux (CentOS/RHEL)"
-        sudo yum install -y xclip xsel
-    elif command -v pacman &> /dev/null; then
-        gum_log_info "Installing xclip and xsel for Linux (Arch)"
-        sudo pacman -Syu xclip xsel
-    fi
-fi
+# if [[ "$OSTYPE" == "darwin"* ]]; then
+#     gum_log_info "Pbcopy is included in macOS by default and does not need to be installed."
+# elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+#     if command -v apt-get &> /dev/null; then
+#         gum_log_info "Installing xclip and xsel for Linux (Debian/Ubuntu)"
+#         sudo apt-get update
+#         sudo apt-get install -y xclip xsel
+#     elif command -v yum &> /dev/null; then
+#         gum_log_info "Installing xclip and xsel for Linux (CentOS/RHEL)"
+#         sudo yum install -y xclip xsel
+#     elif command -v pacman &> /dev/null; then
+#         gum_log_info "Installing xclip and xsel for Linux (Arch)"
+#         sudo pacman -Syu xclip xsel
+#     fi
+# fi
 
 GIT_MIN_VERSION="2.5.0"
 GIT_CURRENT_VERSION=$(git --version | awk '{print $3}')
