@@ -302,6 +302,35 @@ else
     gum_log_info "Delta is already installed"
 fi
 
+if ! command -v hx &> /dev/null; then
+    gum_log_debug "Installing Helix"
+    if [ "$os_name" = "Linux" ]; then        
+        curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64-linux.tar.xz
+        tar -xf helix-25.01.1-x86_64-linux.tar.xz
+        cd helix-25.01.1-x86_64-linux && sudo mv -f hx /usr/local/bin/ && sudo mv -f runtime/ /usr/local/bin/
+        cd .. && rm -rf helix-25.01.1-x86_64-linux && rm -rf helix-25.01.1-x86_64-linux.tar.xz
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install helix
+    fi
+else
+    gum_log_info "Helix is already installed"
+fi
+
+if ! command -v lazygit &> /dev/null; then
+    gum_log_debug "Installing lazygit"
+    if [ "$os_name" = "Linux" ]; then        
+        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+        tar xf lazygit.tar.gz lazygit
+        sudo install lazygit -D -t /usr/local/bin/
+    elif [ "$os_name" = "Darwin" ]; then
+        brew install jesseduffield/lazygit/lazygit
+    fi
+else
+    gum_log_info "Helix is already installed"
+fi
+
+
 #* Check if history files exist, if not, create them
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 if [ ! -f "$FZF_MAKE_HISTORY_FILE" ]; then
@@ -325,33 +354,6 @@ if [ ! -f "$DOCKER_COMPOSE_CONFIG_FILE" ]; then
 fi
 
 
-if ! command -v hx &> /dev/null; then
-    gum_log_debug "Installing Helix"
-    if [ "$os_name" = "Linux" ]; then        
-        curl -LO https://github.com/helix-editor/helix/releases/download/25.01.1/helix-25.01.1-x86_64-linux.tar.xz
-        tar -xf helix-25.01.1-x86_64-linux.tar.xz
-        cd helix-25.01.1-x86_64-linux && mv -f hx /usr/local/bin/ && mv -f runtime/ /usr/local/bin/
-        cd .. && rm -rf helix-25.01.1-x86_64-linux && rm -rf helix-25.01.1-x86_64-linux.tar.xz
-    elif [ "$os_name" = "Darwin" ]; then
-        brew install helix
-    fi
-else
-    gum_log_info "Helix is already installed"
-fi
-
-if ! command -v lazygit &> /dev/null; then
-    gum_log_debug "Installing lazygit"
-    if [ "$os_name" = "Linux" ]; then        
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-        curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-        tar xf lazygit.tar.gz lazygit
-        sudo install lazygit -D -t /usr/local/bin/
-    elif [ "$os_name" = "Darwin" ]; then
-        brew install jesseduffield/lazygit/lazygit
-    fi
-else
-    gum_log_info "Helix is already installed"
-fi
 
 UNATTENDED_INSTALLATION=false
 if [ "$1" == "--unattended" ]; then
