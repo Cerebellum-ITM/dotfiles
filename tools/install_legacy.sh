@@ -282,9 +282,11 @@ if ! command -v delta &> /dev/null; then
     elif [ "$os_name" = "Darwin" ]; then
         brew install git-delta
     fi
-    cat "$HOME"/dotfiles/git/delta_config.txt >> .gitconfig
+    cat "$HOME"/dotfiles/git/delta_config.txt >> "$HOME/.gitconfig"
 else
     DELTA_MIN_VERSION="0.24.0"
+    GITCONFIG="$HOME/.gitconfig"
+    DELTA_CONFIG="$HOME/dotfiles/git/delta_config.txt"
     DELTA_CURRENT_VERSION=$(bat --version | awk '{print $2}')
     if [ "$(printf '%s\n' "$DELTA_MIN_VERSION" "$DELTA_CURRENT_VERSION" | sort -V | head -n1)" != "$DELTA_MIN_VERSION" ]; then
     gum_log_warning "The installed version of Delta is lower than the minimum required version" DELTA_CURRENT_VERSION "$DELTA_CURRENT_VERSION" DELTA_MIN_VERSION $DELTA_MIN_VERSION
@@ -298,6 +300,12 @@ else
         gum_log_debug "Delta has been updated to the latest version."
     else
         gum_log_debug "The installed version of Delta ($DELTA_CURRENT_VERSION) is sufficient."
+    fi
+
+    if ! grep -q "^\[delta\]" "$GITCONFIG"; then
+        gum_log_warning "Delta configuration is missing"
+        gum_log_debug "Adding Delta configuration"
+        cat "$HOME"/dotfiles/git/delta_config.txt >> "$HOME/.gitconfig"
     fi
     gum_log_info "Delta is already installed"
 fi
