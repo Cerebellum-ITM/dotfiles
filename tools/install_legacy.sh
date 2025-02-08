@@ -330,6 +330,13 @@ else
     gum_log_info "Helix is already installed"
 fi
 
+if ! command -v atuin &> /dev/null; then
+    gum_log_debug "Installing Atuin"
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh
+else
+    gum_log_info "Atuin is already installed"
+fi
+
 
 #* Check if history files exist, if not, create them
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"

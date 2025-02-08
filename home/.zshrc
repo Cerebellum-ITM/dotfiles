@@ -20,6 +20,10 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
 fi
 
+if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
+  source "$HOME/dotfiles/home/.config/atuin/sync-server.env"
+fi
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -80,6 +84,7 @@ alias kk="printf '\n%.0s' {1..100}"
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source <(fzf --zsh)
+
 source ~/dotfiles/tools/tput-config.sh
 source ~/dotfiles/home/.config/.tmp/.docker-compose-config
 source ~/dotfiles/tools/gum_styles.sh
@@ -134,3 +139,7 @@ fzf-code(){
 }
 
 printf '\n%.0s' {1..100}
+
+. "$HOME/.atuin/bin/env"
+
+eval "$(atuin init zsh)"
