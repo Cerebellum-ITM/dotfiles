@@ -38,7 +38,8 @@ bindkey '^[OA' history-search-backward
 bindkey '^[OB' history-search-forward
 bindkey '^[[1;5D' backward-word
 bindkey '^[[1;5C' forward-word
-
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line 
 
 HISTSIZE=10000
 HISTFILE=~/.zsh_history
