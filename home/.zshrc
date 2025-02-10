@@ -18,6 +18,7 @@ export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
+    export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 fi
 
 if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
