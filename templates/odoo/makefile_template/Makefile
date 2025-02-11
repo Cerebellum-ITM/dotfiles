@@ -53,6 +53,8 @@ create_backup:
 	zip -r $(db-name)_$(TODAY).zip $(db-name) $(dumpfile)
 	rm $(dumpfile)
 	rm -r $(db-name)
+neutralize_db:
+	docker exec -it -u0 $(docker-container) bash -c "odoo neutralize -d $(db-name) -w odoo -r odoo --db_host db"
 restore_db:
 	unzip $(backup_zip)
 	mv $(filestore_dump_name) $(db-name)
