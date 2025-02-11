@@ -364,7 +364,12 @@ if ! command -v tmux &>/dev/null; then
     elif [ "$os_name" = "Darwin" ]; then
         brew install tmux
     fi
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 else
+    if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+        gum_log_warning "tmux extension manager missing"
+        git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+    fi
     gum_log_info "Tmux is already installed"
 fi
 
