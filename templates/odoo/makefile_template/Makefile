@@ -7,6 +7,7 @@ dumpfile=dump.sql
 filestore_dump_name=filestore
 backup_zip=main_2024-07-22_20-55-42.zip
 access_db= docker exec -it -u0 $(docker-container-db) bash
+TODAY := $(shell date +%Y-%m-%d)
 # Start local instance
 init:
 	{{ cookiecutter.docker_compose_cmd }} up -d
@@ -44,6 +45,14 @@ change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
 remove_s3:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE ir_attachment SET store_fname = REPLACE(store_fname, 's3://multimoto-odoo/', '') WHERE store_fname LIKE 's3%' AND 1=1;\""
+create_backup:
+	$(access_db) -c "pg_dump -d $(db-name) -U odoo -f ./$(dumpfile)"
+	docker cp $(docker-container-db):./$(dumpfile) $(dumpfile)
+	$(access_db) -c "rm -r ./$(dumpfile)"
+	docker cp $(docker-container):/var/lib/odoo/filestore/$(db-name) $(db-name)
+	zip -r $(db-name)_$(TODAY).zip $(db-name) $(dumpfile)
+	rm $(dumpfile)
+	rm -r $(db-name)
 restore_db:
 	unzip $(backup_zip)
 	mv $(filestore_dump_name) $(db-name)
