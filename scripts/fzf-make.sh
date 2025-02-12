@@ -23,6 +23,15 @@ check_makefile() {
     fi
 }
 
+_check_odoo_env() {
+    if grep -qi "odoo" "$working_dir/docker-compose.yml"; then
+        echo "true"
+    else
+        echo "false"
+    fi
+
+}
+
 _fzf_make_gui() {
     fzf-tmux --ansi -m -p80%,60% -- \
         --layout=reverse --multi --height=100% --min-height=20 --border \
@@ -124,7 +133,12 @@ _select_odoo_module() {
         return 1
     fi
     #* Remove the path from the subdir
-    subdir=$(basename "$subdir")
+    basename "$subdir"
+
+}
+
+_update_odoo_module() {
+    subdir=$(_select_odoo_module)
 
     #* Add a history entry
     local history_entry=""
@@ -136,15 +150,19 @@ _select_odoo_module() {
 
 select_a_option() {
     check_makefile || return 1
-    local choice
-    choice=$(echo -e "View history\nUpdate Odoo Module\nSelect commands" | fzf --ansi --height=100% --preview-window='right,70%,border-left' --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat $working_dir/Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
+    local choice options
+    options=("view history" "Select commands")
+    if [[ $(_check_odoo_env) == 'true' ]]; then
+        options=("view history" "Update Odoo Module" "Export Odoo transtation" "Update Odoo transtation" "Select commands")
+    fi
+    choice=$(printf "%s\n" "${options[@]}" | fzf --ansi --height=100% --preview-window='right,70%,border-left' --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat $working_dir/Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
     _check_fzf_make_exit_code || return 1
     if [[ "$choice" == "Select commands" ]]; then
         _function_list
     elif [[ "$choice" == "View history" ]]; then
         _view_history
     elif [[ "$choice" == "Update Odoo Module" ]]; then
-        _select_odoo_module
+        _update_odoo_module
     fi
 }
 
@@ -154,8 +172,8 @@ fzf-make() {
         execute_commands "$(grep "$working_dir" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
     elif [[ "$1" == "-edit" || "$1" == "-e" ]]; then
         check_makefile || return 1
-        if command -v code &>/dev/null; then
-            code "$working_dir/Makefile"
+        if command -v vim &>/dev/null; then
+            vim "$working_dir/Makefile"
         elif command -v nano &>/dev/null; then
             nano "$working_dir/Makefile"
         else
