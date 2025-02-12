@@ -2,8 +2,7 @@
 working_dir=""
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 
-
-_check_fzf_make_exit_code(){
+_check_fzf_make_exit_code() {
     if [ -f /tmp/fzf_makefile_exit_code ] && [ "$(cat /tmp/fzf_makefile_exit_code)" -eq 130 ]; then
         gun_log_fatal "Process aborted by the $(git_strong_white "user")"
         rm /tmp/fzf_makefile_exit_code
@@ -25,7 +24,7 @@ check_makefile() {
 }
 
 _fzf_make_gui() {
-    fzf-tmux --ansi	-m -p80%,60% -- \
+    fzf-tmux --ansi -m -p80%,60% -- \
         --layout=reverse --multi --height=100% --min-height=20 --border \
         --border-label-pos=2 \
         --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code' \
@@ -37,7 +36,7 @@ _fzf_make_gui() {
 
 log_history() {
     local selection="$1"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $working_dir - $selection" >> "$FZF_MAKE_HISTORY_FILE"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $working_dir - $selection" >>"$FZF_MAKE_HISTORY_FILE"
 }
 
 _function_list() {
@@ -57,17 +56,16 @@ _view_history() {
     fi
 
     selected_history=$(
-        grep " - $working_dir -" "$FZF_MAKE_HISTORY_FILE" | \
-        awk -F' - ' '{print $1 " - " $3}' | \
-        sort -rk1,1 | \
-        fzf --layout=reverse --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
+        grep " - $working_dir -" "$FZF_MAKE_HISTORY_FILE" |
+            awk -F' - ' '{print $1 " - " $3}' |
+            sort -rk1,1 |
+            fzf --layout=reverse --ansi --preview="echo {} | awk -F' - ' '{print \$2}' | tr ', ' '\n' | \
         while read cmd; do awk '/^'\"\$cmd\"'[[:space:]]*:/ {flag=1; next} /^[^[:space:]]+:/ {flag=0} flag && /^[[:space:]]/' $working_dir/Makefile | sed 's/^\t//'; done | bat --style='${BAT_STYLE:-full}' --color=always --paging=always --pager='less -FRX' --language=sh" \
-        --preview-window=down:60%:wrap
+                --preview-window=down:60%:wrap
     )
     _check_fzf_make_exit_code || return 1
     execute_commands "$(echo "$selected_history" | awk -F' - ' '{print $2}' | sed 's/ *, */,/g' | tr ',' '\n')"
 }
-
 
 execute_commands() {
     local selected_commands target args
@@ -77,9 +75,9 @@ execute_commands() {
         IFS=$'\n' commands_array=()
         while IFS= read -r line; do
             commands_array+=("$line")
-        done <<< "$selected_commands"
+        done <<<"$selected_commands"
         IFS="$original_ifs"
-        
+
         local history_entry=""
 
         for cmd in "${commands_array[@]}"; do
@@ -91,9 +89,9 @@ execute_commands() {
 
         for cmd in "${commands_array[@]}"; do
             target=$(echo "$cmd" | awk '{print $1}') #! The first element will always be the function to be executed
-            args=$(echo "$cmd" | cut -d' ' -f2-)  
+            args=$(echo "$cmd" | cut -d' ' -f2-)
             if [[ -z "$args" ]]; then
-                
+
                 make -C "$working_dir" "$target"
             else
                 make -C "$working_dir" "$target" "$args"
@@ -133,10 +131,8 @@ _select_odoo_module() {
     history_entry+="update_module module_name=$subdir"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
-    (cd "$working_dir" && make update_module module_name="$subdir" > /dev/null 2>&1 | grep -v "Nothing to be done for")
+    (cd "$working_dir" && make update_module module_name="$subdir" >/dev/null 2>&1 | grep -v "Nothing to be done for")
 }
-
-
 
 select_a_option() {
     check_makefile || return 1
@@ -158,16 +154,17 @@ fzf-make() {
         execute_commands "$(grep "$working_dir" "$FZF_MAKE_HISTORY_FILE" | sort -r | awk -F ' - ' '{print $3}' | head -n 1 | sed 's/ *, */,/g' | tr ',' '\n')"
     elif [[ "$1" == "-edit" || "$1" == "-e" ]]; then
         check_makefile || return 1
-        if command -v code &> /dev/null; then
+        if command -v code &>/dev/null; then
             code "$working_dir/Makefile"
-        elif command -v nano &> /dev/null; then
+        elif command -v nano &>/dev/null; then
             nano "$working_dir/Makefile"
         else
             gum_log_warning "The command code or nano is not available in the shell."
         fi
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
-        echo "List of available commands:\n- repeat or -r"
+        printf "List of available commands:\n- repeat or -r"
     else
-        select_a_option       
+        select_a_option
     fi
 }
+
