@@ -19,13 +19,13 @@ return {
   end,
   opts = {
     mappings = {
-      add = "gsa", -- Add surrounding in Normal and Visual modes
-      delete = "gsd", -- Delete surrounding
-      find = "gsf", -- Find surrounding (to the right)
-      find_left = "gsF", -- Find surrounding (to the left)
-      highlight = "gsh", -- Highlight surrounding
-      replace = "gsr", -- Replace surrounding
-      update_n_lines = "gsn", -- Update `n_lines`
+      add = "<leader>Sa", -- Add surrounding in Normal and Visual modes
+      delete = "<leader>Sd", -- Delete surrounding
+      find = "<leader>Sf", -- Find surrounding (to the right)
+      find_left = "<leader>SF", -- Find surrounding (to the left)
+      highlight = "<leader>Sh", -- Highlight surrounding
+      replace = "<leader>Sr", -- Replace surrounding
+      update_n_lines = "<leader>Sn", -- Update `n_lines`
     },
   },
 }
