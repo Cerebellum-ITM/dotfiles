@@ -11,6 +11,6 @@ vim.keymap.set("n", "<S-Down>", ":m .+1<CR>==", { desc = "Move line down" })
 local opts = { noremap = true, silent = true }
 
 -- delete single character without copying into register
-vim.keymap.set("n", "x", '"_x', opts)
+vim.keymap.set({ "n", "v" }, "x", '"_x', opts)
 -- Keep last yanked when pasting
 vim.keymap.set("v", "p", '"_dP', opts)
