@@ -11,6 +11,7 @@ return {
         },
         files = {
           hidden = true,
+          ignored = { "node_modules", ".git", ".venv", "__pycache__" },
         },
         explorer = {
           hidden = true,
