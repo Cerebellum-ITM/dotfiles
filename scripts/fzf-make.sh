@@ -151,9 +151,9 @@ _update_odoo_module() {
 select_a_option() {
     check_makefile || return 1
     local choice options
-    options=("view history" "Select commands")
+    options=("View history" "Select commands")
     if [[ $(_check_odoo_env) == 'true' ]]; then
-        options=("view history" "Update Odoo Module" "Export Odoo transtation" "Update Odoo transtation" "Select commands")
+        options=("View history" "Update Odoo Module" "Export Odoo transtation" "Update Odoo transtation" "Select commands")
     fi
     choice=$(printf "%s\n" "${options[@]}" | fzf --ansi --height=100% --preview-window='right,70%,border-left' --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat $working_dir/Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
     _check_fzf_make_exit_code || return 1
@@ -161,6 +161,8 @@ select_a_option() {
         _function_list
     elif [[ "$choice" == "View history" ]]; then
         _view_history
+    elif [[ "$choice" == "Export Odoo transtation" ]]; then
+        _export_odoo_translation_module
     elif [[ "$choice" == "Update Odoo Module" ]]; then
         _update_odoo_module
     fi
@@ -185,4 +187,3 @@ fzf-make() {
         select_a_option
     fi
 }
-
