@@ -147,4 +147,3 @@ printf '\n%.0s' {1..100}
 
 eval "$(atuin init zsh)"
 
-. "$HOME/.local/bin/env"
