@@ -38,6 +38,12 @@ update_module:
 	@echo "\033[35m\nmodule update: $(module_name) completed!!!\033[0m"
 	@sleep 2
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
+update_odoo_translation:
+	{{ cookiecutter.docker_compose_cmd }} restart
+	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db --load-language=es_MX --stop-after-init
+	@echo "\033[35m\nTranslation update: es_MX completed!!!\033[0m"
+	@sleep 2
+	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 update_only_view:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
