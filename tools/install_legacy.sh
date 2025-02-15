@@ -285,7 +285,6 @@ if ! command -v delta &>/dev/null; then
 else
     DELTA_MIN_VERSION="0.24.0"
     GITCONFIG="$HOME/.gitconfig"
-    DELTA_CONFIG="$HOME/dotfiles/git/delta_config.txt"
     DELTA_CURRENT_VERSION=$(bat --version | awk '{print $2}')
     if [ "$(printf '%s\n' "$DELTA_MIN_VERSION" "$DELTA_CURRENT_VERSION" | sort -V | head -n1)" != "$DELTA_MIN_VERSION" ]; then
         gum_log_warning "The installed version of Delta is lower than the minimum required version" DELTA_CURRENT_VERSION "$DELTA_CURRENT_VERSION" DELTA_MIN_VERSION $DELTA_MIN_VERSION
@@ -372,6 +371,9 @@ else
     fi
     gum_log_info "Tmux is already installed"
 fi
+
+
+mkdir -p "$HOME/dotfiles/home/.config/.tmp/"
 
 #* Check if history files exist, if not, create them
 FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
