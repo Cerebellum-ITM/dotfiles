@@ -147,3 +147,6 @@ printf '\n%.0s' {1..100}
 
 eval "$(atuin init zsh)"
 
+if [ -f "$HOME/.local/bin/env" ]; then
+    . "$HOME/.local/bin/env"
+fi
