@@ -28,6 +28,15 @@ git:
   paging:
     colorArg: always
     pager: delta --dark --paging=never
+  merging:
+    manualCommit: false
+    args: "--no-ff"
+  mainBranches:
+    - master
+    - main
+    - 18.0
+    - 17.0
+    - 18.0-develop
 
 customCommands:
  - key: 'A'
