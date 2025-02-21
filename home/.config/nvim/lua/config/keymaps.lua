@@ -15,3 +15,4 @@ vim.keymap.set({ "n", "v" }, "x", '"_x', opts)
 vim.keymap.set({ "n", "v" }, "dd", '"_dd', opts)
 -- Keep last yanked when pasting
 vim.keymap.set("v", "p", '"_dP', opts)
+vim.keymap.set({ "n", "v" }, "c", '"_c', opts)
