@@ -16,3 +16,8 @@ vim.keymap.set({ "n", "v" }, "dd", '"_dd', opts)
 -- Keep last yanked when pasting
 vim.keymap.set("v", "p", '"_dP', opts)
 vim.keymap.set({ "n", "v" }, "c", '"_c', opts)
+-- enable and disable line wrap
+vim.keymap.set("n", "<leader>ow", "<cmd>set wrap!<CR>", opts)
+-- The original behavior of dd has been restored in other keybiding
+vim.keymap.set("n", "<leader>od", "dd", opts)
+vim.keymap.set("v", "<leader>od", "d", opts)
