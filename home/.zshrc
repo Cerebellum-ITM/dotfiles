@@ -104,6 +104,15 @@ function history_clean() {
     tail -n 3000 "$FZF_MAKE_HISTORY_FILE" > "$FZF_MAKE_HISTORY_FILE.tmp" && mv "$FZF_MAKE_HISTORY_FILE.tmp" "$FZF_MAKE_HISTORY_FILE"
 }
 
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
 get_ip() {
     local ip_address=$(hostname -I | awk '{print $1}')
     blue_bold "The IP address is: $ip_address"
@@ -143,10 +152,16 @@ fzf-code(){
 
 printf '\n%.0s' {1..100}
 
-. "$HOME/.atuin/bin/env"
-
-eval "$(atuin init zsh)"
+if [ -f "$HOME/.atuin/bin/env" ] && [ -f "$HOME/.atuin/bin/atuin" ]; then
+    . "$HOME/.atuin/bin/env"
+    eval "$(atuin init zsh)"
+fi
 
 if [ -f "$HOME/.local/bin/env" ]; then
     . "$HOME/.local/bin/env"
 fi
+
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
