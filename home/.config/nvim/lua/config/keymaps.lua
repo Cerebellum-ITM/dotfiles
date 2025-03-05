@@ -21,3 +21,7 @@ vim.keymap.set("n", "<leader>ow", "<cmd>set wrap!<CR>", opts)
 -- The original behavior of dd has been restored in other keybiding
 vim.keymap.set("n", "<leader>od", "dd", opts)
 vim.keymap.set("v", "<leader>od", "d", opts)
+vim.keymap.set("n", "<leader>oy", function()
+  vim.cmd('normal! "ayiw')
+  vim.fn.setreg("/", vim.fn.getreg("a"))
+end, { noremap = true, silent = true, desc = "copy to registry '/'" })
