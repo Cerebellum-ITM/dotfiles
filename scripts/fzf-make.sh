@@ -110,7 +110,7 @@ execute_commands() {
 }
 
 _select_odoo_module() {
-    local dir subdir
+    local dir subdir return_full_path="${1:-false}"
     #* Find directories containing "addon", ignoring those in .git
     dir=$(cd "$working_dir" && find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
         --prompt="Select a directory or press Ctrl+Z to include any directory: " \
@@ -132,8 +132,12 @@ _select_odoo_module() {
         echo "No subdirectory selected."
         return 1
     fi
-    #* Remove the path from the subdir
-    basename "$subdir"
+    if [[ "$return_full_path" == "true" ]]; then
+        echo "$subdir"
+    else
+        #* returns only the name of the addon
+        basename "$subdir"
+    fi
 
 }
 
@@ -146,6 +150,18 @@ _update_odoo_module() {
     history_entry="${history_entry%, }"
     log_history "$history_entry"
     (cd "$working_dir" && make update_module module_name="$subdir" >/dev/null 2>&1 | grep -v "Nothing to be done for")
+}
+
+_export_odoo_translation_module() {
+    FULL_PATH=$(_select_odoo_module "true")
+    subdir=$(basename "$FULL_PATH")
+
+    #* Add a history entry
+    local history_entry=""
+    history_entry+="export_odoo_translation module_name=$subdir modele_path=$FULL_PATH"
+    history_entry="${history_entry%, }"
+    log_history "$history_entry"
+    (cd "$working_dir" && make export_odoo_translation module_name="$subdir" >/dev/null 2>&1 | grep -v "Nothing to be done for")
 }
 
 select_a_option() {

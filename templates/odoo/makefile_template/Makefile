@@ -3,11 +3,14 @@ docker-container={{ cookiecutter.odoo_container }}
 docker-container-db={{ cookiecutter.db_container }}
 db-name=main
 module_name=loans
+modele_path=
 dumpfile=dump.sql
 filestore_dump_name=filestore
 backup_zip=main_2024-07-22_20-55-42.zip
 access_db= docker exec -it -u0 $(docker-container-db) bash
 TODAY := $(shell date +%Y-%m-%d)
+CURRENT_DIR := $(shell pwd)
+
 # Start local instance
 init:
 	{{ cookiecutter.docker_compose_cmd }} up -d
@@ -44,6 +47,11 @@ update_odoo_translation:
 	@echo "\033[35m\nTranslation update: es_MX completed!!!\033[0m"
 	@sleep 2
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
+export_odoo_translation:
+	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -l es_MX --i18n-export=/tmp/es_MX.po --modules $(module_name) --stop-after-init
+	docker cp $(docker-container):/tmp/es_MX.po ./.
+	~/dotfiles/tools/export_odoo_translation.sh $(modele_path) $(CURRENT_DIR)
+	@echo "\033[35m\nmodule update: $(module_name) completed!!!\033[0m"
 update_only_view:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
@@ -67,7 +75,7 @@ restore_db:
 	docker cp $(dumpfile) $(docker-container-db):./$(dumpfile)
 	$(access_db) -c "psql -d postgres -U odoo -c 'CREATE DATABASE $(db-name);'"
 	$(access_db) -c "psql -d $(db-name) -U odoo -f ./$(dumpfile)"
-	$(access_db) -c "rm -r $(dumpfile)"	
+	$(access_db) -c "rm -r $(dumpfile)"
 	docker exec $(docker-container) bash -c "mkdir -p /var/lib/odoo/filestore"
 	docker cp $(db-name) $(docker-container):/var/lib/odoo/filestore/$(db-name)
 	docker exec -it -u0 $(docker-container) bash -c "chown odoo /var/lib/odoo/filestore/$(db-name)/*"
