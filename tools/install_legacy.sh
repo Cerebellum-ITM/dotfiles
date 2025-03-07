@@ -333,7 +333,7 @@ if ! command -v lazygit &>/dev/null; then
         brew install jesseduffield/lazygit/lazygit
     fi
 else
-    gum_log_info "Helix is already installed"
+    gum_log_info "lazygit is already installed"
 fi
 
 if ! command -v atuin &>/dev/null; then
@@ -353,7 +353,7 @@ if ! command -v nvim &>/dev/null; then
         brew install neovim
     fi
 else
-    gum_log_info "Helix is already installed"
+    gum_log_info "nvim is already installed"
 fi
 
 if ! command -v tmux &>/dev/null; then
@@ -372,6 +372,14 @@ else
     gum_log_info "Tmux is already installed"
 fi
 
+# if ! command -v yazi &>/dev/null; then
+#     gum_log_debug "Installing yazi"
+#     if [ "$os_name" = "Linux" ]; then
+#         apt install ffmpeg 7zip jq poppler-utils fd-find ripgrep imagemagick
+#     elif [ "$os_name" = "Darwin" ]; then
+#         brew install yazi ffmpeg sevenzip jq poppler fd ripgrep imagemagick font-symbols-only-nerd-font
+#     fi
+# fi
 
 mkdir -p "$HOME/dotfiles/home/.config/.tmp/"
 
