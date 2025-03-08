@@ -184,6 +184,17 @@ select_a_option() {
     fi
 }
 
+_update_makefile() {
+    local MAKEFILE_PATH TEMP_FILE NEW_MAKEFILE_PATH
+    check_makefile || return 1
+    MAKEFILE_PATH="./Makefile"
+    TEMP_FILE="/tmp/Makefile_tmp"
+    NEW_MAKEFILE_PATH="$HOME/dotfiles/templates/odoo/makefile_template/Makefile"
+    awk '/^init:|# Start local instance/ { exit } { print }' "$MAKEFILE_PATH" >"$TEMP_FILE"
+    awk '/^init:|# Start local instance/ { found=1; print; next } found { print }' "$NEW_MAKEFILE_PATH" >"$TEMP_FILE"
+    cp -f $TEMP_FILE $MAKEFILE_PATH
+}
+
 fzf-make() {
     if [[ "$1" == "repeat" || "$1" == "-r" ]]; then
         check_makefile || return 1
@@ -197,6 +208,8 @@ fzf-make() {
         else
             gum_log_warning "The command code or nano is not available in the shell."
         fi
+    elif [[ "$1" == "update" || "$1" == "-u" ]]; then
+        _update_makefile
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
         printf "List of available commands:\n- repeat or -r"
     else
