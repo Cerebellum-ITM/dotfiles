@@ -100,10 +100,9 @@ execute_commands() {
             target=$(echo "$cmd" | awk '{print $1}') #! The first element will always be the function to be executed
             args=$(echo "$cmd" | cut -d' ' -f2-)
             if [[ -z "$args" ]]; then
-
                 make -C "$working_dir" "$target"
             else
-                make -C "$working_dir" "$target" "$args"
+                eval make -C "$working_dir" "$target" "$args"
             fi
         done
     fi
@@ -149,19 +148,19 @@ _update_odoo_module() {
     history_entry+="update_module module_name=$subdir"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
-    (cd "$working_dir" && make update_module module_name="$subdir" >/dev/null 2>&1 | grep -v "Nothing to be done for")
+    cd "$working_dir" && make update_module module_name="$subdir" | grep -v "Nothing to be done for"
 }
 
 _export_odoo_translation_module() {
     FULL_PATH=$(_select_odoo_module "true")
     subdir=$(basename "$FULL_PATH")
-
+    repository_dir_path=$(basename "$(dirname "$FULL_PATH")")
     #* Add a history entry
     local history_entry=""
-    history_entry+="export_odoo_translation module_name=$subdir modele_path=$FULL_PATH"
+    history_entry+="export_odoo_translation module_name=$subdir module_path=$repository_dir_path"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
-    (cd "$working_dir" && make export_odoo_translation module_name="$subdir" >/dev/null 2>&1 | grep -v "Nothing to be done for")
+    cd "$working_dir" && make export_odoo_translation module_name="$subdir" module_path="$repository_dir_path" | grep -v "Nothing to be done for"
 }
 
 select_a_option() {
