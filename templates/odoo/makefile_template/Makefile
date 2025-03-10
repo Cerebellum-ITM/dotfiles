@@ -50,8 +50,8 @@ update_odoo_translation:
 export_odoo_translation:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -l es_MX --i18n-export=/tmp/es_MX.po --modules $(module_name) --stop-after-init
 	docker cp $(docker-container):/tmp/es_MX.po ./.
-	~/dotfiles/tools/export_odoo_translation.sh $(modele_path) $(CURRENT_DIR)
-	@echo "\033[35m\nmodule update: $(module_name) completed!!!\033[0m"
+	~/dotfiles/tools/export_odoo_translation.sh $(module_name) $(module_path) $(CURRENT_DIR)
+	@echo "\033[35m\nTranslations export completed: $(module_name) completed!!!\033[0m"
 update_only_view:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w odoo -r odoo --db_host db -u $(module_name) --stop-after-init
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
