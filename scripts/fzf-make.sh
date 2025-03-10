@@ -151,6 +151,17 @@ _update_odoo_module() {
     cd "$working_dir" && make update_module module_name="$subdir" | grep -v "Nothing to be done for"
 }
 
+_update_odoo_translation() {
+    subdir=$(_select_odoo_module)
+
+    #* Add a history entry
+    local history_entry=""
+    history_entry+="update_odoo_translation module_name=$subdir"
+    history_entry="${history_entry%, }"
+    log_history "$history_entry"
+    cd "$working_dir" && make update_odoo_translation module_name="$subdir" | grep -v "Nothing to be done for"
+}
+
 _export_odoo_translation_module() {
     FULL_PATH=$(_select_odoo_module "true")
     subdir=$(basename "$FULL_PATH")
@@ -176,6 +187,8 @@ select_a_option() {
         _function_list
     elif [[ "$choice" == "View history" ]]; then
         _view_history
+    elif [[ "$choice" == "Update Odoo transtation" ]]; then
+        _update_odoo_translation
     elif [[ "$choice" == "Export Odoo transtation" ]]; then
         _export_odoo_translation_module
     elif [[ "$choice" == "Update Odoo Module" ]]; then
