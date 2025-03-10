@@ -191,7 +191,15 @@ _update_makefile() {
     TEMP_FILE="/tmp/Makefile_tmp"
     NEW_MAKEFILE_PATH="$HOME/dotfiles/templates/odoo/makefile_template/Makefile"
     awk '/^init:|# Start local instance/ { exit } { print }' "$MAKEFILE_PATH" >"$TEMP_FILE"
-    awk '/^init:|# Start local instance/ { found=1; print; next } found { print }' "$NEW_MAKEFILE_PATH" >"$TEMP_FILE"
+    awk '/^init:|# Start local instance/ { found=1; print; next } found { print }' "$NEW_MAKEFILE_PATH" >>"$TEMP_FILE"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' -e "s/{{ cookiecutter.docker_compose_cmd }}/$DOCKER_COMPOSE_CMD/g" \
+            "$TEMP_FILE"
+    else
+        sed -i -e "s/{{ cookiecutter.docker_compose_cmd }}/$DOCKER_COMPOSE_CMD/g" \
+            "$TEMP_FILE"
+    fi
+
     cp -f $TEMP_FILE $MAKEFILE_PATH
 }
 
