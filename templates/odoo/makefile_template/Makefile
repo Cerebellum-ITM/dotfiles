@@ -10,6 +10,10 @@ backup_zip=main_2024-07-22_20-55-42.zip
 access_db= docker exec -it -u0 $(docker-container-db) bash
 TODAY := $(shell date +%Y-%m-%d)
 CURRENT_DIR := $(shell pwd)
+DOCKER_USER = USER
+DOCKER_TOKEN = TOKEN
+DOCKER_REPOSITORY = REPO
+DOCKER_IMAGE_TAG = TAG
 
 # Start local instance
 init:
@@ -57,6 +61,10 @@ update_only_view:
 	{{ cookiecutter.docker_compose_cmd }} logs -f --tail 100
 change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
+docker_build_push:
+	@echo "$(DOCKER_TOKEN)" | docker login -u $(DOCKER_USER) --password-stdin 
+	docker build -t $(DOCKER_USER)/$(DOCKER_REPOSITORY):$(DOCKER_IMAGE_TAG) .
+	docker push $(DOCKER_USER)/$(DOCKER_REPOSITORY):$(DOCKER_IMAGE_TAG)
 remove_s3:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE ir_attachment SET store_fname = REPLACE(store_fname, 's3://multimoto-odoo/', '') WHERE store_fname LIKE 's3%' AND 1=1;\""
 create_backup:
