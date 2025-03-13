@@ -17,6 +17,7 @@ return {
         },
         explorer = {
           hidden = true,
+          auto_close = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
         },
       },
