@@ -37,6 +37,7 @@ git:
     - 18.0
     - 17.0
     - 18.0-develop
+  overrideGpg: true
 
 customCommands:
  - key: 'A'
