@@ -2,3 +2,4 @@ theme = tokyonight
 shell-integration = zsh
 shell-integration-features = sudo
 unfocused-split-opacity = 0.85
+macos-option-as-alt = right
