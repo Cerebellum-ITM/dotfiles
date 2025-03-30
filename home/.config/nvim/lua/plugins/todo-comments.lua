@@ -11,6 +11,7 @@ return {
     keywords = {
       HELPERS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS", "ACTIONS" } },
       OVERRIDES = { icon = "", color = "#E01800" },
+      DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
     },
   },
 }
