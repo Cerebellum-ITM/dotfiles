@@ -22,5 +22,5 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.textwidth = 160
     vim.opt_local.fileformat = "unix"
   end,
-  desc = "Lua Filetype Options"
+  desc = "Lua Filetype Options",
 })

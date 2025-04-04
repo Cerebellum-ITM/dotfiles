@@ -4,7 +4,7 @@ return {
   opts = {
     merge_keywords = true,
     highlight = {
-      before = "fg",
+      before = "",
       keyword = "fg",
       pattern = [[.*<(KEYWORDS)\s*]],
     },
