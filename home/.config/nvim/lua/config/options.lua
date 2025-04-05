@@ -7,4 +7,7 @@ vim.o.softtabstop = 4 -- Tab key inserts 4 spaces.
 vim.o.expandtab = true -- Convert tabs to spaces.
 vim.o.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim. (default: '')
 vim.opt.spelllang = "en_us,es_mx"
-vim.opt.guicursor = "a:blinkon100"
+vim.opt.guicursor = {
+  "i:ver25",
+  "a:blinkon100",
+}
