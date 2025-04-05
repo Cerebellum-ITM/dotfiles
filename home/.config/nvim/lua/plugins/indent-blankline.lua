@@ -1,7 +1,3 @@
-vim.cmd([[
-  highlight IblIndentCustom guifg=#575D90 guibg=NONE gui=bold
-
-]])
 return {
   "lukas-reineke/indent-blankline.nvim",
   main = "ibl",
@@ -11,23 +7,23 @@ return {
     opts.indent = opts.indent or {}
     opts.indent.char = "╎"
     local highlight = {
-      "RainbowRed",
-      "RainbowYellow",
-      "RainbowBlue",
-      "RainbowOrange",
+      "RainbowIvory",
       "RainbowGreen",
+      "RainbowRed",
       "RainbowViolet",
-      "RainbowCyan",
+      "RainbowAmethys",
+      "RainbowBlue",
+      "RainbowTurquoise",
     }
     local hooks = require("ibl.hooks")
     hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-      vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-      vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-      vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-      vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-      vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-      vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+      vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#FF7477" })
+      vim.api.nvim_set_hl(0, "RainbowIvory", { fg = "#FFFFF3" })
+      vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#5BC0EB" })
+      vim.api.nvim_set_hl(0, "RainbowTurquoise", { fg = "#00D9C0" })
+      vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#CEF7A0" })
+      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#3A1772" })
+      vim.api.nvim_set_hl(0, "RainbowAmethys", { fg = "#9B5DE5" })
     end)
     opts.indent.highlight = highlight
   end,
