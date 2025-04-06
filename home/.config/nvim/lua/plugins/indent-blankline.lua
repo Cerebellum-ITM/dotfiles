@@ -22,7 +22,7 @@ return {
       vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#5BC0EB" })
       vim.api.nvim_set_hl(0, "RainbowTurquoise", { fg = "#00D9C0" })
       vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#CEF7A0" })
-      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#3A1772" })
+      vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#6A0136" })
       vim.api.nvim_set_hl(0, "RainbowAmethys", { fg = "#9B5DE5" })
     end)
     opts.indent.highlight = highlight

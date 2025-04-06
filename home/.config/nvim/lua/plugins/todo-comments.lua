@@ -7,6 +7,7 @@ return {
       before = "",
       keyword = "fg",
       pattern = [[.*<(KEYWORDS)\s*]],
+      multiline_pattern = "^[^-].*",
     },
     keywords = {
       HELPERS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS", "ACTIONS" } },
