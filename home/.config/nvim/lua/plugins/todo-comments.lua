@@ -10,8 +10,10 @@ return {
       multiline_pattern = "^[^-].*",
     },
     keywords = {
-      HELPERS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS", "ACTIONS" } },
-      OVERRIDES = { icon = "", color = "#E01800" },
+      HELPERS = { icon = "", color = "#f1009a" },
+      COMPUTED_METHODS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS" } },
+      ACTIONS = { icon = "", color = "#7EBCE6" },
+      OVERRIDES = { icon = "", color = "#FFC53A" },
       DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
     },
   },

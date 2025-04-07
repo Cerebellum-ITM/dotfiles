@@ -41,10 +41,16 @@ return {
           end,
           extmark_opts = { priority = 2000 },
         },
+        custom_comment = {
+          pattern = "%-%-%-%-%-%-*",
+          group = "MyCustomWhiteColor",
+          extmark_opts = { priority = 2000 },
+        },
       },
     }
   end,
   config = function(_, opts)
+    vim.api.nvim_set_hl(0, "MyCustomWhiteColor", { fg = "#FFFFFF" })
     if type(opts.tailwind) == "table" and opts.tailwind.enabled then
       -- reset hl groups when colorscheme changes
       vim.api.nvim_create_autocmd("ColorScheme", {
