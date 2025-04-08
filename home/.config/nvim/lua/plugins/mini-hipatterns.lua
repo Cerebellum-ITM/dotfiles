@@ -41,6 +41,11 @@ return {
           end,
           extmark_opts = { priority = 2000 },
         },
+        type_ignore = {
+          pattern = "type: ignore",
+          group = "ignore_color",
+          extmark_opts = { priority = 2000 },
+        },
         custom_comment = {
           pattern = "%-%-%-%-%-%-*",
           group = "MyCustomWhiteColor",
@@ -51,6 +56,7 @@ return {
   end,
   config = function(_, opts)
     vim.api.nvim_set_hl(0, "MyCustomWhiteColor", { fg = "#FFFFFF" })
+    vim.api.nvim_set_hl(0, "ignore_color", { fg = "#FAFF81" })
     if type(opts.tailwind) == "table" and opts.tailwind.enabled then
       -- reset hl groups when colorscheme changes
       vim.api.nvim_create_autocmd("ColorScheme", {
