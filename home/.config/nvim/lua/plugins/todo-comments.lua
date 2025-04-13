@@ -12,6 +12,7 @@ return {
     keywords = {
       HELPERS = { icon = "", color = "#f1009a" },
       COMPUTED_METHODS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS" } },
+      TEXTUAL = {icon = "", color = "#FAFF81", alt = {'TEXTUAL APPLICATION'}},
       ACTIONS = { icon = "", color = "#7EBCE6" },
       CRUD = { icon = "", color = "#FAFF81" },
       INHERITED = { icon = "", color = "#F9B5AC", alt = { "INHERITED FUNCTIONS" } },
