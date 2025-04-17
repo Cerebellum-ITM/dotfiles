@@ -12,6 +12,9 @@ return {
         "--indent-char",
         " ",
         "--selfclose",
+        "--eof-newline",
+        "--preserve-attributes",
+        "--blanks",
       },
     }
   end,
