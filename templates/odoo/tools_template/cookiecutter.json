@@ -1,3 +1,6 @@
 {
-    "folder_name": "tools"
+    "folder_name": "tools",
+    "_copy_without_render": [
+        "logger_config.py"
+    ]
 }
