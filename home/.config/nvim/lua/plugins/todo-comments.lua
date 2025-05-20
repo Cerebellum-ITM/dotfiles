@@ -12,7 +12,9 @@ return {
     keywords = {
       HELPERS = { icon = "", color = "#f1009a" },
       COMPUTED_METHODS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS" } },
-      TEXTUAL = {icon = "", color = "#FAFF81", alt = {'TEXTUAL APPLICATION'}},
+      API = { icon = "", color = "#00D9C0", alt = { "API RESPONE SCHEMAS" } },
+      CONTROLLERS = { icon = "", color = "#B7AD99", alt = { "ENDPOINT ROUTERS" } },
+      TEXTUAL = { icon = "", color = "#FAFF81", alt = { "TEXTUAL APPLICATION" } },
       ACTIONS = { icon = "", color = "#7EBCE6" },
       CRUD = { icon = "", color = "#FAFF81" },
       INHERITED = { icon = "", color = "#F9B5AC", alt = { "INHERITED FUNCTIONS" } },
