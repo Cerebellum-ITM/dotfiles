@@ -14,6 +14,7 @@ return {
       COMPUTED_METHODS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS" } },
       API = { icon = "", color = "#00D9C0", alt = { "API RESPONE SCHEMAS" } },
       CONTROLLERS = { icon = "", color = "#B7AD99", alt = { "ENDPOINT ROUTERS" } },
+      DEPENDENCY = { icon = "", color = "#744899", alt = { "DEPENDENCY DEFINITIONS" } },
       TEXTUAL = { icon = "", color = "#FAFF81", alt = { "TEXTUAL APPLICATION" } },
       ACTIONS = { icon = "", color = "#7EBCE6" },
       CRUD = { icon = "", color = "#FAFF81" },
