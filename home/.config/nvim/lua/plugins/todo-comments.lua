@@ -11,7 +11,7 @@ return {
     },
     keywords = {
       HELPERS = { icon = "", color = "#f1009a" },
-      COMPUTED_METHODS = { icon = "", color = "#5AA000", alt = { "COMPUTED METHODS" } },
+      COMPUTED_METHODS = { icon = "", color = "#C2EABD", alt = { "COMPUTED METHODS" } },
       API = { icon = "", color = "#00D9C0", alt = { "API RESPONE SCHEMAS" } },
       CONTROLLERS = { icon = "", color = "#B7AD99", alt = { "ENDPOINT ROUTERS" } },
       DEPENDENCY = { icon = "", color = "#744899", alt = { "DEPENDENCY DEFINITIONS" } },
@@ -20,6 +20,7 @@ return {
       CRUD = { icon = "", color = "#FAFF81" },
       INHERITED = { icon = "", color = "#F9B5AC", alt = { "INHERITED FUNCTIONS" } },
       OVERRIDES = { icon = "", color = "#FFC53A" },
+      CONSTRAINS = { icon = "", color = "#EE4B6A", alt = { "CONSTRAINS FUNCTIONS" } },
       DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
     },
   },
