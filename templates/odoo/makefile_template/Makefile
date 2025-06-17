@@ -86,8 +86,8 @@ restore_db:
 	$(access_db) -c "rm -r $(dumpfile)"
 	docker exec $(docker-container) bash -c "mkdir -p /var/lib/odoo/filestore"
 	docker cp $(db-name) $(docker-container):/var/lib/odoo/filestore/$(db-name)
-	docker exec -it -u0 $(docker-container) bash -c "chown odoo /var/lib/odoo/filestore/$(db-name)/*"
-	docker exec -it -u0 $(docker-container) bash -c "chgrp odoo /var/lib/odoo/filestore/$(db-name)/*"
+	docker exec -it -u0 $(docker-container) bash -c "chown -R odoo:odoo /var/lib/odoo/filestore/$(db-name)"
+	docker exec -it -u0 $(docker-container) bash -c "chmod -R 755 /var/lib/odoo/filestore/$(db-name)"
 	docker exec -it -u0 $(docker-container) bash -c "cd /var/lib/odoo/filestore/$(db-name) && chown odoo checklist/*"
 	docker exec -it -u0 $(docker-container) bash -c "cd /var/lib/odoo/filestore/$(db-name) && chgrp odoo checklist/*"
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U odoo -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
