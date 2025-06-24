@@ -73,15 +73,18 @@ return {
       sources = {
         grep = {
           hidden = true,
+          ignored = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
         },
 
         files = {
           hidden = true,
+          ignored = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
         },
         explorer = {
           hidden = true,
+          ignored = true,
           auto_close = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
         },
