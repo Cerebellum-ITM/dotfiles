@@ -34,6 +34,8 @@ function ask() {
     [ "$response_lc" = "y" ]
 }
 
+python_libraries=("groq" "dotenv" "rich")
+
 gum_log_info "Check for dependencies"
 # install all dependencies
 
@@ -48,7 +50,7 @@ elif [ "$os_name" = "Darwin" ]; then
         gum_log_debug "Installing Homebrew"
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-    brew update
+    # brew update
 fi
 
 if ! command -v zsh &>/dev/null; then
@@ -200,8 +202,8 @@ if ! command -v eza &>/dev/null; then
     fi
 else
     gum_log_info "eza is already installed"
-    gum_log_debug "Updating eza"
-    sudo eza upgrade --force
+    # gum_log_debug "Updating eza"
+    # sudo eza upgrade --force
 fi
 
 if ! command -v cookiecutter &>/dev/null; then
@@ -409,6 +411,16 @@ UNATTENDED_INSTALLATION=false
 if [ "$1" == "--unattended" ]; then
     UNATTENDED_INSTALLATION=true
 fi
+
+gum_log_info 'Checking for python libraries'
+for library in "${python_libraries[@]}"; do
+    if pip show "$library" >/dev/null 2>&1; then
+        gum_log_info "$library is already installed"
+    else
+        gum_log_warning "$library is not installed. Installing..."
+        pip install "$library"
+    fi
+done
 
 if [ "$UNATTENDED_INSTALLATION" == false ]; then
     # Remove oh-my-zsh
