@@ -8,7 +8,8 @@ from dotenv import load_dotenv
 
 
 def translate_commit_message(commit_message):
-    load_dotenv(".env")
+    dotenv_path = os.path.expanduser("~/dotfiles/python/.env")
+    load_dotenv(dotenv_path)
 
     client = Groq(
         api_key=os.environ.get("GROQ_API_KEY"),
