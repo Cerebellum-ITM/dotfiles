@@ -5,7 +5,8 @@ FZF_TRANSLATE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-translate_hist
 
 if [[ "$1" == "_request_translation" ]]; then
     commit_message="$2"
-    translate_message=$(trans es:en "$commit_message" -4 -b)
+    # translate_message=$(trans es:en "$commit_message" -4 -b)
+    translate_message=$(python3 "$HOME/dotfiles/python/groq_translate_api.py" "$commit_message")
     echo "$PWD ~ $commit_message ~ $translate_message" | sed "s/'//g" >> "$FZF_TRANSLATE_HISTORY_FILE"
     exit 0
 fi
