@@ -7,7 +7,7 @@ from rich import print
 from dotenv import load_dotenv
 
 
-def translate_commit_message(commit_message):
+def translate_commit_message(commit_message: str) -> str:
     dotenv_path = os.path.expanduser("~/dotfiles/python/.env")
     load_dotenv(dotenv_path)
 
@@ -30,8 +30,15 @@ def translate_commit_message(commit_message):
             ],
             model="llama-3.3-70b-versatile",
         )
+        content = completion.choices[0].message.content
 
-        return completion.choices[0].message.content
+        if content is None:
+            raise ValueError("Received None instead of a valid translated message.")
+
+        if content.startswith('"') and content.endswith('"'):
+            content = content[1:-1]
+
+        return content
 
     except Exception as e:
         print(f"[red]Error translating commit message: {e}[/red]")
@@ -51,4 +58,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
