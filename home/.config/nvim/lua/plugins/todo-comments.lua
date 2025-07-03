@@ -23,6 +23,7 @@ return {
       OVERRIDES = { icon = "", color = "#FFC53A" },
       CONSTRAINS = { icon = "", color = "#EE4B6A", alt = { "CONSTRAINS FUNCTIONS" } },
       DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
+      DESC = { icon = "", color = "#C2EABD", alt = { "Desc" } },
     },
   },
 }
