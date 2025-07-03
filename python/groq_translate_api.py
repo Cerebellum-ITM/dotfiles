@@ -7,12 +7,15 @@ from rich import print
 from dotenv import load_dotenv
 
 
+# ---------------------------------------------------------
+# HELPERS
+# ---------------------------------------------------------
 def translate_commit_message(commit_message: str) -> str:
-    dotenv_path = os.path.expanduser("~/dotfiles/python/.env")
+    dotenv_path = os.path.expanduser('~/dotfiles/python/.env')
     load_dotenv(dotenv_path)
 
     client = Groq(
-        api_key=os.environ.get("GROQ_API_KEY"),
+        api_key=os.environ.get('GROQ_API_KEY'),
     )
 
     system_prompt = """
@@ -23,17 +26,17 @@ def translate_commit_message(commit_message: str) -> str:
         completion = client.chat.completions.create(
             messages=[
                 {
-                    "role": "system",
-                    "content": system_prompt,
+                    'role': 'system',
+                    'content': system_prompt,
                 },
-                {"role": "user", "content": commit_message},
+                {'role': 'user', 'content': commit_message},
             ],
-            model="llama-3.3-70b-versatile",
+            model='llama-3.3-70b-versatile',
         )
         content = completion.choices[0].message.content
 
         if content is None:
-            raise ValueError("Received None instead of a valid translated message.")
+            raise ValueError('Received None instead of a valid translated message.')
 
         if content.startswith('"') and content.endswith('"'):
             content = content[1:-1]
@@ -41,20 +44,20 @@ def translate_commit_message(commit_message: str) -> str:
         return content
 
     except Exception as e:
-        print(f"[red]Error translating commit message: {e}[/red]")
+        print(f'[red]Error translating commit message: {e}[/red]')
         sys.exit(1)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Translate Git commit messages from Spanish to English."
+        description='Translate Git commit messages from Spanish to English.'
     )
-    parser.add_argument("message", type=str, help="The commit message to translate")
+    parser.add_argument('message', type=str, help='The commit message to translate')
 
     args = parser.parse_args()
     translated_message = translate_commit_message(args.message)
     print(translated_message)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
