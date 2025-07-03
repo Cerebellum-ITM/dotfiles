@@ -19,7 +19,7 @@ def translate_commit_message(commit_message: str) -> str:
     )
 
     system_prompt = """
-        Translate the following Git commit message from Spanish to English. The message was written by a developer with extensive experience. Ensure the translation maintains technical context and precision, while keeping the translated message between 80 and 150 characters.
+        Translate the following Git commit message from Spanish to English. The message was written by a developer with extensive experience. Aim to keep the translation between 80 and 150 characters while maintaining technical context and precision. If this is not possible without losing important details, allow for a longer translation.
     """
 
     try:
