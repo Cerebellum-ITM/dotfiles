@@ -31,5 +31,7 @@ return {
         "false",
       },
     }
+
+    opts.formatters_by_ft.go = { "gofumpt", "goimports_reviser", "golines" }
   end,
 }
