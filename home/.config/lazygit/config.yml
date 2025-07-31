@@ -62,3 +62,8 @@ customCommands:
    command: " echo '{{ .SelectedCommit.Sha }}' | $HOME/dotfiles/tools/lazygit-custom-submodule-pick-commit-workflow.sh"
    subprocess: true
    description: 'Run the script to create a commit in the parent directory (submodule)'
+ - key: 'U'
+   context: 'localBranches'
+   command: "echo '{{ .SelectedLocalBranch.Name }}' | $HOME/dotfiles/tools/lazygit-custom-upstream-workflow.sh"
+   subprocess: true
+   description: 'Run the script to create an upstream of the selected branch'
