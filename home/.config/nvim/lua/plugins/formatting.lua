@@ -4,6 +4,7 @@ return {
     opts.formatters_by_ft = opts.formatters_by_ft or {}
     opts.formatters = opts.formatters or {}
     opts.formatters_by_ft.javascript = { "prettier" }
+    opts.formatters_by_ft.typescript = { "prettier" }
     opts.formatters_by_ft.xml = { "prettier" }
     opts.formatters["prettier"] = {
       prepend_args = function(self, ctx)
