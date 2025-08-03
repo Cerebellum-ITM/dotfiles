@@ -1,3 +1,7 @@
+# shellcheck disable=SC1090
+# shellcheck disable=SC2034
+
+# shellcheck disable=SC2050
 if [ "STERM PROGRAM" != "Apple_Terminal" ]; then
     eval "$(oh-my-posh init zsh --config $HOME/.oh-my-posh/prompt_config.toml)"
 fi
@@ -44,6 +48,7 @@ bindkey '^[[F' end-of-line
 
 HISTSIZE=10000
 HISTFILE=~/.zsh_history
+
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
 setopt appendhistory
@@ -57,6 +62,7 @@ setopt hist_find_no_dups
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+# shellcheck disable=SC2296
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
@@ -105,16 +111,18 @@ function history_clean() {
 }
 
 function y() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+    local tmp cwd
+    tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
+		builtin cd -- "$cwd" || exit
 	fi
 	rm -f -- "$tmp"
 }
 
 get_ip() {
-    local ip_address=$(hostname -I | awk '{print $1}')
+    local ip_address
+    ip_address=$(hostname -I | awk '{print $1}')
     blue_bold "The IP address is: $ip_address"
     
     if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -132,17 +140,17 @@ get_ip() {
 }
 
 fzf-code(){
-    local actual_path=$(pwd)
+    local file_name
     if [[ "$1" == "open-directory" || "$1" == "." ]]; then
         code . -r
     elif [[ "$1" == "new-window" || "$1" == "-nw" ]]; then
         code .
     elif [[ "$1" == "create" || "$1" == "-c" ]]; then
-        local file_name=$2
-        code $file_name
+        file_name=$2
+        code "$file_name"
     elif [[ "$1" == "open" || "$1" == "-o" ]]; then
-        local file_name=$(fzf_select)
-        code $file_name
+        file_name=$(fzf_select)
+        code "$file_name"
     elif [[ "$1" == "help" || "$1" == "-h" ]]; then
         echo "List of available commands:\n- $(blue_bold 'open-directory') or $(purple_underlie '.')\n- $(green_bold 'new-window') or $(purple_underlie '-nw')\n- $(green_bold 'create') or $(purple_underlie '-c') $(purple_underlie '<file_name>')\n- $(green_bold 'open') or $(purple_underlie '-o')"
     else
@@ -166,5 +174,5 @@ if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
 fi
 
 if [ -n "$TMUX" ]; then
-    eval $(tmux showenv -s SSH_AUTH_SOCK)
+    eval "$(tmux showenv -s SSH_AUTH_SOCK)"
 fi
