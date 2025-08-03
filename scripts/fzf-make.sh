@@ -202,7 +202,7 @@ select_a_option() {
         _update_odoo_translation
     elif [[ "$choice" == "Export Odoo translation" ]]; then
         _export_odoo_translation_module
-    elif [[ "$choice" == "Update Odoo Module" ]]; then
+    elif [[ "$choice" == "Install Odoo Module" ]]; then
         _install_odoo_module
     elif [[ "$choice" == "Update Odoo Module" ]]; then
         _update_odoo_module
