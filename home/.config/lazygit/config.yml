@@ -66,4 +66,4 @@ customCommands:
    context: 'localBranches'
    command: "echo '{{ .SelectedLocalBranch.Name }}' | $HOME/dotfiles/tools/lazygit-custom-upstream-workflow.sh"
    subprocess: true
-   description: 'Run the script to create an upstream of the selected branch'
+   description: 'Run the script to create an upstream/push to a specific remote of the selected branch'
