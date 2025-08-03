@@ -38,12 +38,20 @@ db_conteiner_shell:
 	docker exec -it -u0 $(docker-container-db) bash
 postgres_shell:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql --host=localhost --username=$(POSTGRES_USER) --dbname=$(db-name)"
+install_module:
+	docker compose restart
+	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db -i $(module_name) --stop-after-init
+	clear
+	$$HOME/dotfiles/tools/odoo_logo.sh
+	@echo "$$(gum style --foreground='808080' 'The module installation is complete:') $$(gum style --foreground='#FFD700' --bold --underline '$(module_name)')"
+	@sleep 2
+	docker compose logs -f --tail 100
 update_module:
 	docker compose restart
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db -u $(module_name) --stop-after-init
 	clear
 	$$HOME/dotfiles/tools/odoo_logo.sh
-	@echo "\033[35m\nmodule update: $(module_name) completed!!!\033[0m"
+	@echo "$$(gum style --foreground='808080' 'The module update is complete:') $$(gum style --foreground='#FFD700' --bold --underline '$(module_name)')"
 	@sleep 2
 	docker compose logs -f --tail 100
 update_odoo_translation:

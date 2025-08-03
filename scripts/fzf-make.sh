@@ -140,6 +140,17 @@ _select_odoo_module() {
 
 }
 
+_install_odoo_module() {
+    local history_entry subdir
+    subdir=$(_select_odoo_module)
+
+    #* Add a history entry
+    history_entry+="install_module module_name=$subdir"
+    history_entry="${history_entry%, }"
+    log_history "$history_entry"
+    cd "$working_dir" && make install_module module_name="$subdir" | grep -v "Nothing to be done for"
+}
+
 _update_odoo_module() {
     subdir=$(_select_odoo_module)
 
@@ -152,10 +163,10 @@ _update_odoo_module() {
 }
 
 _update_odoo_translation() {
+    local history_entry subdir
     subdir=$(_select_odoo_module)
 
     #* Add a history entry
-    local history_entry=""
     history_entry+="update_odoo_translation module_name=$subdir"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
@@ -163,11 +174,11 @@ _update_odoo_translation() {
 }
 
 _export_odoo_translation_module() {
+    local history_entry subdir FULL_PATH repository_dir_path
     FULL_PATH=$(_select_odoo_module "true")
     subdir=$(basename "$FULL_PATH")
     repository_dir_path=$(basename "$(dirname "$FULL_PATH")")
     #* Add a history entry
-    local history_entry=""
     history_entry+="export_odoo_translation module_name=$subdir module_path=$repository_dir_path"
     history_entry="${history_entry%, }"
     log_history "$history_entry"
@@ -179,7 +190,7 @@ select_a_option() {
     local choice options
     options=("View history" "Select commands")
     if [[ $(_check_odoo_env) == 'true' ]]; then
-        options=("View history" "Update Odoo Module" "Export Odoo translation" "Update Odoo translation" "Select commands")
+        options=("View history" "Install Odoo Module" "Update Odoo Module" "Export Odoo translation" "Update Odoo translation" "Select commands")
     fi
     choice=$(printf "%s\n" "${options[@]}" | fzf --ansi --height=100% --preview-window='right,70%,border-left' --border --header="Choose action: 'w' for command selection, 's' for history" --preview="bat $working_dir/Makefile --style='${BAT_STYLE:-full}' --color=always" --cycle --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
     _check_fzf_make_exit_code || return 1
@@ -191,6 +202,8 @@ select_a_option() {
         _update_odoo_translation
     elif [[ "$choice" == "Export Odoo translation" ]]; then
         _export_odoo_translation_module
+    elif [[ "$choice" == "Update Odoo Module" ]]; then
+        _install_odoo_module
     elif [[ "$choice" == "Update Odoo Module" ]]; then
         _update_odoo_module
     fi
