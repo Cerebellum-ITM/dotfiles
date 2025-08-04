@@ -57,19 +57,20 @@ update_module:
 update_odoo_translation:
 	docker compose restart
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db -u $(module_name) --i18n-overwrite --stop-after-init
-	@echo "\033[35m\nTranslation update: es_MX completed!!!\033[0m"
+	@echo "$$(gum style --foreground='#FFD700' --bold 'es_MX') $$(gum style --foreground='808080' 'updated translation of ') $$(gum style --foreground='#FFD700' --bold --underline '$(module_name)')"
 	@sleep 2
 	docker compose logs -f --tail 100
 export_odoo_translation:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db -l es_MX --i18n-export=/tmp/es_MX.po --modules $(module_name) --stop-after-init
 	docker cp $(docker-container):/tmp/es_MX.po ./.
 	~/dotfiles/tools/export_odoo_translation.sh $(module_name) $(module_path) $(CURRENT_DIR)
-	@echo "\033[35m\nTranslations export completed: $(module_name) completed!!!\033[0m"
+	@echo "$$(gum style --foreground='#FFD700' --bold 'es_MX') $$(gum style --foreground='808080' 'export translation of ') $$(gum style --foreground='#FFD700' --bold --underline '$(module_name)')"
 update_only_view:
 	docker exec -it $(docker-container) odoo -c /etc/odoo/odoo.conf -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db -u $(module_name) --stop-after-init
 	docker compose logs -f --tail 100
 change_login:
 	docker exec -it -u0 $(docker-container-db) bash -c "psql -d $(db-name) -U $(POSTGRES_USER) -c \"UPDATE res_users SET password = 'admin' WHERE id=2; UPDATE res_users SET login = 'admin' WHERE id=2;\""
+	@echo "$$(gum style --foreground='808080' 'The access change process for user with ID 2 has been ') $$(gum style --foreground='#FFD700' --bold 'completed')"
 docker_build_push:
 	@echo "$(DOCKER_TOKEN)" | docker login -u $(DOCKER_USER) --password-stdin 
 	docker build -t $(DOCKER_USER)/$(DOCKER_REPOSITORY):$(DOCKER_IMAGE_TAG) .
@@ -86,6 +87,7 @@ create_backup:
 	rm -r $(db-name)
 neutralize_db:
 	docker exec -it -u0 $(docker-container) bash -c "odoo neutralize -d $(db-name) -w $(POSTGRES_PASSWORD) -r $(POSTGRES_USER) --db_host db"
+	@echo "$$(gum style --foreground='808080' 'The ') $$(gum style --foreground='#FFD700' --bold 'neutralization') $$(gum style --foreground='808080' ' process is complete')"
 restore_db:
 	unzip $(backup_zip)
 	mv $(filestore_dump_name) $(db-name)
