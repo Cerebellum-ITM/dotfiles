@@ -21,6 +21,8 @@ return {
             "false",
             "--xml-sort-attributes-by-key",
             "false",
+            '--xml-whitespace-sensitivity',
+            'perserve',
             "--plugin=@prettier/plugin-xml",
           }
         else
