@@ -4,6 +4,8 @@
 
 *.log
 *.flag
+*.db
+**__pycache__/
 .docker-compose-config
 odoo_develop.lua
 home/.config/karabiner/automatic_backups/**
