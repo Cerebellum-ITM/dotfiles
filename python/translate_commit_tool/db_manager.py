@@ -1,7 +1,24 @@
 import os
 import sqlite3
+import logging
 from datetime import datetime
+from logging.handlers import RotatingFileHandler
 from typing import Optional, Dict, Any, List, Tuple
+
+
+LOG_FILE = os.path.expanduser('~/dotfiles/home/.config/.tmp/translation_db.log')
+log_dir = os.path.dirname(LOG_FILE)
+os.makedirs(log_dir, exist_ok=True)
+
+logger = logging.getLogger('translation_db_logger')
+logger.setLevel(logging.DEBUG)
+
+handler = RotatingFileHandler(LOG_FILE, maxBytes=5 * 1024 * 1024, backupCount=3)
+formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+handler.setFormatter(formatter)
+
+if not logger.hasHandlers():
+    logger.addHandler(handler)
 
 
 class TranslationDB:
@@ -12,7 +29,7 @@ class TranslationDB:
     def _ensure_db(self) -> None:
         if not os.path.exists(self.db_path):
             os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
-            print(f'Database not found. Creating at {self.db_path}...')
+            logger.info(f'Database not found. Creating at {self.db_path}...')
 
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -41,7 +58,10 @@ class TranslationDB:
                 (date, execute_path, original_message, translation),
             )
             conn.commit()
-        print('Record inserted successfully.')
+            inserted_id = cursor.lastrowid
+        logger.info(
+            f"Record inserted successfully PWD = '{execute_path}', id = {inserted_id}"
+        )
 
     def query_commits(
         self, filter_by: Optional[Dict[str, Any]] = None

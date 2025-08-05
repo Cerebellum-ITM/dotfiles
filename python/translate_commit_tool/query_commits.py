@@ -1,5 +1,5 @@
 import sys
-from db_manager import TranslationDB
+from db_manager import TranslationDB, logger
 
 
 def get_all_commits(execute_path: str, db: TranslationDB) -> None:
@@ -13,18 +13,19 @@ def get_all_commits(execute_path: str, db: TranslationDB) -> None:
         for commit in reversed(commits):
             print(f'{commit[0]}\t{commit[1]}\t{commit[2]}\t{commit[3]}\t{commit[4]}')
     else:
-        print('No records found')
+        logger.info('No records found')
 
 
 def get_commit_by_id(id: int, db: TranslationDB) -> None:
     error_message = 'Cannot get translate message with that ID'
     if id == 0:
-        print(error_message)
+        logger.error(error_message)
+        sys.exit(1)
     commit = db.get_translation_by_id(commit_id=id)
     if commit:
         print(commit)
     else:
-        print(error_message)
+        logger.error(error_message)
 
 
 if __name__ == '__main__':
@@ -40,5 +41,5 @@ if __name__ == '__main__':
     elif command == 'get_commit_by_id':
         get_commit_by_id(id=int(sys.argv[2]), db=db)
     else:
-        print(f'Unknown command: {command}')
+        logger.error(f'Unknown command: {command}')
         sys.exit(1)
