@@ -60,10 +60,21 @@ class TranslationDB:
                     filters.append(f'{key} = ?')
                     params.append(value)
             query += ' WHERE ' + ' AND '.join(filters)
+            query += ' ORDER BY date DESC'
 
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(query, params)
             rows = cursor.fetchall()
         return rows
+
+    def get_translation_by_id(self, commit_id: int) -> Optional[str]:
+        query = 'SELECT translation FROM commits WHERE id = ?'
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, (commit_id,))
+            result = cursor.fetchone()
+        if result:
+            return result[0]
+        return None
 
