@@ -63,6 +63,22 @@ class TranslationDB:
             f"Record inserted successfully PWD = '{execute_path}', id = {inserted_id}"
         )
 
+    def delete_commit_by_id(self, commit_id: int) -> None:
+        logger.debug('Enter: delete_commit_by_id')
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                DELETE FROM commits WHERE id = ?
+                """,
+                (commit_id,),
+            )
+            conn.commit()
+            if cursor.rowcount > 0:
+                logger.info(f'Record deleted successfully with id = {commit_id}')
+            else:
+                logger.warning(f'No record found with id = {commit_id} to delete')
+
     def query_commits(
         self, filter_by: Optional[Dict[str, Any]] = None
     ) -> List[Tuple[int, str, str, str, str]]:
