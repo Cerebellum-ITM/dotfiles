@@ -29,6 +29,11 @@ fi
 
 _fzf_translate_main_function() {
     entry=$(_fzf_translate_gui)
+    if [[ -z "$entry" ]]; then
+        echo "$(gum style --foreground="#FF0000" "") $(gum style --foreground='808080' 'No entry selected. Exiting.')"
+        return 1
+    fi
+
     IFS=$'\t' read -r id rest <<< "$entry"
     python3 "$HOME/dotfiles/python/translate_commit_tool/query_commits.py" "get_commit_by_id" "$id"
 }
