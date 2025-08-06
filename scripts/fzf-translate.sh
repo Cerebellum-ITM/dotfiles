@@ -29,7 +29,7 @@ if [[ "$1" == "_change_query" ]]; then
     IFS=$'\t' read -r _ _ entry <<< "$2"
     echo "$entry"
 fi
-w
+
 _fzf_translate_main_function() {
     entry=$(_fzf_translate_gui)
     if [[ -z "$entry" ]]; then
