@@ -17,7 +17,6 @@ if [[ "$1" == "_preview_translation" ]]; then
     exit 0
 fi
 
-
 _fzf_translate_get_pwd_commits() {
     python3 "$HOME/dotfiles/python/translate_commit_tool/query_commits.py" "get_all_commits" "$PWD" | awk -F'\t' '{print $1 "\t" $2 "\t" $4}'
 }
@@ -26,7 +25,11 @@ if [[ "$1" == "_update_pwd_commits" ]]; then
     _fzf_translate_get_pwd_commits 
 fi
 
-
+if [[ "$1" == "_change_query" ]]; then
+    IFS=$'\t' read -r _ _ entry <<< "$2"
+    echo "$entry"
+fi
+w
 _fzf_translate_main_function() {
     entry=$(_fzf_translate_gui)
     if [[ -z "$entry" ]]; then
@@ -50,6 +53,7 @@ _fzf_translate_gui() {
     --preview="bash $__fzf_translate_script _preview_translation {}" \
     --preview-label 'English Translation' \
     --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
+    --bind "ctrl-q:transform-query:(bash $__fzf_translate_script _change_query {})" \
     --bind "ctrl-r:execute-silent(bash $__fzf_translate_script _remove_element_from_db {})+reload(bash $__fzf_translate_script _update_pwd_commits)" \
     --bind "ctrl-w:execute-silent(bash $__fzf_translate_script _request_translation {q})+reload(bash $__fzf_translate_script _update_pwd_commits)"
 }
