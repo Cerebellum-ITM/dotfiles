@@ -24,12 +24,12 @@ check_makefile() {
 }
 
 _check_odoo_env() {
-    if grep -qi "odoo" "$working_dir/docker-compose.yml"; then
+    local file="$working_dir/docker-compose.yml"
+    if [[ -f "$file" ]] && grep -qi "odoo" "$file"; then
         echo "true"
     else
         echo "false"
     fi
-
 }
 
 _fzf_make_gui() {
