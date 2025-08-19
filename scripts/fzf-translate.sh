@@ -75,6 +75,7 @@ _fzf_translate_gui() {
     _fzf_translate_get_pwd_commits |
         fzf-tmux --ansi -m -p80%,60% -- \
             --layout=reverse --multi --height=50% --min-height=20 --border \
+            --tac \
             --border-label-pos=2 \
             --color='header:italic:underline,label:blue' \
             --prompt='Commit: ' \
