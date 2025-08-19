@@ -4,10 +4,17 @@ __fzf_translate_script=${BASH_SOURCE[0]:-${(%):-%x}}
 
 if [[ "$1" == "_request_translation" ]]; then
     commit=$2
+    unset translate_message
     commit=${commit#\'}
     commit=${commit%\'}
-    translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit")
-    python3 "$HOME/dotfiles/python/translate_commit_tool/insert_commit.py" "$PWD" "$commit" "$translate_message"
+    if [[ -n "$commit" ]]; then
+        translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit")
+    fi
+
+    if [[ -n "$translate_message" ]]; then
+        python3 "$HOME/dotfiles/python/translate_commit_tool/insert_commit.py" "$PWD" "$commit" "$translate_message"
+    fi
+
     exit 0
 fi
 
