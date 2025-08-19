@@ -3,12 +3,20 @@
 __fzf_translate_script="$HOME/dotfiles/scripts/fzf-translate.sh"
 
 if [[ "$1" == "_request_translation" ]]; then
-    commit=$2
+
+    unset context
     unset translate_message
+    if [ -f "$TMP_FILE_PATH" ] && [ -s "$TMP_FILE_PATH" ]; then
+        context=$(cat "$TMP_FILE_PATH")
+        rm "$TMP_FILE_PATH"
+    fi
+
+    commit=$2
     commit=${commit#\'}
     commit=${commit%\'}
+
     if [[ -n "$commit" ]]; then
-        translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit")
+        translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit" "$context")
     fi
 
     if [[ -n "$translate_message" ]]; then
@@ -61,6 +69,8 @@ if [[ "$1" == "_change_query" ]]; then
 fi
 
 _fzf_translate_main_function() {
+    TMP_FILE_PATH=$(mktemp) && git diff --cached | grep -E '^(@@ |[+-])' | grep -vE '^\+\+\+ |^--- ' >"$TMP_FILE_PATH"
+    export TMP_FILE_PATH
     entry=$(_fzf_translate_gui)
     if [[ -z "$entry" ]]; then
         echo "$(gum style --foreground="#FF0000" "") $(gum style --foreground='808080' 'No entry selected. Exiting.')"
