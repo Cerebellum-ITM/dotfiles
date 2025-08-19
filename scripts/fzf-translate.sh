@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2296
-__fzf_translate_script=${BASH_SOURCE[0]:-${(%):-%x}}
+__fzf_translate_script="$HOME/dotfiles/scripts/fzf-translate.sh"
 
 if [[ "$1" == "_request_translation" ]]; then
     commit=$2
