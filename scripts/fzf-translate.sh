@@ -32,6 +32,11 @@ if [[ "$1" == "_update_pwd_commits" ]]; then
     _fzf_translate_get_pwd_commits 
 fi
 
+if [[ "$1" == "_remove_element_from_db" ]]; then
+    IFS=$'\t' read -r id _ _ <<< "$2"
+    python3  "$HOME/dotfiles/python/translate_commit_tool/delete_commit.py" "$id"
+fi
+
 if [[ "$1" == "_change_query" ]]; then
     IFS=$'\t' read -r _ _ entry <<< "$2"
     echo "$entry"
