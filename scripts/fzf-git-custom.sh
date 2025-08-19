@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-fzf_git_check_abort(){
+fzf_git_check_abort() {
     if [ -f /tmp/fzf_git_exit_code ] && [ "$(cat /tmp/fzf_git_exit_code)" -eq 130 ]; then
         gun_log_fatal "Process aborted by the $(git_strong_white "user")"
         rm /tmp/fzf_git_exit_code
@@ -7,28 +7,28 @@ fzf_git_check_abort(){
     fi
 }
 
-_check_for_git_repository(){
-    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+_check_for_git_repository() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         gun_log_fatal "There is no $(git_strong_red "git repository") in this $(git_strong_white "directory")."
         return 1
     fi
 }
 
-_check_for_git_repository_and_submodule(){
-    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+_check_for_git_repository_and_submodule() {
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         gun_log_fatal "There is no $(git_strong_red "git repository") in this $(git_strong_white "directory")."
         return 1
     fi
     cd .. || return 1
-    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
         gun_log_fatal "There is no $(git_strong_red "git repository") in the $(gum_blue "parent") $(git_strong_white "directory")."
-        cd - > /dev/null 2>&1 || return 1
+        cd - >/dev/null 2>&1 || return 1
         return 1
     fi
-    cd - > /dev/null 2>&1 || return 1
+    cd - >/dev/null 2>&1 || return 1
 }
 
-_create_fzf_select(){
+_create_fzf_select() {
     local mode
     mode=""
     CURRENT_DIR_NAME=$(basename "$PWD")
@@ -38,67 +38,67 @@ _create_fzf_select(){
     fzf_select $mode
 }
 
-_fzf_commit_type_selector(){
-    awk -F': ' '{print $1 "\t" $2}' "$HOME/dotfiles/git/commits_guide_lines.txt" | \
-    fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
-        --color=fg:yellow,hl:green,preview-fg:white \
-        --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
-        --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 \
-        --preview="echo 'Select type of commit - 󰘴-X (abort)' && echo {} | cut -f2" | cut -f1
+_fzf_commit_type_selector() {
+    awk -F': ' '{print $1 "\t" $2}' "$HOME/dotfiles/git/commits_guide_lines.txt" |
+        fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
+            --color=fg:yellow,hl:green,preview-fg:white \
+            --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
+            --preview-window='right,90%,border-left' --delimiter="\t" --with-nth=1 \
+            --preview="echo 'Select type of commit - 󰘴-X (abort)' && echo {} | cut -f2" | cut -f1
 }
 
-_create_commit_options(){
+_create_commit_options() {
     local commit_options_file="/tmp/fzf_git_commit_options"
     if [ -f "$commit_options_file" ]; then
         rm "$commit_options_file"
-        echo "D $(cat /tmp/fzf_git_commit)" > /tmp/fzf_git_commit_preview
+        echo "D $(cat /tmp/fzf_git_commit)" >/tmp/fzf_git_commit_preview
     else
-        echo "200" > "$commit_options_file"
-        echo "P $(cat /tmp/fzf_git_commit)" > /tmp/fzf_git_commit_preview
+        echo "200" >"$commit_options_file"
+        echo "P $(cat /tmp/fzf_git_commit)" >/tmp/fzf_git_commit_preview
     fi
 }
 
-_check_for_changelog(){
+_check_for_changelog() {
     if [ -f "../CHANGELOG.md" ]; then
         changelog_exists=true
     fi
 }
 
-_write_in_changelog(){
+_write_in_changelog() {
     local last_commit_info module_list changelog_path
 
     last_commit_info="$1"
     module_list="$2"
     changelog_path="../CHANGELOG.md"
-    
+
     {
         echo "$last_commit_info"
         echo "$module_list" | while read -r module; do
             echo "  - Module: $module"
         done
-    } >> "$changelog_path"
+    } >>"$changelog_path"
 }
 
-_check_remote_source(){
+_check_remote_source() {
     remote_count=$(git remote | wc -l)
-    if [[ "$remote_count" -gt 1 ]]; then 
+    if [[ "$remote_count" -gt 1 ]]; then
         remote=$(git remote | gum choose)
-    elif [[ "$remote_count" -eq 0 ]];then
+    elif [[ "$remote_count" -eq 0 ]]; then
         gun_log_fatal "$(git_strong_red 󱓌) - $(git_strong_red_bold "Error") There is no $(gum_cyan_bold "branch") to make the $(gum_yellow_underline "commit") in the repository."
-    else 
+    else
         remote=$(git remote)
     fi
     echo "$remote"
 }
 
 # shellcheck disable=SC2120
-_force_push_to_repository(){
+_force_push_to_repository() {
     declare -A args
     local branch remote submodule
 
     for arg in "$@"; do
-        key="${arg%%=*}"     
-        value="${arg#*=}"    
+        key="${arg%%=*}"
+        value="${arg#*=}"
         args["$key"]="$value"
     done
 
@@ -106,26 +106,25 @@ _force_push_to_repository(){
     remote="${args["remote"]:-$(_check_remote_source)}"
     submodule="${args["submodule"]:-"false"}"
 
-    if [[ "$submodule" == 'true' ]]; then 
+    if [[ "$submodule" == 'true' ]]; then
         submodule_message=$(gum_blue_bold_underline " in the $(gum_blue_bold_underline parent) repository")
     fi
 
-    if git push -f "$remote" "$branch"
-        then
-            gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") was $(gum_red_underline "forced") into the repository $(git_green_light  "successfully")." "remote" "$remote" "branch" "$branch"
-        else
-            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit") in the $(gum_blue_bold_underline parent) repository."
+    if git push -f "$remote" "$branch"; then
+        gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") was $(gum_red_underline "forced") into the repository $(git_green_light "successfully")." "remote" "$remote" "branch" "$branch"
+    else
+        gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit") in the $(gum_blue_bold_underline parent) repository."
     fi
 }
 
 # shellcheck disable=SC2120
-_push_to_repository(){
+_push_to_repository() {
     declare -A args
     local cmd branch remote submodule flag
 
     for arg in "$@"; do
-        key="${arg%%=*}"     
-        value="${arg#*=}"    
+        key="${arg%%=*}"
+        value="${arg#*=}"
         args["$key"]="$value"
     done
 
@@ -134,7 +133,7 @@ _push_to_repository(){
     submodule="${args["submodule"]:-"false"}"
     flag="${args["flag"]:-""}"
 
-    if [[ "$submodule" == 'true' ]]; then 
+    if [[ "$submodule" == 'true' ]]; then
         submodule_message=" in the $(gum_blue_bold_underline parent) repository"
     fi
 
@@ -142,19 +141,21 @@ _push_to_repository(){
     cmd+=("$remote" "$branch")
     [[ -n "$flag" ]] && cmd+=("$flag")
 
-    if "${cmd[@]}";
-        then
-            gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") has been uploaded $(git_green_light  "successfully")$submodule_message."
-        else
-            gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit")$submodule_message."
+    if "${cmd[@]}"; then
+        gum_log_info "$(git_strong_red 󰊢) - The $(git_strong_red "commit") has been uploaded $(git_green_light "successfully")$submodule_message."
+    else
+        gun_log_fatal "$(git_strong_red 󰊢) - There was a $(git_strong_red_bold "problem") when making the $(git_strong_red "commit")$submodule_message."
     fi
 }
 
 create_commit() {
+    local one_line
     local commit_file="/tmp/fzf_git_commit"
     local commit_preview_file="/tmp/fzf_git_commit_preview"
+
+    one_line=$(tr '\n' ' ' <"$commit_file" | sed 's/[[:space:]]\+/ /g')
     if [ -f "$commit_file" ]; then
-        confirmation=$(cat "$commit_file" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
+        confirmation=$(printf '%s\n' "$one_line" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
             --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
             --bind "ctrl-e:execute-silent:code $commit_file" \
             --bind "tab:execute-silent:zsh -i -c '_create_commit_options'" \
@@ -176,18 +177,18 @@ create_commit() {
                     module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
                 fi
                 git commit -F "$commit_file"
-                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
+                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully")."
                 if [[ "$changelog_exists" == "true" ]]; then
                     last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
                     _write_in_changelog "$last_commit_info" "$module_list"
                 fi
-            elif [[ "$1" == "submodule" ]]; then    
+            elif [[ "$1" == "submodule" ]]; then
                 git -C "$parent_dir" add "$base_dir"
                 if [[ "$changelog_exists" == "true" ]]; then
                     git -C "$parent_dir" add "CHANGELOG.md"
                 fi
                 git -C "$parent_dir" commit -F "$commit_file"
-                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully") in the $(gum_blue_bold_underline parent) repository."
+                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully") in the $(gum_blue_bold_underline parent) repository."
             fi
             if [[ -f /tmp/fzf_git_commit_options ]]; then
                 commit_options=$(cat /tmp/fzf_git_commit_options)
@@ -211,7 +212,7 @@ create_commit() {
 fzf-git() {
     if [[ "$1" == "--log" || "$1" == "-l" ]]; then
         _check_for_git_repository || return 1
-        _fzf_git_hashes 
+        _fzf_git_hashes
     elif [[ "$1" == "--status" || "$1" == "-s" ]]; then
         lazygit
     elif [[ "$1" == "--commit" || "$1" == "-sc" ]]; then
@@ -225,7 +226,7 @@ fzf-git() {
         fzf_git_check_abort || return 1
         message=$(_fzf_translate_main_function)
         fzf_git_check_abort || return 1
-        echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
+        echo -n "$type_of_commit $file_or_folder: $message" >/tmp/fzf_git_commit
         create_commit module
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--commit-submodule" || "$1" == "-scs" ]]; then
@@ -242,13 +243,13 @@ fzf-git() {
         fzf_git_check_abort || return 1
         message=$(_fzf_translate_main_function)
         fzf_git_check_abort || return 1
-        echo -n "$type_of_commit $file_or_folder: $message" > /tmp/fzf_git_commit
+        echo -n "$type_of_commit $file_or_folder: $message" >/tmp/fzf_git_commit
         _check_for_changelog
         create_commit module
         gum spin --spinner dot --title "$(git_strong_red ) Starting the $(git_strong_red commit) process in the $(gum_blue_bold_underline parent) repository" -- sleep 0.5
         fzf_git_check_abort || return 1
         submodule_commit_type="${type_of_commit//[^a-zA-Z0-9]/}"
-        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" >/tmp/fzf_git_commit
         create_commit submodule
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--create-submodule-commit" || "$1" == "-csc" ]]; then
@@ -259,7 +260,7 @@ fzf-git() {
         submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
         file_or_folder=$(echo "$commit_message" | sed -E 's/.*\] ([^:]+):.*/\1/')
         message=$(echo "$commit_message" | sed -n 's/^\[.*\] .*: \(.*\)/\1/p')
-        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+        echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" >/tmp/fzf_git_commit
         create_commit submodule
         fzf_git_check_abort || return 1
     elif [[ "$1" == "--amend" || "$1" == "-am" ]]; then
@@ -318,7 +319,7 @@ fzf-git() {
             submodule_commit_type=$(echo "$commit_message" | awk -F'[] []' '{print $2}')
             file_or_folder=$(echo "$commit_message" | awk -F'[][]' '{print $2}' | awk -F' ' '{print $2}')
             message=$(echo "$commit_message" | sed -n 's/^\[.*\] .*: \(.*\)/\1/p')
-            echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" > /tmp/fzf_git_commit
+            echo -n "[CHECKOUT-$submodule_commit_type] $file_or_folder: $message" >/tmp/fzf_git_commit
             create_commit submodule
             fzf_git_check_abort || return 1
         done
@@ -343,7 +344,7 @@ fzf-git() {
         _check_for_git_repository || return 1
         remote=$(_fzf_git_remotes)
         branch=$(_fzf_git_branches)
-        _push_to_repository "remote=$remote" "branch=$branch" 
+        _push_to_repository "remote=$remote" "branch=$branch"
     elif [[ "$1" == "--push-interactive-upstream" || "$1" == "-piu" ]]; then
         local remote branch
         _check_for_git_repository || return 1
@@ -352,7 +353,7 @@ fzf-git() {
         _push_to_repository "remote=$remote" "branch=$branch" "flag=-u"
     elif [[ "$1" == "--push" || "$1" == "-p" ]]; then
         _check_for_git_repository || return 1
-        _push_to_repository  
+        _push_to_repository
     elif [[ "$1" == "--push-force" || "$1" == "-pf" ]]; then
         _check_for_git_repository || return 1
         _force_push_to_repository
@@ -389,21 +390,22 @@ fzf-git() {
         hash2=$(echo "$hashes" | sed -n '2p')
         git diff "$hash1" "$hash2"
     elif [[ "$1" == "--help" || "$1" == "-h" ]]; then
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
+        gum format -t markdown --theme="tokyo-night" <"$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
     else
         local cmd_options branch_name
         branch_name=""
 
-        gum format -t markdown --theme="tokyo-night" < "$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
+        gum format -t markdown --theme="tokyo-night" <"$HOME/dotfiles/docs/function_fzf-git_help.md" | gum pager --soft-wrap=false
         gum confirm "Search the commands" && CONTINUE=true || CONTINUE=false
         if [[ $CONTINUE == "true" ]]; then
             cmd_options=$(echo -e "--log\n--cherry\n--cherry-with-submodule\n--status\n--commit\n--commit-submodule\n--create-submodule-commit\n--amend\n--amend-submodule\n--checkout\n--checkout-new_branch\n--checkout-remote-branch\n--delete-branch\n--remote\n--stash\n--reset\n--push-interactive\n--push-interactive-upstream\n--push\n--push-force\n--pull\n--assume-unchanged\n--no-assume-unchanged\n--diff" | gum filter)
             if [[ $cmd_options == '--checkout-new_branch' ]]; then
-                branch_name=$(gum input --cursor.foreground "#FF0" \
-                --prompt.foreground "#0FF" \
-                --prompt "* Name of the new branch: " \
-                --placeholder "new_feature" \
-                --width 80
+                branch_name=$(
+                    gum input --cursor.foreground "#FF0" \
+                        --prompt.foreground "#0FF" \
+                        --prompt "* Name of the new branch: " \
+                        --placeholder "new_feature" \
+                        --width 80
                 )
             fi
             fzf-git "$cmd_options" "$branch_name"
