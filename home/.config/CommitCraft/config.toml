@@ -1,0 +1,53 @@
+# CommitCraft Global Configuration
+# This file was auto-generated. You can customize it.
+
+[commit_types]
+  behavior = "replace"
+
+  [[commit_types.types]]
+    tag = "IMP"
+    description = "Improvements to the implementation"
+    Color = "39"
+
+  [[commit_types.types]]
+    tag = "FIX"
+    description = "Bug fixes"
+    Color = "197"
+
+  [[commit_types.types]]
+    tag = "ADD"
+    description = "Feature additions"
+    Color = "47"
+
+  [[commit_types.types]]
+    tag = "REM"
+    description = "Feature removals"
+    Color = "202"
+
+  [[commit_types.types]]
+    tag = "REF"
+    description = "Code refactoring"
+    Color = "141"
+
+  [[commit_types.types]]
+    tag = "MOV"
+    description = "File moves or renames"
+    Color = "221"
+
+  [[commit_types.types]]
+    tag = "REL"
+    description = "Release-related commits"
+    Color = "81"
+
+  [[commit_types.types]]
+    tag = "WIP"
+    description = "Work in progress"
+    Color = "15"
+
+  [[commit_types.types]]
+    tag = "DOC"
+    description = "Documentation updates"
+    Color = "254"
+
+[commit_format]
+  type_format = "[%s]"
