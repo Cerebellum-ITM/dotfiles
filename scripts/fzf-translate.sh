@@ -1,12 +1,20 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2296
-__fzf_translate_script="$HOME/dotfiles/scripts/fzf-translate.sh"
 git_pwd_context="/tmp/git_pwd_context"
+git_commit_preamble_file="/tmp/fzf_git_commit_preamble"
+__fzf_translate_script="$HOME/dotfiles/scripts/fzf-translate.sh"
 
 if [[ "$1" == "_request_translation" ]]; then
 
     unset context
+    unset preamble
     unset translate_message
+
+    if [ -f "$git_commit_preamble_file" ] && [ -s "$git_commit_preamble_file" ]; then
+        preamble=$(cat "$git_commit_preamble_file")
+        rm "$git_commit_preamble_file"
+    fi
+
     if [ -f "$git_pwd_context" ] && [ -s "$git_pwd_context" ]; then
         context=$(cat "$git_pwd_context")
         rm "$git_pwd_context"
@@ -17,7 +25,7 @@ if [[ "$1" == "_request_translation" ]]; then
     commit=${commit%\'}
 
     if [[ -n "$commit" ]]; then
-        translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit" "$context")
+        translate_message=$(python3 "$HOME/dotfiles/python/translate_commit_tool/groq_translate_api.py" "$commit" "$context" "$preamble")
     fi
 
     if [[ -n "$translate_message" ]]; then

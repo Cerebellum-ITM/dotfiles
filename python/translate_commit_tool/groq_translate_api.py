@@ -46,6 +46,7 @@ You are a senior software engineer with expertise in code diff analysis. You pro
 - The first paragraph must reflect the developer's intent.
 - The second paragraph must contain only unrelated changes.
 - Output only the two paragraphs.
+- The output text must always be in English.
 </constraints>
 <examples>
 INPUT:
@@ -118,6 +119,7 @@ You are a senior software engineer with deep expertise in Git best practices and
 - Use exact names from the code.
 - Output format: title → blank line → body.
 -  Output only the message text.
+- The output text must always be in English.
 </constraints>
 <examples>
 INPUT:
@@ -145,45 +147,57 @@ You are a precision-focused formatting engine specialized in Git commit message 
 - You receive:
   - A TITLE: a short English phrase summarizing the change.
   - A BODY: detailed explanation of the change, possibly multi-paragraph.
--  The TITLE and BODY may include a `<BLANKLINE>` placeholder indicating where the blank line should be inserted.
+- The TITLE and BODY may include a `<BLANKLINE>` placeholder indicating where the blank line should be inserted.
+- Additionally, you may receive a [PREAMBLE] line at the start of the input in the format: `[PREAMBLE]: [TYPE] filename_or_directory:`
+  - Example: `[PREAMBLE]: [ADD] my_file.sh:`
+  - If present, extract the string (e.g., `my_file.sh`) and ensure it does not appear redundantly in the TITLE.
 </context>
 <task>
-1. Format the TITLE:
+1. If the input starts with `[PREAMBLE]:`, extract the filename (the part after `[TYPE]` and before the final colon).
+   - Remove any occurrence of this filename (with or without path) from the TITLE.
+   - Rephrase the TITLE minimally if needed to keep it grammatical.
+2. Format the TITLE:
    - Apply sentence case (only first word and proper nouns capitalized).
    - Trim whitespace.
    - Ensure ≤130 characters.
-2. If the BODY contains the string `<BLANKLINE>`, replace it with a single newline character.
-   - If no `<BLANKLINE>` is present, insert exactly one blank line between TITLE and BODY.
-3. Wrap all BODY lines to ≤130 characters per line.
-4. Ensure:
+3. If the BODY contains `<BLANKLINE>`, replace it with a single newline.
+   - If not, insert one blank line between TITLE and BODY.
+4. Wrap all BODY lines to ≤130 characters.
+5. Ensure:
    - Exactly one blank line between title and body.
    - No leading or trailing blank lines.
    - No extra spaces at end of lines.
-5. Output a single string with:
-   - Formatted TITLE on first line
-   - One blank line (`\\n\\n`)
-   - Formatted BODY (wrapped, clean)
+6. Output: TITLE + \\n\\n + BODY
+   - Do not include the [PREAMBLE] in the output.
 </task>
 <constraints>
--   Do not alter, rephrase, or enrich the TITLE or BODY content.
--  Do not add, remove, or reorder information.
--  Only apply formatting: case, line breaks, wrapping, spacing.
--  Preserve exact technical terms, code, and syntax.
--  Output must be a valid Git commit message string.
--  Output only the formatted message — no commentary, no quotes, no preamble.
+- Do not alter, rephrase, or enrich the TITLE or BODY beyond removing filename redundancy and formatting.
+- Preserve exact technical terms, code, and syntax.
+- Output must be a valid Git commit message string.
+- Output only the formatted message — no commentary, no quotes, no preamble.
+- The output text must always be in English.
 </constraints>
 <examples>
 INPUT:
-TITLE: Add age validation in user form using type check
-BODY: The `validate_user_data` function in `src/user_form.py` now validates that the 'age' field is present and of type integer. If the check fails, a `ValueError` is raised with the message 'Age must be a valid integer'. This improves data integrity for user demographic inputs.
+[PREAMBLE]: [ADD] fzf-translate.sh:
+Update `scripts/my_file.sh`
+<BLANKLINE>
+The script now supports bidirectional translation using the DeepL API.
 
 OUTPUT:
-Add age validation in user form using type check
+Update bidirectional translation support
 
-The `validate_user_data` function in `src/user_form.py` now validates that the
-'age' field is present and of type integer. If the check fails, a `ValueError` is
-raised with the message 'Age must be a valid integer'. This improves data
-integrity for user demographic inputs.
+The script now supports bidirectional translation using the DeepL API.
+
+INPUT:
+Fix user profile image upload
+<BLANKLINE>
+The image upload handler in `profile.js` was not setting the correct MIME type.
+
+OUTPUT:
+Fix user profile image upload
+
+The image upload handler in `profile.js` was not setting the correct MIME type.
 </examples>
 </instructions>
 """
@@ -192,7 +206,9 @@ integrity for user demographic inputs.
 # ---------------------------------------------------------
 # HELPERS
 # ---------------------------------------------------------
-def translate_commit_message(commit_message: str, staged_diff: str) -> str:
+def translate_commit_message(
+    commit_message: str, staged_diff: str, preamble: str
+) -> str:
     template_user_message = """
         TITLE:
         {TITLE}
@@ -212,6 +228,7 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
         '{CONTEXT}', staged_diff
     )
 
+    _logger.debug(f'{preamble = }')
     _logger.debug(f'{user_message = }')
     try:
         summary = client.chat.completions.create(
@@ -243,6 +260,7 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
         if commit_output is None:
             raise ValueError('Received None instead of a valid translated message.')
 
+        commit_output = f'[PREAMBLE]: {preamble}\n{commit_output}'
         _logger.debug(f'{commit_output = }')
         format = client.chat.completions.create(
             messages=[
@@ -278,10 +296,11 @@ def main():
     parser.add_argument(
         'context', nargs='?', default='', help='Optional staged diff text'
     )
+    parser.add_argument('preamble', type=str, help='The preamble of the commit message')
 
     args = parser.parse_args()
     translated_message = translate_commit_message(
-        commit_message=args.message, staged_diff=args.context
+        commit_message=args.message, staged_diff=args.context, preamble=args.preamble
     )
     print(translated_message)
 
