@@ -5,73 +5,81 @@ import argparse
 from groq import Groq
 from rich import print
 from dotenv import load_dotenv
+from db_manager import logger as _logger
 
 
 prompt_summary = """
 <instructions>
 <identity>
-You are a senior software engineer with expertise in code diff analysis. You specialize in identifying which changes align with the developer's stated intent and which are secondary.
+You are a senior software engineer with expertise in code diff analysis. You produce factual, concise summaries by strictly analyzing git diffs without assumptions.
 </identity>
 <context>
 - You receive:
   - A commit title in Spanish (TITLE): the developer's intent.
-  - A git diff (CONTEXT): the actual code changes.
+  - A git diff (CONTEXT): the actual code changes, with file paths as shown in the diff.
 - Your task is to produce a two-paragraph summary:
   - First paragraph: only changes that directly support the TITLE.
-  - Second paragraph: all other changes (version bumps, translations, logs, etc.).
+  - Second paragraph: all other changes (e.g., dependencies, config, logs).
+- The changes may be in any programming language, framework, or technology.
+- Do not assume file roles (e.g., "manifest", "config") or project structure.
 </context>
 <task>
-1. Read the TITLE and extract the core intent (e.g., "corregir tamaño de columnas").
-2. Scan the CONTEXT to find:
-   - Changes that directly implement this intent (e.g., width, padding, layout in email template)
-   - Changes unrelated to the intent (e.g., version, .po files, logs)
+1. Read the TITLE to understand the high-level intent.
+2. Scan the CONTEXT to identify:
+   - Files modified (use the path exactly as shown in `diff --git`)
+   - Changes that align with the TITLE
+   - Other changes (e.g., imports, dependencies, config)
 3. Write the first paragraph:
-   - Describe only the changes that fulfill the developer's stated purpose.
-   - Use exact values and locations.
-   - For files in subdirectories, use only the immediate parent directory and filename (e.g., data/mail_template.xml).
-   - For files in the root, use only the filename (e.g., __manifest__.py).
+   - Describe only changes that fulfill the developer's stated purpose.
+   - Use exact file names and paths from the diff.
+   - Do not infer file roles or technologies.
 4. Write the second paragraph:
    - List any additional changes not related to the main intent.
-   - Keep it concise.
-5. Output exactly two paragraphs separated by a blank line — no headings, no labels, no extra newlines.
+   - Use exact names and values.
+5. Output exactly two paragraphs separated by a blank line — no headings, no labels, no extra text.
 </task>
 <constraints>
--  Use only information from TITLE and CONTEXT.
-- Do not invent, assume, or infer functionality.
--  The first paragraph must reflect the developer's intent as stated in the TITLE.
--  The second paragraph must contain only changes not related to that intent.
--  Use exact identifiers and values.
--  Output only the two paragraphs.
+- Use only information present in TITLE and CONTEXT.
+- Do not invent, assume, or infer file types, roles, or project structure.
+- Never refer to a file by a name not shown in the diff.
+- Use exact file paths as they appear in `diff --git`.
+- The first paragraph must reflect the developer's intent.
+- The second paragraph must contain only unrelated changes.
+- Output only the two paragraphs.
 </constraints>
 <examples>
 INPUT:
-TITLE: se añadió validación de tipo en la función de procesamiento de datos
+TITLE: se añadió un nuevo componente para seleccionar archivos en la interfaz
 CONTEXT:
-diff --git a/utils/data_processor.py b/utils/data_processor.py
+diff --git a/src/ui/components/file_selector.js b/src/ui/components/file_selector.js
 index a1b2c3d..e4f5g6h 100644
---- a/utils/data_processor.py
-+++ b/utils/data_processor.py
-@@ -8,6 +8,7 @@ def process_record(record):
-     if not record.get('id'):
-         raise ValueError('Record ID is required')
-+    if not isinstance(record.get('value'), float):
-+        raise TypeError('Field "value" must be a float')
-     return transform(record)
-
-diff --git a/utils/logger.py b/utils/logger.py
+--- a/src/ui/components/file_selector.js
++++ b/src/ui/components/file_selector.js
+@@ -10,6 +10,12 @@ function render() {
+     return `<div class="selector">Select a file</div>`;
+ }
+ 
++function onSelect(callback) {
++    const input = document.createElement('input');
++    input.type = 'file';
++    input.onchange = (e) => callback(e.target.files[0]);
++    input.click();
++}
+ 
+diff --git a/package.json b/package.json
 index x9y8z7w..v6u5t4s 100644
---- a/utils/logger.py
-+++ b/utils/logger.py
-@@ -12,7 +12,7 @@ def log_event(event, level='info'):
-     timestamp = datetime.utcnow().isoformat()
--     print(f"[{level.upper()}] {timestamp} - {event}")
-+    print(f"[{level.upper()}] {timestamp} - {event} | src=processor")
-     save_to_disk(event, level)
-
+--- a/package.json
++++ b/package.json
+@@ -5,6 +5,7 @@
+   "dependencies": {
++    "file-utils": "^2.1.0",
+     "lodash": "^4.17.0"
+   }
+ }
 OUTPUT:
-The file `data_processor.py` was modified to add type validation for the 'value' field in the data processing function. The `process_record` function now checks if the field is of type float and raises a `TypeError` if validation fails.
+The file `src/ui/components/file_selector.js` was modified to add a new file selection component. A new `onSelect` function was introduced, allowing users to trigger a file input dialog and pass the selected file to a callback.
 
-The file `logger.py` was updated to include a source tag 'src=processor' in log messages.
+The file `package.json` was updated to include a new dependency: `file-utils@^2.1.0`.
 </examples>
 </instructions>
 """
@@ -204,6 +212,7 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
         '{CONTEXT}', staged_diff
     )
 
+    _logger.debug(f'{user_message = }')
     try:
         summary = client.chat.completions.create(
             messages=[
@@ -219,6 +228,7 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
         if summary_output is None:
             raise ValueError('Received None instead of a valid translated message.')
 
+        _logger.debug(f'{summary_output = }')
         commit = client.chat.completions.create(
             messages=[
                 {
@@ -233,6 +243,7 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
         if commit_output is None:
             raise ValueError('Received None instead of a valid translated message.')
 
+        _logger.debug(f'{commit_output = }')
         format = client.chat.completions.create(
             messages=[
                 {
@@ -250,6 +261,8 @@ def translate_commit_message(commit_message: str, staged_diff: str) -> str:
 
         if format_output.startswith('"') and format_output.endswith('"'):
             format_output = format_output[1:-1]
+
+        _logger.debug(f'{format_output = }')
         return format_output
 
     except Exception as e:
