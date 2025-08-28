@@ -1,14 +1,15 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2296
 __fzf_translate_script="$HOME/dotfiles/scripts/fzf-translate.sh"
+git_pwd_context="/tmp/git_pwd_context"
 
 if [[ "$1" == "_request_translation" ]]; then
 
     unset context
     unset translate_message
-    if [ -f "$TMP_FILE_PATH" ] && [ -s "$TMP_FILE_PATH" ]; then
-        context=$(cat "$TMP_FILE_PATH")
-        rm "$TMP_FILE_PATH"
+    if [ -f "$git_pwd_context" ] && [ -s "$git_pwd_context" ]; then
+        context=$(cat "$git_pwd_context")
+        rm "$git_pwd_context"
     fi
 
     commit=$2
@@ -69,8 +70,13 @@ if [[ "$1" == "_change_query" ]]; then
 fi
 
 _fzf_translate_main_function() {
-    TMP_FILE_PATH=$(mktemp) && git diff --cached | grep -E '^(@@ |[+-])' | grep -vE '^\+\+\+ |^--- ' >"$TMP_FILE_PATH"
-    export TMP_FILE_PATH
+    {
+        git diff --cached --name-only | while read file; do
+            echo "=== $file ==="
+            git diff --cached --unified=0 -- "$file"
+        done
+    } >"$git_pwd_context"
+
     entry=$(_fzf_translate_gui)
     if [[ -z "$entry" ]]; then
         echo "$(gum style --foreground="#FF0000" "") $(gum style --foreground='808080' 'No entry selected. Exiting.')"
