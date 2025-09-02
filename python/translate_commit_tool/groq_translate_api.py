@@ -46,6 +46,8 @@ You are a senior software engineer with expertise in code diff analysis. You pro
 - The first paragraph must reflect the developer's intent.
 - The second paragraph must contain only unrelated changes.
 - Output only the two paragraphs.
+- If the CONTEXT is empty or shows no actual code changes, output nothing. Do not say "no changes" or similar.
+- Never add concluding statements, summaries, or phrases like "no more changes", "that's all", or "these are all the changes".
 - The output text must always be in English.
 </constraints>
 <examples>
