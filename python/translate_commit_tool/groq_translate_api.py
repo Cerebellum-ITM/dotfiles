@@ -149,15 +149,17 @@ You are a precision-focused formatting engine specialized in Git commit message 
 - You receive:
   - A TITLE: a short English phrase summarizing the change.
   - A BODY: detailed explanation of the change, possibly multi-paragraph.
-- The TITLE and BODY may include a `<BLANKLINE>` placeholder indicating where the blank line should be inserted.
-- Additionally, you may receive a [PREAMBLE] line at the start of the input in the format: `[PREAMBLE]: [TYPE] filename_or_directory:`
+  - The TITLE and BODY may include a `<BLANKLINE>` placeholder indicating where the blank line should be inserted.
+  - Additionally, you may receive a [PREAMBLE] line at the start of the input in the format: `[PREAMBLE]: [TYPE] filename_or_directory:`
+  - You receive a single input string with optional `[PREAMBLE]: [TYPE] filename:` at the start
   - Example: `[PREAMBLE]: [ADD] my_file.sh:`
   - If present, extract the string (e.g., `my_file.sh`) and ensure it does not appear redundantly in the TITLE.
 </context>
 <task>
-1. If the input starts with `[PREAMBLE]:`, extract the filename (the part after `[TYPE]` and before the final colon).
-   - Remove any occurrence of this filename (with or without path) from the TITLE.
-   - Rephrase the TITLE minimally if needed to keep it grammatical.
+1. If `[PREAMBLE]` is present:
+   - Extract the filename (e.g., `my_file.py` from `[ADD] my_file.py:`).
+   - Remove it from the TITLE if it appears.
+   - Rephrase the TITLE minimally to maintain grammar.
 2. Format the TITLE:
    - Apply sentence case (only first word and proper nouns capitalized).
    - Trim whitespace.
@@ -178,29 +180,40 @@ You are a precision-focused formatting engine specialized in Git commit message 
 - Output must be a valid Git commit message string.
 - Output only the formatted message — no commentary, no quotes, no preamble.
 - The output text must always be in English.
+- Do not add, remove, or reorder information unless for redundancy.
 </constraints>
 <examples>
 INPUT:
-[PREAMBLE]: [ADD] fzf-translate.sh:
-Update `scripts/my_file.sh`
+[PREAMBLE]: [ADD] my_file.py:
+Update `my_file.py` to support new API
 <BLANKLINE>
-The script now supports bidirectional translation using the DeepL API.
+The `my_file.py` script now includes a `process_data` function that handles API v2 endpoints.
 
 OUTPUT:
-Update bidirectional translation support
+Update new API support
 
-The script now supports bidirectional translation using the DeepL API.
+The `my_file.py` script now includes a `process_data` function that handles API v2 endpoints.
 
 INPUT:
-Fix user profile image upload
+Fix bug in `utils.py`
 <BLANKLINE>
-The image upload handler in `profile.js` was not setting the correct MIME type.
+The `utils.py` file had a typo in the `calculate_sum` function.
 
 OUTPUT:
-Fix user profile image upload
+Fix bug in `utils.py`
 
-The image upload handler in `profile.js` was not setting the correct MIME type.
-</examples>
+The `utils.py` file had a typo in the `calculate_sum` function.
+
+INPUT:
+[PREAMBLE]: [IMP] config.json:
+Change default timeout to 30s
+<BLANKLINE>
+The `config.json` file was updated to set a default timeout of 30 seconds.
+
+OUTPUT:
+Change default timeout to 30s
+
+The `config.json` file was updated to set a default timeout of 30 second>
 </instructions>
 """
 
@@ -241,7 +254,7 @@ def translate_commit_message(
                 },
                 {'role': 'user', 'content': user_message},
             ],
-            model='gemma2-9b-it',
+            model='llama-3.1-8b-instant',
         )
         summary_output = summary.choices[0].message.content
         if summary_output is None:
@@ -256,7 +269,7 @@ def translate_commit_message(
                 },
                 {'role': 'user', 'content': summary_output},
             ],
-            model='gemma2-9b-it',
+            model='llama-3.1-8b-instant',
         )
         commit_output = commit.choices[0].message.content
         if commit_output is None:
@@ -272,7 +285,7 @@ def translate_commit_message(
                 },
                 {'role': 'user', 'content': commit_output},
             ],
-            model='gemma2-9b-it',
+            model='llama-3.1-8b-instant',
         )
         format_output = format.choices[0].message.content
 
