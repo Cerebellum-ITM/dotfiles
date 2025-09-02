@@ -51,3 +51,6 @@
 
 [commit_format]
   type_format = "[%s]"
+
+[tui]
+  use_nerd_fonts = true
