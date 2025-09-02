@@ -14,10 +14,27 @@ if [[ "$1" == "_request_translation" ]]; then
         rm "$git_commit_preamble_file"
     fi
 
-    context=$(while read -r file; do
-        echo "=== $file ==="
-        git diff --cached --unified=0 -- "$file"
-    done < <(git diff --cached --name-only))
+    context=""
+    max_chars=54000
+    current_chars=0
+
+    while IFS= read -r file; do
+        block="=== $file ===
+        $(git diff --cached --unified=0 -- "$file")
+        "
+
+        block_chars=${#block}
+
+        if ((current_chars + block_chars > max_chars)); then
+            remaining_tokens=$(((max_chars - current_chars) / 4))
+            warning="\\n\\n[TRUNCATED: too many changes. Remaining files skipped to stay under 13k tokens. Approx. ${remaining_tokens} tokens available.]\\n"
+            context+="$warning"
+            break
+        fi
+
+        context+="$block"
+        ((current_chars += block_chars))
+    done < <(git diff --cached --name-only)
 
     commit=$2
     commit=${commit#\'}
