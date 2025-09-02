@@ -15,7 +15,7 @@ if [[ "$1" == "_request_translation" ]]; then
     fi
 
     context=""
-    max_chars=54000
+    max_chars=80000
     current_chars=0
 
     while IFS= read -r file; do

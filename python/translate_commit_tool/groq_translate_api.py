@@ -254,7 +254,7 @@ def translate_commit_message(
                 },
                 {'role': 'user', 'content': user_message},
             ],
-            model='llama-3.1-8b-instant',
+            model='meta-llama/llama-4-scout-17b-16e-instruct',
         )
         summary_output = summary.choices[0].message.content
         if summary_output is None:
