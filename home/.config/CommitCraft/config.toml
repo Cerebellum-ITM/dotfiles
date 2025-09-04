@@ -54,3 +54,12 @@
 
 [tui]
   use_nerd_fonts = true
+
+[prompts]
+  summary_prompt_file = "prompts/summary.prompt"
+  summary_prompt_model = "meta-llama/llama-4-scout-17b-16e-instruct"
+  summary_prompt_max_diff_size = 80000
+  commit_builder_prompt_file = "prompts/commit_builder.prompt"
+  commit_builder_prompt_model = "llama-3.1-8b-instant"
+  outformat_prompt_file = "prompts/output_format.prompt"
+  outformat_prompt_model = "llama-3.1-8b-instant"
