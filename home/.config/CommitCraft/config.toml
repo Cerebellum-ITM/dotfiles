@@ -63,3 +63,5 @@
   commit_builder_prompt_model = "llama-3.1-8b-instant"
   outformat_prompt_file = "prompts/output_format.prompt"
   outformat_prompt_model = "llama-3.1-8b-instant"
+  only_translate_prompt_file = "prompts/only_translate.prompt"
+  only_translate_prompt_model = "llama-3.1-8b-instant"
