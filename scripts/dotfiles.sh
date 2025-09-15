@@ -5,8 +5,8 @@ function dotfiles_update() {
     ./install.sh --unattended
     history_clean
     # shellcheck source=/dev/null
-    source ~/.zshrc 
-    cd - > /dev/null 2>&1 || exit
+    source ~/.zshrc
+    cd - >/dev/null 2>&1 || exit
 }
 
 function dotfiles() {
@@ -15,13 +15,16 @@ function dotfiles() {
         local stash_output stash_message pull_output pull_successful
         pull_successful=false
         gum_log_info "$(git_strong_white_dark " ") dotfiles $(git_green "Update")"
-        gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_strong_white_dark "dotfiles") repository has begun $(git_strong_white_dark  )" -- sleep 1
-        cd "$HOME/dotfiles" || { echo "Failed to cd to $HOME/dotfiles"; return 1; }
-        stash_output=$(git stash 2>&1) 
+        gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_strong_white_dark "dotfiles") repository has begun $(git_strong_white_dark )" -- sleep 1
+        cd "$HOME/dotfiles" || {
+            echo "Failed to cd to $HOME/dotfiles"
+            return 1
+        }
+        stash_output=$(git stash 2>&1)
         if [[ "$stash_output" != *"No local changes to save"* ]]; then
             stash_message=$(git stash list -1)
             gum_log_warning "$(gum_green "󱣫") There were $(gum_yellow_bold "changes") in the repository; these can be found in $stash_message"
-        else 
+        else
             gum_log_info "No local $(gum_yellow_bold "changes") to save."
         fi
         pull_output=$(git pull 2>&1)
@@ -40,10 +43,21 @@ function dotfiles() {
         fi
 
         # shellcheck source=/dev/null
-        source ~/.zshrc || { echo "Failed to source ~/.zshrc"; return 1; }
-        cd - > /dev/null 2>&1 || { echo "Failed to return to previous directory"; return 1; }
+        "$HOME/dotfiles/tools/install_commitCraft.sh"
+        # shellcheck source=/dev/null
+        source ~/.zshrc || {
+            echo "Failed to source ~/.zshrc"
+            return 1
+        }
+        cd - >/dev/null 2>&1 || {
+            echo "Failed to return to previous directory"
+            return 1
+        }
         gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_green "complete")"
     elif [[ "$1" == "install" || "$1" == "-ins" ]]; then
-        ansible-playbook "$HOME/dotfiles/ansible/sites.yml" -i "$HOME/dotfiles/ansible/inventory.ini" || { echo "Ansible playbook failed"; return 1; }
+        ansible-playbook "$HOME/dotfiles/ansible/sites.yml" -i "$HOME/dotfiles/ansible/inventory.ini" || {
+            echo "Ansible playbook failed"
+            return 1
+        }
     fi
 }
