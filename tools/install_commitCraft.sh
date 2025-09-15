@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GITHUB_REPO="Cerebellum-ITM/CommitCraftReborn" # Your GitHub repository (e.g., "pascualchavez/CommitCraft_v2")
-RELEASE_TAG="v0.2.1"                           # The release tag whose source code you want to download (e.g., "v0.1.0")
+RELEASE_TAG="v0.2.3"                           # The release tag whose source code you want to download (e.g., "v0.1.0")
 BINARY_NAME="commitcraft"                      # The name of your binary once installed
 INSTALL_DIR="$HOME/.local/bin"                 # Installation directory. Ensure it's in your PATH.
 
@@ -92,9 +92,9 @@ mkdir -p "$INSTALL_DIR" # Ensure the installation directory exists
 
 # Use sudo if installing to a system-wide directory
 if [[ "$INSTALL_DIR" == "/usr/local/bin" || "$INSTALL_DIR" == "/usr/bin" ]]; then
-    sudo mv "$TEMP_BINARY_PATH" "$INSTALL_DIR/$BINARY_NAME"
+    sudo mv -f "$TEMP_BINARY_PATH" "$INSTALL_DIR/$BINARY_NAME"
 else
-    mv "$TEMP_BINARY_PATH" "$INSTALL_DIR/$BINARY_NAME"
+    mv -f "$TEMP_BINARY_PATH" "$INSTALL_DIR/$BINARY_NAME"
 fi
 
 if [ $? -ne 0 ]; then
