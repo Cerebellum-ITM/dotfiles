@@ -42,7 +42,6 @@ function dotfiles() {
             gum_log_info "$(gum_red "") $(gum_yellow_bold "New") code download completed"
         fi
 
-        # shellcheck source=/dev/null
         "$HOME/dotfiles/tools/install_commitCraft.sh"
         # shellcheck source=/dev/null
         source ~/.zshrc || {
