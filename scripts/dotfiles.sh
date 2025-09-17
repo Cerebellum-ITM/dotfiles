@@ -43,6 +43,7 @@ function dotfiles() {
         fi
 
         "$HOME/dotfiles/tools/install_commitCraft.sh"
+        gum_log_info "$(git_strong_white_dark " ") CommitCraft update $(gum_green "complete")"
         # shellcheck source=/dev/null
         source ~/.zshrc || {
             echo "Failed to source ~/.zshrc"
