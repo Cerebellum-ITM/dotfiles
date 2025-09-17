@@ -1,9 +1,9 @@
 #!/bin/bash
 
 GITHUB_REPO="Cerebellum-ITM/CommitCraftReborn" # Your GitHub repository (e.g., "pascualchavez/CommitCraft_v2")
-RELEASE_TAG="v0.2.3"                           # The release tag whose source code you want to download (e.g., "v0.1.0")
-BINARY_NAME="commitcraft"                      # The name of your binary once installed
-INSTALL_DIR="$HOME/.local/bin"                 # Installation directory. Ensure it's in your PATH.
+# RELEASE_TAG="v0.2.3"                           # The release tag whose source code you want to download (e.g., "v0.1.0")
+BINARY_NAME="commitcraft"      # The name of your binary once installed
+INSTALL_DIR="$HOME/.local/bin" # Installation directory. Ensure it's in your PATH.
 
 # --- 1. Detect OS and Architecture ---
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -24,6 +24,9 @@ armv*)
     exit 1
     ;;
 esac
+
+LATEST_RELEASE_INFO=$(curl -s "https://api.github.com/repos/${GITHUB_REPO}/releases/latest")
+RELEASE_TAG=$(echo "$LATEST_RELEASE_INFO" | grep '"tag_name":' | sed -E 's/.*"tag_name": "([^"]+)".*/\1/')
 
 # --- 2. Construct the binary file name for download ---
 DOWNLOAD_FILE_NAME="commitcraft"
