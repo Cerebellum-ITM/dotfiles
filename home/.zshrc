@@ -29,6 +29,11 @@ if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
   source "$HOME/dotfiles/home/.config/atuin/sync-server.env"
 fi
 
+# Vim mode
+set -o vi
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -58,11 +63,6 @@ setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
-
-# Vim mode
-set -o vi
-zinit ice depth=1
-zinit light jeffreytse/zsh-vi-mode
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
