@@ -12,6 +12,13 @@ source "$HOME/dotfiles/scripts/fzf-translate.sh"
 repository_name=$(basename "$PWD")
 echo " creating a commit in the repository $(gum_blue "$repository_name")"
 commit_message=$(commitcraft)
+EXIT_STATUS=$?
+
+if [ "$EXIT_STATUS" -eq 1 ]; then
+    gun_log_fatal "$(git_strong_red 󰊢) - An error occurred while initializing CommitCraft"
+    exit 1
+fi
+
 if [ -z "$commit_message" ]; then
     gun_log_fatal "$(git_strong_red 󰊢) - the creation of the commit was canceled"
     exit 1
