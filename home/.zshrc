@@ -59,6 +59,10 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
+# Vim mode
+set -o vi
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
 
 # Completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
