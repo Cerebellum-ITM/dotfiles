@@ -30,9 +30,7 @@ if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
 fi
 
 # Vim mode
-set -o vi
-zinit ice depth=1
-zinit light jeffreytse/zsh-vi-mode
+bindkey -v
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
@@ -162,8 +160,6 @@ fzf-code(){
     fi
 }
 
-printf '\n%.0s' {1..100}
-
 if [ -f "$HOME/.atuin/bin/env" ] && [ -f "$HOME/.atuin/bin/atuin" ]; then
     . "$HOME/.atuin/bin/env"
     eval "$(atuin init zsh)"
@@ -179,4 +175,10 @@ fi
 
 if [ -n "$TMUX" ]; then
     eval "$(tmux showenv -s SSH_AUTH_SOCK)"
+    . "$HOME/.atuin/bin/env"
+    eval "$(atuin init zsh)"
+
 fi
+
+printf '\n%.0s' {1..100}
+
