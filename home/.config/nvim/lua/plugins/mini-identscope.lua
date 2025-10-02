@@ -1,5 +1,5 @@
 return {
-  "echasnovski/mini.indentscope",
+  "nvim-mini/mini.indentscope",
   enable = false,
   opts = function(_, opts)
     opts.symbol = "╎"
