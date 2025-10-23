@@ -15,8 +15,9 @@ return {
   keys = {
     { "<leader>S", false },
   },
-  opts = {
-    indent = {
+  opts = function(_, opts)
+    -- Indent configuration
+    opts.indent = {
       indent = {
         enabled = false,
         only_scope = false,
@@ -42,7 +43,7 @@ return {
         enabled = true,
         only_current = true,
         priority = 200,
-        hl = "ScopeIndentCustom", ---@type string|string[]
+        hl = "ScopeIndentCustom",
         char = {
           corner_top = "┍",
           corner_bottom = "┕",
@@ -51,8 +52,10 @@ return {
           arrow = ">",
         },
       },
-    },
-    zen = {
+    }
+
+    -- Zen configuration
+    opts.zen = {
       enabled = true,
       win = {
         backdrop = {
@@ -68,15 +71,16 @@ return {
         signcolumn = "no",
         indent = true,
       },
-    },
-    picker = {
+    }
+
+    -- Picker configuration
+    opts.picker = {
       sources = {
         grep = {
           hidden = true,
           ignored = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
         },
-
         files = {
           hidden = true,
           ignored = true,
@@ -87,8 +91,13 @@ return {
           ignored = true,
           auto_close = true,
           exclude = { "node_modules", ".git", ".venv", "__pycache__", ".vscode", ".mypy_cache" },
+          layout = {
+            preview = true,
+          },
         },
       },
-    },
-  },
+    }
+
+    return opts
+  end,
 }
