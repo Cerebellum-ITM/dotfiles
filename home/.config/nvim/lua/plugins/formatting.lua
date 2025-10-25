@@ -6,6 +6,20 @@ return {
     opts.formatters_by_ft.javascript = { "prettier" }
     opts.formatters_by_ft.typescript = { "prettier" }
     opts.formatters_by_ft.xml = { "prettier" }
+    opts.formatters_by_ft.toml = { "taplo" }
+    opts.formatters["taplo"] = {
+      command = "taplo",
+      args = {
+        "format",
+        "--option",
+        "indent_tables=true",
+        "--option",
+        "indent_entries=true",
+        "--option",
+        "align_comments=true",
+        "-",
+      },
+    }
     opts.formatters["prettier"] = {
       prepend_args = function(self, ctx)
         local args
