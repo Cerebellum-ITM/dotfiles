@@ -19,11 +19,16 @@ return {
       ACTIONS = { icon = "", color = "#7EBCE6" },
       CRUD = { icon = "", color = "#FAFF81" },
       PROPS = { icon = "", color = "#FAFF81", alt = { "PROPS EXTENSION" } },
-      INHERITED = { icon = "", color = "#F9B5AC", alt = { "INHERITED FUNCTIONS", "FUNCTION PATCHING", "INHERITED ACTIONS" } },
+      INHERITED = {
+        icon = "",
+        color = "#F9B5AC",
+        alt = { "INHERITED FUNCTIONS", "FUNCTION PATCHING", "INHERITED ACTIONS" },
+      },
       OVERRIDES = { icon = "", color = "#FFC53A" },
       CONSTRAINS = { icon = "", color = "#EE4B6A", alt = { "CONSTRAINS FUNCTIONS", "CONSTRAINS METHODS" } },
       DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
       DESC = { icon = "", color = "#C2EABD", alt = { "Desc" } },
+      WIP = { icon = "󱞇", color = "#FFFFFF" },
     },
   },
 }
