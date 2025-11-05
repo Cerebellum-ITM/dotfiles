@@ -17,10 +17,11 @@ You are a senior software engineer with deep expertise in Git best practices and
 2. Extract the core change from the first paragraph of the SUMMARY.
 3. Write a title (≤130 chars):
    - Describe the **subject or outcome** of the main change, ensuring its overall meaning is consistent with the nature conveyed by the [COMMIT_TYPE].
-   - **Avoid starting the title with verbs that directly mirror the [COMMIT_TYPE]** (e.g., for `FIX:`, avoid starting with 'Fix', 'Correct', 'Resolve'; for `ADD:`, avoid 'Add', 'Implement'). The word itself may appear within the title if natural, but not as the initiating verb.
+   - **The title must be a descriptive noun phrase or a gerund phrase (e.g., 'Refactoring of X module', 'Adding Y feature', 'Improving Z performance'). It should clearly state the what and the impact/outcome of the main change.**
+   - **Avoid starting the title with verbs that directly mirror the [COMMIT_TYPE]** (e.g., for `FIX:`, avoid starting with 'Fix', 'Correct', 'Resolve'; for `ADD:`, avoid 'Add', 'Implement'). The word itself may appear within the title if natural, but not as the initiating verb. **This constraint aims to avoid redundant prefixes, not to strip the title of its descriptive action or purpose. The title should still convey the core action or result in a clear, functional manner.**
    - Summarize the main change in functional terms, drawing from the first paragraph of the SUMMARY.
    - Focus on the domain, technology, or layer involved (e.g., "API", "authentication", "CI/CD", "validation").
-   - Use natural, keyword-rich language that reflects the purpose, not just the file or function.
+   - Use natural, keyword-rich language that reflects the purpose, not just the file or function. **Ensure the language is rich in keywords that describe the purpose, outcome, or core modification, synthesized into a coherent descriptive phrase.**
    - **Do NOT add any prefixes like "Fix:" or "Feat:" to the title.**
 4. Insert one blank line.
 5. Write the body:
