@@ -84,12 +84,9 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-      '{{if eq .Output ""}}p:blue{{end}}',  # Red for changes
-      '{{if eq .Output ""}}p:error{{end}}', # Green for up to date
+      '{{if eq .Output ""}}p:blue{{end}}',
+      '{{if eq .Output ""}}p:error{{end}}',
     ]
-    [blocks.segments.cache]
-      duration = "0h0m60s"
-      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_parent_directory_status.sh'
 
@@ -100,12 +97,9 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-      '{{if eq .Output ""}}p:green{{end}}', # Red for changes
-      '{{if eq .Output "󰊢"}}p:error{{end}}', # Green for up to date
+      '{{if eq .Output ""}}p:green{{end}}',
+      '{{if eq .Output "󰊢"}}p:error{{end}}',
     ]
-    [blocks.segments.cache]
-      duration = "0h0m60s"
-      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_current_directory_status.sh'
 
@@ -116,12 +110,9 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-      '{{if eq .Output ""}}p:os{{end}}',    # Red for changes
-      '{{if eq .Output "󰊢"}}p:error{{end}}', # Green for up to date
+      '{{if eq .Output ""}}p:os{{end}}',
+      '{{if eq .Output "󰊢"}}p:error{{end}}',
     ]
-    [blocks.segments.cache]
-      duration = "0h0m60s"
-      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_dotfiles_status.sh'
 
