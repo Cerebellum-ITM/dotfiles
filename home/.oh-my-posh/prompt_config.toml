@@ -20,7 +20,10 @@ final_space = true
 [transient_prompt]
   template = '❯ '
   background = 'transparent'
-  foreground_templates = ['{{if gt .Code 0}}p:error{{end}}', '{{if eq .Code 0}}p:success{{end}}']
+  foreground_templates = [
+    '{{if gt .Code 0}}p:error{{end}}',
+    '{{if eq .Code 0}}p:success{{end}}',
+  ]
 
 [[blocks]]
   type = 'prompt'
@@ -54,7 +57,12 @@ final_space = true
     template = 'on {{ .UpstreamIcon }} {{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} 󱇧 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }} '
     type = 'git'
     style = 'powerline'
-    foreground_templates = ['{{ if or (.Working.Changed) (.Staging.Changed) }}#FFEB3B{{else}}p:lavender{{ end }}', '{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}', '{{ if gt .Ahead 0 }}#B388FF{{ end }}', '{{ if gt .Behind 0 }}#B388FB{{ end }}']
+    foreground_templates = [
+      '{{ if or (.Working.Changed) (.Staging.Changed) }}#FFEB3B{{else}}p:lavender{{ end }}',
+      '{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{ end }}',
+      '{{ if gt .Ahead 0 }}#B388FF{{ end }}',
+      '{{ if gt .Behind 0 }}#B388FB{{ end }}',
+    ]
 
     [blocks.segments.properties]
       branch_icon = ' '
@@ -68,7 +76,7 @@ final_space = true
       rebase_icon = ' '
       revert_icon = ' '
       tag_icon = ' '
-  
+
   [[blocks.segments]]
     template = '{{ .Output }} '
     foreground = '#FFEB3B'
@@ -76,12 +84,14 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-        '{{if eq .Output ""}}p:blue{{end}}',  # Red for changes
-        '{{if eq .Output ""}}p:error{{end}}'   # Green for up to date
-      ]
+      '{{if eq .Output ""}}p:blue{{end}}',  # Red for changes
+      '{{if eq .Output ""}}p:error{{end}}', # Green for up to date
+    ]
+    [blocks.segments.cache]
+      duration = "0h0m60s"
+      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_parent_directory_status.sh'
-      cache_duration = '60s'
 
   [[blocks.segments]]
     template = '{{ .Output }} '
@@ -90,12 +100,14 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-        '{{if eq .Output ""}}p:green{{end}}',  # Red for changes
-        '{{if eq .Output "󰊢"}}p:error{{end}}'   # Green for up to date
-      ]
+      '{{if eq .Output ""}}p:green{{end}}', # Red for changes
+      '{{if eq .Output "󰊢"}}p:error{{end}}', # Green for up to date
+    ]
+    [blocks.segments.cache]
+      duration = "0h0m60s"
+      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_current_directory_status.sh'
-      cache_duration = '60s'
 
   [[blocks.segments]]
     template = '{{ .Output }} '
@@ -104,19 +116,24 @@ final_space = true
     type = 'command'
     style = 'plain'
     foreground_templates = [
-        '{{if eq .Output ""}}p:os{{end}}',  # Red for changes
-        '{{if eq .Output "󰊢"}}p:error{{end}}'   # Green for up to date
-      ]
+      '{{if eq .Output ""}}p:os{{end}}',    # Red for changes
+      '{{if eq .Output "󰊢"}}p:error{{end}}', # Green for up to date
+    ]
+    [blocks.segments.cache]
+      duration = "0h0m60s"
+      strategy = "folder"
     [blocks.segments.properties]
       command = '$HOME/dotfiles/tools/check_dotfiles_status.sh'
-      cache_duration = '60s'
 
   [[blocks.segments]]
     template = '❯'
     background = 'transparent'
     type = 'text'
     style = 'plain'
-    foreground_templates = ['{{if gt .Code 0}}p:error{{end}}', '{{if eq .Code 0}}p:success{{end}}']
+    foreground_templates = [
+      '{{if gt .Code 0}}p:error{{end}}',
+      '{{if eq .Code 0}}p:success{{end}}',
+    ]
 
     [blocks.segments.properties]
       cache_duration = 'none'
