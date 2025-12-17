@@ -11,6 +11,7 @@ return {
     },
     keywords = {
       HELPERS = { icon = "", color = "#f1009a" },
+      DEFAULT = { icon = "", color = "#FAFF81" },
       COMPUTED_METHODS = { icon = "", color = "#C2EABD", alt = { "COMPUTED METHODS" } },
       API = { icon = "", color = "#00D9C0", alt = { "API RESPONE SCHEMAS" } },
       CONTROLLERS = { icon = "", color = "#B7AD99", alt = { "ENDPOINT ROUTERS" } },
