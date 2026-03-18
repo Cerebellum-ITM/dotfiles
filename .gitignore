@@ -13,3 +13,4 @@ home/.config/htop
 home/.config/portal/config.yml
 home/.config/atuin/sync-server.env
 home/.config/karabiner/automatic_backups/**
+vscode/
