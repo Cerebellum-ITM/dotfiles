@@ -30,7 +30,7 @@ if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
 fi
 
 # Vim mode
-bindkey -v
+# bindkey -v
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
