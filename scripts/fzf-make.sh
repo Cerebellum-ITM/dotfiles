@@ -111,11 +111,13 @@ execute_commands() {
 _select_odoo_module() {
     local dir subdir return_full_path="${1:-false}"
     #* Find directories containing "addon", ignoring those in .git
-    dir=$(cd "$working_dir" && find . -type d -name '*addon*' -not -path '*/.git/*' -print | fzf --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
+    dir=$(cd "$working_dir" && find . \( -path "*/.git" -o -path "*/ipython_history_volume" \) -prune -o -type d -name '*addon*' -print 2>/dev/null | fzf \
+        --header="Select a directory containing 'addon' (press Ctrl+C to cancel)" \
         --prompt="Select a directory or press Ctrl+Z to include any directory: " \
         --preview="eza --tree --color=always --icons {} | head -200" \
         --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code' \
-        --bind "ctrl-z:execute(cd $working_dir && fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . -type d -not -path '*/.git/*'))")
+        --bind "ctrl-z:execute(cd $working_dir && fzf --header='Select any directory' --preview='eza --tree --color=always --icons {} | head -200' < <(find . \( -path '*/.git' -o -path '*/ipython_history_volume' \) -prune -o -type d -print 2>/dev/null))")
+
     _check_fzf_make_exit_code || return 1
     #* Check if a directory was selected
     if [[ -z "$dir" ]]; then
