@@ -121,7 +121,7 @@ _select_odoo_module() {
     _check_fzf_make_exit_code || return 1
     #* Check if a directory was selected
     if [[ -z "$dir" ]]; then
-        echo "No directory selected."
+        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
         return 1
     fi
 
@@ -135,7 +135,7 @@ _select_odoo_module() {
     _check_fzf_make_exit_code || return 1
     #* Check if a subdirectory was selected
     if [[ -z "$subdir" ]]; then
-        echo "No subdirectory selected."
+        gun_log_fatal "No $(gum_yellow_underline "subdirectory") selected."
         return 1
     fi
     if [[ "$return_full_path" == "true" ]]; then
@@ -150,6 +150,10 @@ _select_odoo_module() {
 _install_odoo_module() {
     local history_entry subdir
     subdir=$(_select_odoo_module)
+    if [[ -z "$subdir" ]]; then
+        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        return 1
+    fi
 
     #* Add a history entry
     history_entry+="install_module module_name=$subdir"
@@ -160,6 +164,10 @@ _install_odoo_module() {
 
 _update_odoo_module() {
     subdir=$(_select_odoo_module)
+    if [[ -z "$subdir" ]]; then
+        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        return 1
+    fi
 
     #* Add a history entry
     local history_entry=""
@@ -172,6 +180,10 @@ _update_odoo_module() {
 _update_odoo_translation() {
     local history_entry subdir
     subdir=$(_select_odoo_module)
+    if [[ -z "$subdir" ]]; then
+        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        return 1
+    fi
 
     #* Add a history entry
     history_entry+="update_odoo_translation module_name=$subdir"
