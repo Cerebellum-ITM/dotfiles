@@ -1,0 +1,25 @@
+[commit_types]
+  behavior = "append"
+
+  [[commit_types.types]]
+    tag = "CHORE"
+    description = "Routine tasks, maintenance, or minor adjustments that don't affect code logic (e.g., build process, dependency updates, configuration changes)"
+    Color = "#B0C4DE"
+
+  [[commit_types.types]]
+    tag = "PERF"
+    description = "Performance improvements"
+    Color = "#7CFC00"
+
+  [[commit_types.types]]
+    tag = "STYLE"
+    description = "Code style changes (e.g., formatting, semicolons, whitespace), without changing logic"
+    Color = "#ADD8E6"
+
+  [[commit_types.types]]
+    tag = "SEC"
+    description = "Security improvements or vulnerability fixes"
+    Color = "#8B0000"
+
+[commit_format]
+  type_format = "[%s]"
