@@ -126,7 +126,12 @@ _select_odoo_module() {
     fi
 
     #* List subdirectories in the selected directory
-    subdir=$(cd "$working_dir" && find "$dir" -mindepth 1 -maxdepth 1 -type d | fzf --header="Select a subdirectory in '$dir'" --preview='eza --tree --color=always --icons {} | head -200' --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
+    subdir=$(cd "$working_dir" && find "$dir" -mindepth 1 -maxdepth 1 -type d \
+        -not -name "node_modules" \
+        -print 2>/dev/null | fzf \
+        --header="Select a subdirectory in '$dir'" \
+        --preview='eza --tree --color=always --icons {} | head -200' \
+        --bind 'ctrl-x:abort+execute:echo 130 > /tmp/fzf_makefile_exit_code')
     _check_fzf_make_exit_code || return 1
     #* Check if a subdirectory was selected
     if [[ -z "$subdir" ]]; then
