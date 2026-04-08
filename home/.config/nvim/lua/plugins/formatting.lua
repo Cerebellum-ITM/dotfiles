@@ -5,6 +5,7 @@ return {
     opts.formatters = opts.formatters or {}
     opts.formatters_by_ft.javascript = { "prettier" }
     opts.formatters_by_ft.typescript = { "prettier" }
+    opts.formatters_by_ft.python = { "ruff_organize_imports", "ruff_format" }
     opts.formatters_by_ft.xml = { "prettier" }
     opts.formatters_by_ft.toml = { "taplo" }
     opts.formatters["taplo"] = {
