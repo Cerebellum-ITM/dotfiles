@@ -27,7 +27,7 @@ return {
         if ctx.filename:match("%.xml$") then
           args = {
             "--print-width",
-            "180",
+            "120",
             "--bracket-same-line",
             "true",
             "--tab-width",
