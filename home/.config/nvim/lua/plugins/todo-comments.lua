@@ -17,7 +17,7 @@ return {
       CONTROLLERS = { icon = "", color = "#B7AD99", alt = { "ENDPOINT ROUTERS" } },
       DEPENDENCY = { icon = "", color = "#744899", alt = { "DEPENDENCY DEFINITIONS" } },
       TEXTUAL = { icon = "", color = "#FAFF81", alt = { "TEXTUAL APPLICATION" } },
-      ACTIONS = { icon = "", color = "#7EBCE6" },
+      ACTIONS = { icon = "", color = "#7EBCE6", alt = { "BUSINESS ACTIONS" } },
       CRUD = { icon = "", color = "#FAFF81" },
       PROPS = { icon = "", color = "#FAFF81", alt = { "PROPS EXTENSION" } },
       INHERITED = {
@@ -27,6 +27,7 @@ return {
       },
       OVERRIDES = { icon = "", color = "#FFC53A" },
       CONSTRAINS = { icon = "", color = "#EE4B6A", alt = { "CONSTRAINS FUNCTIONS", "CONSTRAINS METHODS" } },
+      BUSINESS = { icon = "", color = "#B4A0E5", alt = { "BUSINESS METHODS" } },
       DELETE = { icon = "", color = "#E01800", alt = { "REMOVE" } },
       DESC = { icon = "", color = "#C2EABD", alt = { "Desc" } },
       WIP = { icon = "󱞇", color = "#FFFFFF" },
