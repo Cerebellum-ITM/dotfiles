@@ -27,9 +27,9 @@ gui:
     defaultFgColor:
       - default
 git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
   merging:
     manualCommit: false
     args: "--no-ff"
@@ -40,35 +40,34 @@ git:
     - 17.0
     - 18.0-develop
   overrideGpg: true
-
 customCommands:
- - key: 'A'
-   context: 'files'
-   command: "$HOME/dotfiles/tools/lazygit-custom-amment-commit.sh"
-   subprocess: true
-   description: 'Run the script to amment the last commit'
- - key: 'c'
-   context: 'files'
-   command: "$HOME/dotfiles/tools/lazygit-custom-commit-workflow.sh"
-   subprocess: true
-   description: 'Run the script to create a commit'
- - key: '<c-c>'
-   context: 'files'
-   command: "$HOME/dotfiles/tools/lazygit-custom-submodule-commit-workflow.sh"
-   subprocess: true
-   description: 'Run the script to create a commit current repository and parent repository'
- - key: 'c'
-   context: 'commits'
-   command: " echo '{{ .SelectedCommit.Sha }}' | $HOME/dotfiles/tools/lazygit-custom-submodule-pick-commit-workflow.sh"
-   subprocess: true
-   description: 'Run the script to create a commit in the parent directory (submodule)'
- - key: 'U'
-   context: 'localBranches'
-   command: "echo '{{ .SelectedLocalBranch.Name }}' | $HOME/dotfiles/tools/lazygit-custom-upstream-workflow.sh"
-   subprocess: true
-   description: 'Run the script to create an upstream/push to a specific remote of the selected branch'
- - key: '<c-c>'
-   context: 'commits'
-   command: "$HOME/.local/bin/commitcraft -r"
-   subprocess: true
-   description: 'Run CommitCraft in Relesse mode'
+  - key: 'A'
+    context: 'files'
+    command: "$HOME/dotfiles/tools/lazygit-custom-amment-commit.sh"
+    description: 'Run the script to amment the last commit'
+    output: terminal
+  - key: 'c'
+    context: 'files'
+    command: "$HOME/dotfiles/tools/lazygit-custom-commit-workflow.sh"
+    description: 'Run the script to create a commit'
+    output: terminal
+  - key: '<c-c>'
+    context: 'files'
+    command: "$HOME/dotfiles/tools/lazygit-custom-submodule-commit-workflow.sh"
+    description: 'Run the script to create a commit current repository and parent repository'
+    output: terminal
+  - key: 'c'
+    context: 'commits'
+    command: " echo '{{ .SelectedCommit.Sha }}' | $HOME/dotfiles/tools/lazygit-custom-submodule-pick-commit-workflow.sh"
+    description: 'Run the script to create a commit in the parent directory (submodule)'
+    output: terminal
+  - key: 'U'
+    context: 'localBranches'
+    command: "echo '{{ .SelectedLocalBranch.Name }}' | $HOME/dotfiles/tools/lazygit-custom-upstream-workflow.sh"
+    description: 'Run the script to create an upstream/push to a specific remote of the selected branch'
+    output: terminal
+  - key: '<c-c>'
+    context: 'commits'
+    command: "$HOME/.local/bin/commitcraft -r"
+    description: 'Run CommitCraft in Relesse mode'
+    output: terminal
