@@ -1,11 +1,12 @@
-import os
 import inspect as py_inspect
+import os
 from typing import Any, Optional
+
+from loguru import logger as _logger  # type: ignore
 from rich import inspect
 from rich.console import Console
-from rich.pretty import pretty_repr
 from rich.logging import RichHandler
-from loguru import logger as _logger  # type: ignore
+from rich.pretty import pretty_repr
 
 console = Console(width=200, log_time=False, log_path=False)
 
@@ -62,8 +63,8 @@ def _log_formatter(record: dict) -> str:
     }
     lvl_color = color_map.get(record["level"].name, "bold")
     return (
-        f"[not bold green]{{time:YYYY/MM/DD HH:mm:ss.SSS}}[/not bold green] | [{lvl_color}]{{level}}[/{lvl_color}] | "
-        + f"[thistle1]{{name}}[/thistle1]:[{lvl_color}]{{function}}[/{lvl_color}]:[{lvl_color}]{{line}}[/{lvl_color}] - [{lvl_color}]{{message}}[/{lvl_color}]"
+        f"[not bold green]{{time:YYYY-MM-DD HH:mm:ss.SSS}}[/not bold green] | [{lvl_color}]{{level}}[/{lvl_color}] | "
+        + f"[honeydew2 bold]{{name}}[/honeydew2 bold]:[{lvl_color}]{{function}}[/{lvl_color}]:[{lvl_color}]{{line}}[/{lvl_color}] - [{lvl_color}]{{message}}[/{lvl_color}]"
     )
 
 
@@ -79,7 +80,7 @@ def configure_logger(log_format: Optional[str] = None):
     if not os.path.exists(odoo_log_path):
         if not log_format:
             log_format = "{message}"
-        _logger.add(
+        _logger.add(  # type: ignore
             RichHandler(
                 markup=True,
                 console=console,
@@ -90,7 +91,7 @@ def configure_logger(log_format: Optional[str] = None):
                 tracebacks_width=300,
                 tracebacks_show_locals=True,
             ),
-            format=_log_formatter,
+            format=_log_formatter,  # type: ignore
             catch=True,
             colorize=True,
         )
@@ -99,4 +100,3 @@ def configure_logger(log_format: Optional[str] = None):
             log_format = "<level>{time:YYYY-MM-DD HH:mm:ss.SSS}</level> | <level>{level: <8}</level> | <level>{name}</level>:<level>{function}</level>:<level>{line}</level> - <level>{message}</level>"
         _logger.add(odoo_log_path, format=log_format, catch=True, colorize=True)
     return _logger
-
