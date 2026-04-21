@@ -2,6 +2,7 @@
     "folder_name": "base_module",
     "module_name": "Base Module",
     "odoo_version": [
+        "19.0",
         "18.0",
         "17.0",
         "16.0",

@@ -13,7 +13,7 @@
         {{ cookiecutter.module_description }}
     """,
     "category": "{{ cookiecutter.category }}",
-    "version": "{{ cookiecutter.odoo_version }}.0.0.1",
+    "version": "{{ cookiecutter.odoo_version }}.0.0.0",
     "depends": [
         "{{ cookiecutter.depends }}",
     ],
