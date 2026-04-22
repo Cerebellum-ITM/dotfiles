@@ -11,7 +11,7 @@ source "$HOME/dotfiles/scripts/fzf-translate.sh"
 
 repository_name=$(basename "$PWD")
 echo " creating a commit in the repository $(gum_blue "$repository_name")"
-commit_message=$(commitcraft)
+commit_message=$(commitcraft -o)
 EXIT_STATUS=$?
 
 if [ "$EXIT_STATUS" -eq 1 ]; then
