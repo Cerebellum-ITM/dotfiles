@@ -15,8 +15,10 @@ Generate ONLY the commit body text. Write it as a direct technical statement exp
 - **NEVER** mention "the developer", "the author", "the programmer", or any person
 - **NEVER** use phrases like "the intention was", "the goal is", "this change aims to"
 - **NEVER** describe actions as "someone fixed", "someone added", "we modified"
+- **NEVER** write meta-comments like "no additional changes", "no other modifications", "only these changes were made"
+- **NEVER** write text that reads like a title or header (e.g., short phrases in title case)
 - **ALWAYS** describe the change directly: what happens now, what was fixed, what was added
-- Use impersonal constructions or passive voice when needed: "Fixes", "Adds", "Prevents", "Updates"
+- Use impersonal constructions: "Fixes", "Adds", "Prevents", "Updates", "Removes"
 - Focus on the technical reality: the bug that existed, the solution implemented, the behavior changed
 
 ## EXAMPLES OF WRONG vs RIGHT:
@@ -30,6 +32,12 @@ RIGHT: "Implements LRU caching to reduce database queries by 40%"
 WRONG: "This change removes the old API because it was deprecated"
 RIGHT: "Removes deprecated v1 endpoints in favor of v2 implementation"
 
+WRONG: "No additional changes were made"
+RIGHT: [simply omit this section if there are no additional changes]
+
+WRONG: "Fix login bug" [sounds like a title]
+RIGHT: "Fixes the session fixation vulnerability that allowed anonymous session IDs to persist after authentication"
+
 ## FORMATTING RULES:
 
 - Start with a blank line
@@ -38,20 +46,22 @@ RIGHT: "Removes deprecated v1 endpoints in favor of v2 implementation"
 - Use 4 spaces indentation for bullet points (standard git format)
 - Separate logical sections with blank lines
 - Do NOT include the tag or module name in the body
+- Write in sentence case (not Title Case), full sentences or technical fragments
+- Paragraphs should be descriptive, not headline-style
 
 ## STRUCTURE:
 
 1. **Main paragraph**: Describe the core change directly (what was wrong, what was done, result)
 2. **Technical details** (optional): Bullet points for specific implementation details
-3. **Additional changes** (if any): Brief mention of secondary modifications
+3. **Additional changes** (if any): Brief mention of secondary modifications. **OMIT ENTIRELY if none exist - do not write "no additional changes"**
 
 ## OUTPUT FORMAT:
 
-[Direct technical explanation of the primary change - paragraph form]
+[Direct technical explanation of the primary change - paragraph form, descriptive not title-like]
     - [Specific technical detail - only if multiple distinct items]
     - [Another technical detail - only if applicable]
 
-[Additional changes if significant, otherwise omit entirely]
+[Additional changes if significant - otherwise OMIT THIS SECTION COMPLETELY, do not mention its absence]
     - [Specific additional change detail - only if multiple items]
     - [Another additional detail - only if applicable]
 
@@ -76,7 +86,16 @@ Updates authentication middleware to use async handlers.
     - Refactors synchronous blocking calls to Promise-based API
     - Maintains backward compatibility with legacy callback syntax
 
+## EXAMPLE OUTPUT (single change, no additional):
+
+Adds input validation for user email addresses to prevent
+injection attacks. Validates format against RFC 5322 and rejects
+malformed addresses before database insertion.
+
 ## REMEMBER:
 - No "I", "we", "the developer", "the author"
 - No "this commit aims to", "the purpose is", "the goal was"
+- No "no additional changes", "only these changes", "no other modifications"
+- No title-like text: write full descriptive paragraphs, not headlines
 - Just the technical facts: what changed, why (technically), how it works now
+- If there are no additional changes, simply end after the main description
