@@ -17,6 +17,7 @@ Generate ONLY the commit body text. Write it as a direct technical statement exp
 - **NEVER** describe actions as "someone fixed", "someone added", "we modified"
 - **NEVER** write meta-comments like "no additional changes", "no other modifications", "only these changes were made"
 - **NEVER** write text that reads like a title or header (e.g., short phrases in title case)
+- **NEVER** wrap the output in markdown code blocks (no ```plaintext, no ```, no triple backticks)
 - **ALWAYS** describe the change directly: what happens now, what was fixed, what was added
 - Use impersonal constructions: "Fixes", "Adds", "Prevents", "Updates", "Removes"
 - Focus on the technical reality: the bug that existed, the solution implemented, the behavior changed
