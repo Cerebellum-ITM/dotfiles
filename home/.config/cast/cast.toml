@@ -1,0 +1,44 @@
+# cast — global configuration
+# https://github.com/Cerebellum-ITM/cast
+
+[theme]
+default = "catppuccin"   # catppuccin | dracula | nord
+
+# Per-environment theme base. The accent color is always overridden:
+#   staging → orange  |  prod → red
+[theme.env]
+dev     = "catppuccin"
+staging = "catppuccin"
+prod    = "catppuccin"
+
+[history]
+max = 100   # max run-history rows retained in the SQLite db
+
+[db]
+path = ""   # empty = ~/.config/cast/cast.db
+
+[layout]
+# Panel widths as % of total terminal width.
+# With show_center_panel = true:  sidebar 15–40, output 30–60, sum ≤ 90.
+# With show_center_panel = false: sidebar 30–50, output 30–50, sum ≤ 100.
+# Runtime keys: [ / ]  shrink/grow output · { / }  shrink/grow sidebar.
+sidebar_width_pct  = 25
+output_width_pct   = 30
+show_center_panel  = true
+
+# ── WIP ──────────────────────────────────────────────────────────────────────
+# Uncomment and fill these sections when the features are ready.
+
+# [keybindings]
+# build = "b"
+# test  = "t"
+# lint  = "l"
+
+# [notifications]
+# enabled    = false
+# on_failure = true
+# on_success = false
+
+# [update]
+# check   = true
+# channel = "stable"   # stable | nightly
