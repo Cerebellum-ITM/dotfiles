@@ -42,8 +42,10 @@ function dotfiles() {
             gum_log_info "$(gum_red "") $(gum_yellow_bold "New") code download completed"
         fi
 
-        "$HOME/dotfiles/tools/install_commitCraft.sh"
-        gum_log_info "$(git_strong_white_dark " ") CommitCraft update $(gum_green "complete")"
+        "$HOME/dotfiles/tools/install_github_release.sh" "Cerebellum-ITM/CommitCraftReborn" "commitcraft"
+        gum_log_info "$(git_strong_white_dark " ") CommitCraft update $(gum_green "complete")"
+        "$HOME/dotfiles/tools/install_github_release.sh" "Cerebellum-ITM/cast" "cast"
+        gum_log_info "$(git_strong_white_dark " ") Cast update $(gum_green "complete")"
         # shellcheck source=/dev/null
         source ~/.zshrc || {
             echo "Failed to source ~/.zshrc"
