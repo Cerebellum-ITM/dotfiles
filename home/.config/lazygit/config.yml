@@ -71,3 +71,8 @@ customCommands:
     command: "$HOME/.local/bin/commitcraft -r"
     description: 'Run CommitCraft in Relesse mode'
     output: terminal
+  - key: 'R'
+    context: 'commits'
+    command: "$HOME/.local/bin/commitcraft -w {{ .SelectedCommit.Sha }}"
+    description: 'Reword selected commit with CommitCraft'
+    output: terminal
