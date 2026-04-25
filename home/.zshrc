@@ -88,7 +88,6 @@ alias fg='fzf-git'
 alias frm='rm -rf $(fzf_select -m)'
 alias ft='_odoo_template_list'
 alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
-alias s='source ~/.zshrc'
 alias kk="printf '\n%.0s' {1..100}"
 alias tfs='eval $(tmux showenv -s SSH_AUTH_SOCK)'
 

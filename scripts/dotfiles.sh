@@ -55,6 +55,25 @@ function dotfiles_update() {
     cd - >/dev/null 2>&1 || exit
 }
 
+function s() {
+    local zshrc="$HOME/.zshrc"
+    local current stored
+    if [[ ! -f "$zshrc" ]]; then
+        gum_log_warning "$(gum_red "") $zshrc not found"
+        return 1
+    fi
+    current=$(shasum "$zshrc" | awk '{print $1}')
+    stored=$(_dotfiles_state_get "zshrc_hash")
+    if [[ "$current" == "$stored" ]]; then
+        printf '\n%.0s' {1..100}
+        gum_log_info "$(git_strong_white_dark " ") .zshrc $(gum_green "unchanged"); skipping source"
+        return 0
+    fi
+    # shellcheck source=/dev/null
+    source "$zshrc" && _dotfiles_state_set "zshrc_hash" "$current"
+    gum_log_info "$(git_strong_white_dark " ") .zshrc $(gum_green "reloaded")"
+}
+
 function dotfiles() {
     if [[ "$1" == "update" || "$1" == "-u" ]]; then
         shift
