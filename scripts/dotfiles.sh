@@ -61,20 +61,22 @@ function dotfiles_update() {
 
 function s() {
     local zshrc="$HOME/.zshrc"
-    local current stored
+    local current force=false
+    if [[ "$1" == "-f" || "$1" == "--force" ]]; then
+        force=true
+    fi
     if [[ ! -f "$zshrc" ]]; then
         gum_log_warning "$(gum_red "") $zshrc not found"
         return 1
     fi
     current=$(shasum "$zshrc" | awk '{print $1}')
-    stored=$(_dotfiles_state_get "zshrc_hash")
-    if [[ "$current" == "$stored" ]]; then
+    if [[ "$force" != "true" ]] && [[ "$current" == "$_S_ZSHRC_HASH" ]]; then
         printf '\n%.0s' {1..100}
         gum_log_info "$(git_strong_white_dark " ") .zshrc $(gum_green "unchanged"); skipping source"
         return 0
     fi
     # shellcheck source=/dev/null
-    source "$zshrc" && _dotfiles_state_set "zshrc_hash" "$current"
+    source "$zshrc" && export _S_ZSHRC_HASH="$current"
     gum_log_info "$(git_strong_white_dark " ") .zshrc $(gum_green "reloaded")"
 }
 

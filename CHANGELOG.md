@@ -6,6 +6,9 @@ Sections are dated (rolling) instead of versioned — each entry references the 
 
 ## [Unreleased]
 
+### Fixed
+- `s` now tracks the last-sourced `.zshrc` hash **per shell session** (in-memory `_S_ZSHRC_HASH` variable) instead of the global state file, so with multiple terminals open none of them gets skipped just because another already updated the on-disk hash. Adds `-f`/`--force` flag to re-source even when the hash matches. Usage: `s` or `s -f`.
+
 ### Added
 - `dotfiles force-cli` (alias `-fc`): interactive multi-select prompt (powered by `gum choose --no-limit`) to force-reinstall managed CLI tools — currently `commitcraft` and `cast` — bypassing the cached release tag in `~/.cache/dotfiles/state`. Useful when a binary is broken locally or you want to re-pull the same version. Usage:
   ```bash
