@@ -49,6 +49,9 @@
     description = "Documentation updates"
     Color = "254"
 
+[changelog]
+  enabled = true
+
 [commit_format]
   type_format = "[%s]"
 
