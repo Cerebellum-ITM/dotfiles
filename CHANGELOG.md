@@ -4,6 +4,9 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [v0.1.0] - 2026-04-26
+- Removes old fzf-based commit workflow that has been replaced by the Commitcraft CLI, streamlining the commit process in `scripts/fzf-git-custom.sh`.\n  - Refactors `create_commit` function to eliminate intermediary steps and user prompts, simplifying logic and directly interacting with Git for committing changes.\n  - Removes temporary files used by the old workflow, enhancing code maintainability.\n  - Adapts commit process to align with the new CLI tool's functionality, potentially improving performance and reducing user errors.\n
+
 ## [Unreleased]
 
 ### Fixed

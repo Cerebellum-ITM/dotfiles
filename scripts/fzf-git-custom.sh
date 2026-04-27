@@ -149,62 +149,45 @@ _push_to_repository() {
 }
 
 create_commit() {
-    local one_line
     local commit_file="/tmp/fzf_git_commit"
     local commit_preview_file="/tmp/fzf_git_commit_preview"
 
-    one_line=$(tr '\n' ' ' <"$commit_file" | sed 's/[[:space:]]\+/ /g')
     if [ -f "$commit_file" ]; then
-        confirmation=$(printf '%s\n' "$one_line" | fzf --layout=reverse --height=50% --min-height=20 --border --border-label-pos=2 \
-            --bind "ctrl-x:execute-silent(echo 130 > /tmp/fzf_git_exit_code)+abort" \
-            --bind "ctrl-e:execute-silent:code $commit_file" \
-            --bind "tab:execute-silent:zsh -i -c '_create_commit_options'" \
-            --bind "tab:+reload(cat $commit_preview_file)" \
-            --bind change:clear-query \
-            --preview-window='down,50%,border-top' \
-            --preview="echo -n 'git commit -m \"' && cat $commit_file && echo '\"'" \
-            --header="Enter (Create commit) - CTRL-E/R (Edit/Reload) - CTRL-P (Mark to push) - CTRL-X (Abort)" \
-            --expect=enter)
-
-        key=$(echo "$confirmation" | head -1)
-        if [[ "$key" == "enter" ]]; then
-            local base_dir parent_dir
-            base_dir=$(pwd)
-            parent_dir=$(dirname "$base_dir")
-            if [[ "$1" == "module" ]]; then
-                if [[ "$changelog_exists" == "true" ]]; then
-                    gum_log_info "Creating a change record in the Docker repository  " "changelog_exists" "$changelog_exists"
-                    module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
-                fi
-                git commit -F "$commit_file"
-                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully")."
-                if [[ "$changelog_exists" == "true" ]]; then
-                    last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
-                    _write_in_changelog "$last_commit_info" "$module_list"
-                fi
-            elif [[ "$1" == "submodule" ]]; then
-                git -C "$parent_dir" add "$base_dir"
-                if [[ "$changelog_exists" == "true" ]]; then
-                    git -C "$parent_dir" add "CHANGELOG.md"
-                fi
-                git -C "$parent_dir" commit -F "$commit_file"
-                gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully") in the $(gum_blue_bold_underline parent) repository."
+        local base_dir parent_dir
+        base_dir=$(pwd)
+        parent_dir=$(dirname "$base_dir")
+        if [[ "$1" == "module" ]]; then
+            if [[ "$changelog_exists" == "true" ]]; then
+                gum_log_info "Creating a change record in the Docker repository  " "changelog_exists" "$changelog_exists"
+                module_list=$(git diff --cached --name-only | awk -F/ 'NF>1 {print $1}' | sort -u)
             fi
-            if [[ -f /tmp/fzf_git_commit_options ]]; then
-                commit_options=$(cat /tmp/fzf_git_commit_options)
-                rm /tmp/fzf_git_commit_options
-                rm $commit_preview_file
-                if [[ "$commit_options" -eq 200 ]]; then
-                    if [[ "$1" == "module" ]]; then
-                        _push_to_repository
-                    elif [[ "$1" == "submodule" ]]; then
-                        cd "$parent_dir" || exit
-                        _push_to_repository "submodule=true"
-                        cd "$base_dir" || exit
-                    fi
+            git commit -F "$commit_file"
+            gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully")."
+            if [[ "$changelog_exists" == "true" ]]; then
+                last_commit_info=$(git log -1 --pretty=format:"%h %ad %s" --date=short)
+                _write_in_changelog "$last_commit_info" "$module_list"
+            fi
+        elif [[ "$1" == "submodule" ]]; then
+            git -C "$parent_dir" add "$base_dir"
+            if [[ "$changelog_exists" == "true" ]]; then
+                git -C "$parent_dir" add "CHANGELOG.md"
+            fi
+            git -C "$parent_dir" commit -F "$commit_file"
+            gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light "successfully") in the $(gum_blue_bold_underline parent) repository."
+        fi
+        if [[ -f /tmp/fzf_git_commit_options ]]; then
+            commit_options=$(cat /tmp/fzf_git_commit_options)
+            rm /tmp/fzf_git_commit_options
+            rm $commit_preview_file
+            if [[ "$commit_options" -eq 200 ]]; then
+                if [[ "$1" == "module" ]]; then
+                    _push_to_repository
+                elif [[ "$1" == "submodule" ]]; then
+                    cd "$parent_dir" || exit
+                    _push_to_repository "submodule=true"
+                    cd "$base_dir" || exit
                 fi
             fi
-            rm "$commit_file"
         fi
     fi
 }
