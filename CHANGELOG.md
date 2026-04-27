@@ -4,6 +4,10 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [v0.1.3] - 2026-04-27
+-
+Adds `cc` alias for `commitcraft` to facilitate easy access via short name.
+
 ## [v0.1.2] - 2026-04-27
 -
 Adds changelog functionality to commit message refiner.
