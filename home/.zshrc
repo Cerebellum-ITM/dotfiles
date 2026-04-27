@@ -20,6 +20,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 export LC_ALL=en_US.UTF-8
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
+export PATH="$(go env GOPATH)/bin:$PATH"
+
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
     # export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
