@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [v0.1.2] - 2026-04-27
+-
+Adds changelog functionality to commit message refiner.
+ Introduces `refiner.md` to guide commit message entry generation
+Modifies the code to include new refiner configuration section, enabling the functionality
+
 ## [v0.1.1] - 2026-04-26
 -
 Adds new changelog refiner functionality to CommitCraft's CLI.

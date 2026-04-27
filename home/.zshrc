@@ -20,7 +20,9 @@ source "${ZINIT_HOME}/zinit.zsh"
 export LC_ALL=en_US.UTF-8
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
-export PATH="$(go env GOPATH)/bin:$PATH"
+PATH_GO_BIN="$(go env GOPATH)/bin"
+export PATH="$PATH_GO_BIN:$PATH"
+
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     export PATH="$HOME/.local/bin:$PATH"
