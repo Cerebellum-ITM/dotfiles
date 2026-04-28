@@ -4,6 +4,15 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+### [v0.1.6] - 2026-04-27
+- Improves the prompt for synthesizing commit messages into coherent release notes by refining instructions for capitalization, formatting, and organization.
+  • Updates the `commit.Body` reference to maintain consistent capitalization.
+  • Refines guidelines for organizing release notes into structured sections with past tense, active voice, and bullet points.
+    • Instructs users to prefix bullets with `-` instead of `*`
+    • Specifies writing commit entries in past tense, active voice
+    • Adds guidelines for classifying commit entries based on bracketed tags `[ADD]`, `[IMP]`, `[FIX]`, `[REM]`
+  • Standardizes the output format for consolidated entries describing the same capability or incremental fixes.
+
 # [v0.1.5] - 2026-04-27
 ### Prevents errors
 ### Added
