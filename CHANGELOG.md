@@ -6,6 +6,14 @@ Sections are dated (rolling) instead of versioned — each entry references the 
 
 ## [Unreleased]
 
+### Added
+
+- New `gretime` shell function (in `scripts/git_retime.sh`) to rewrite the date of an existing commit through a `gum`-based UI: pick a commit from the last N, choose between *Now* (sets author + committer to current time), *Custom* (`YYYY-MM-DD HH:MM:SS`), or *Sync* (align committer to author date). Detects BSD vs GNU `date`, warns when the commit is already pushed, and uses `git rebase -i` programmatically for non-HEAD commits. Usage:
+  ```bash
+  gretime          # last 20 commits
+  gretime 50       # last 50 commits
+  ```
+
 ### Changed
 
 - Replaced the three per-prompt status scripts (`check_parent_directory_status.sh`, `check_current_directory_status.sh`, `check_dotfiles_status.sh`) with a single `tools/check_repo_status.sh` that takes a mode argument (`current`, `parent`, or `dotfiles`). Removes the synchronous `ping google.com` call and collapses 4 git invocations per check into 1, dramatically reducing post-command prompt latency. Usage:
