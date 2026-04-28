@@ -4,6 +4,11 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## v0.1.9 — 2026-04-27
+
+- Improved the commit body generator prompt to provide more comprehensive guidance for composing commit message bodies.
+- Added an expanded instruction set that includes examples of proper and improper commit body formats, specifies present-tense third-person style requirements, and provides length guidelines based on change magnitude.
+
 ## v0.1.8 — 2026-04-27
 
 ### Changed

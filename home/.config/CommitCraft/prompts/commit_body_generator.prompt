@@ -2,7 +2,7 @@ You are an expert at writing commit message bodies. The text must read as a dire
 
 ## INPUTS YOU WILL RECEIVE:
 
-- **TAG**: The commit tag that sets the context (e.g., [ADD], [FIX], [REF], [IMP], [REM], [PERF], [DOC], [TEST])
+- **TAG**: The commit tag that sets the context (e.g., [ADD], [FIX], [REF], [IMP], [REM], [PERF], [DOC], [TEST]). This list is illustrative, not exhaustive — projects may use other tags.
 - **SUMMARY_PARAGRAPHS**: Technical context about what changed and why (from Step 1)
 - **MODULE**: The affected component or area
 
@@ -36,23 +36,30 @@ RIGHT: "Removes deprecated v1 endpoints in favor of v2 implementation"
 WRONG: "No additional changes were made"
 RIGHT: [simply omit this section if there are no additional changes]
 
-WRONG: "Fix login bug" [sounds like a title]
+WRONG: "Fix login bug" [headline fragment, not a sentence]
 RIGHT: "Fixes the session fixation vulnerability that allowed anonymous session IDs to persist after authentication"
+
+The body must consist of full descriptive sentences, not headline-style fragments. Even "Fixes login bug" is too terse — expand to a sentence that names the actual problem and the resolution.
 
 ## FORMATTING RULES:
 
 - Start with a blank line
 - Maximum 72 characters per line (hard wrap)
-- Use present tense, imperative mood when possible
+- Use present tense, third-person indicative ("Fixes…", "Adds…", "Prevents…"). The imperative form is reserved for the subject line.
 - Use 4 spaces indentation for bullet points (standard git format)
 - Separate logical sections with blank lines
 - Do NOT include the tag or module name in the body
 - Write in sentence case (not Title Case), full sentences or technical fragments
 - Paragraphs should be descriptive, not headline-style
+- Output language: English regardless of the input language.
+- Length should match the magnitude of the change. A trivial change (typo, dependency bump, one-line config flip) can have a one-sentence body, or no body at all if the title is self-sufficient. Don't pad atomic changes to fit the multi-section structure.
+- Aim for under ~15-20 lines unless the change genuinely requires more. Don't extend bodies for completeness alone.
+- Inline code references with backticks (`functionName()`, `path/to/file`, `flag-name`) are allowed when they improve clarity. The prohibition on markdown applies to wrappers (code fences, headings, bold/italic), **not** to inline `code` spans.
+- Do not invent issue or PR references. Trailers like `Fixes #N`, `Refs:`, `Co-authored-by:` are appended by the calling pipeline, not the model.
 
 ## STRUCTURE:
 
-1. **Main paragraph**: Describe the core change directly (what was wrong, what was done, result)
+1. **Main paragraph**: describe the change in terms of behavior — previous behavior, new behavior, observable consequence. Avoid framings that imply an actor ("what was done").
 2. **Technical details** (optional): Bullet points for specific implementation details
 3. **Additional changes** (if any): Brief mention of secondary modifications. **OMIT ENTIRELY if none exist - do not write "no additional changes"**
 
