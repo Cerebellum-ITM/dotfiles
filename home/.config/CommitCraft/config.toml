@@ -1,64 +1,67 @@
-[commit_types]
-  behavior = "replace"
-
-  [[commit_types.types]]
-    tag = "IMP"
-    description = "Improvements to the implementation"
-    Color = "39"
-
-  [[commit_types.types]]
-    tag = "FIX"
-    description = "Bug fixes"
-    Color = "197"
-
-  [[commit_types.types]]
-    tag = "ADD"
-    description = "Feature additions"
-    Color = "47"
-
-  [[commit_types.types]]
-    tag = "REM"
-    description = "Feature removals"
-    Color = "202"
-
-  [[commit_types.types]]
-    tag = "REF"
-    description = "Code refactoring"
-    Color = "141"
-
-  [[commit_types.types]]
-    tag = "MOV"
-    description = "File moves or renames"
-    Color = "221"
-
-  [[commit_types.types]]
-    tag = "REL"
-    description = "Release-related commits"
-    Color = "81"
-
-  [[commit_types.types]]
-    tag = "WIP"
-    description = "Work in progress"
-    Color = "15"
-
-  [[commit_types.types]]
-    tag = "DOC"
-    description = "Documentation updates"
-    Color = "254"
+[changelog]
+  bump_strategy = "patch"
+  enabled = true
+  path = "CHANGELOG.md"
+  prompt_file = "prompts/changelog_refiner.prompt"
+  prompt_model = "llama-3.3-70b-versatile"
 
 [commit_format]
   type_format = "[%s]"
 
-[tui]
-  use_nerd_fonts = true
-  theme = "harmonized"
+[commit_types]
+  behavior = "replace"
+
+  [[commit_types.types]]
+    Color = "39"
+    description = "Improvements to the implementation"
+    tag = "IMP"
+
+  [[commit_types.types]]
+    Color = "197"
+    description = "Bug fixes"
+    tag = "FIX"
+
+  [[commit_types.types]]
+    Color = "47"
+    description = "Feature additions"
+    tag = "ADD"
+
+  [[commit_types.types]]
+    Color = "202"
+    description = "Feature removals"
+    tag = "REM"
+
+  [[commit_types.types]]
+    Color = "141"
+    description = "Code refactoring"
+    tag = "REF"
+
+  [[commit_types.types]]
+    Color = "221"
+    description = "File moves or renames"
+    tag = "MOV"
+
+  [[commit_types.types]]
+    Color = "81"
+    description = "Release-related commits"
+    tag = "REL"
+
+  [[commit_types.types]]
+    Color = "15"
+    description = "Work in progress"
+    tag = "WIP"
+
+  [[commit_types.types]]
+    Color = "254"
+    description = "Documentation updates"
+    tag = "DOC"
 
 [prompts]
+  change_analyzer_max_diff_size = 80000
   change_analyzer_prompt_file = "prompts/change_analyzer.prompt"
   change_analyzer_prompt_model = "meta-llama/llama-4-scout-17b-16e-instruct"
-  change_analyzer_max_diff_size = 80000
   commit_body_generator_prompt_file = "prompts/commit_body_generator.prompt"
-  commit_body_generator_prompt_model = "llama-3.1-8b-instant"
+  commit_body_generator_prompt_model = "openai/gpt-oss-120b"
   commit_title_generator_prompt_file = "prompts/commit_title_generator.prompt"
   commit_title_generator_prompt_model = "llama-3.1-8b-instant"
   only_translate_prompt_file = "prompts/only_translate.prompt"
@@ -66,9 +69,6 @@
   release_prompt_file = "prompts/release.prompt"
   release_prompt_model = "llama-3.3-70b-versatile"
 
-[changelog]
-  enabled = true
-  path = "CHANGELOG.md"
-  bump_strategy = "patch"
-  prompt_file = "prompts/changelog_refiner.prompt"
-  prompt_model = "llama-3.1-8b-instant"
+[tui]
+  theme = "harmonized"
+  use_nerd_fonts = true

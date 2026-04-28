@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## v0.1.10 — 2026-04-27
+
+- Updated the AI models used by the CLI for commit body generation, switching to a higher-capacity model (`openai/gpt-oss-120b`) for more accurate commit message creation.
+- Updated the prompt model for changelog generation to `llama-3.3-70b-versatile` for improved output.
+- Reordered configuration sections and tag definitions for better readability, explicitly defined `tui.theme` and `tui.use_nerd_fonts`, and removed the unused `change_analyzer_max_diff_size` entry.
+
 ## v0.1.9 — 2026-04-27
 
 - Improved the commit body generator prompt to provide more comprehensive guidance for composing commit message bodies.
