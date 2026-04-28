@@ -76,6 +76,7 @@ function s() {
         return 0
     fi
     # shellcheck source=/dev/null
+    set --
     source "$zshrc" && export _S_ZSHRC_HASH="$current"
     gum_log_info "$(git_strong_white_dark " ") .zshrc $(gum_green "reloaded")"
 }

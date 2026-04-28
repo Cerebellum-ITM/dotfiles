@@ -4,6 +4,10 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [v0.1.13] - 2026-04-28
+
+- Fixed terminal closure error when invoking the alias `s -f` by ensuring flags are handled locally and preventing unintended termination.
+
 ## [v0.1.12] - 2026-04-28
 
 ### Changed
