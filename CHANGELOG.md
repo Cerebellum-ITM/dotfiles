@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## v0.1.11 — 2026-04-27
+
+- Enhanced the change-analyzer prompt used by CommitCraft by adding a description of the generated output's purpose and refining the instruction wording for improved clarity.
+- Added documentation of the output purpose and its downstream consumption.
+- Optimized the prompt content for lower token count and increased summary generation accuracy.
+
 ## v0.1.10 — 2026-04-27
 
 - Updated the AI models used by the CLI for commit body generation, switching to a higher-capacity model (`openai/gpt-oss-120b`) for more accurate commit message creation.
