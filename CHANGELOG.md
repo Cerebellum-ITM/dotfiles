@@ -4,6 +4,13 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [v0.1.12] - 2026-04-28
+
+### Changed
+
+- Added visual status icons to `check_repo_status.sh` for synchronized and offline states.
+- Refined error output handling to suppress consecutive 'no connection' messages.
+
 ## [Unreleased]
 
 ### Added

@@ -13,6 +13,12 @@ export GIT_TERMINAL_PROMPT=0
 
 MODE="${1:-current}"
 
+case "$MODE" in
+    parent)    SYNC_ICON=''           OUT_ICON='' ;;
+    dotfiles)  SYNC_ICON='' OUT_ICON='󰊢' ;;
+    current|*) SYNC_ICON=''           OUT_ICON='󰊢' ;;
+esac
+
 FETCH_THROTTLE=300   # don't refetch more often than every 5 min
 STALE_AFTER=600      # if last successful fetch >10 min ago, consider data stale
 
@@ -80,9 +86,11 @@ COUNTS=$(git -C "$REPO" rev-list --left-right --count "HEAD...$UPSTREAM" 2>/dev/
     exit 0
 }
 
-# Staleness only matters if we've never had a successful fetch, or it's old.
+# Only flag stale if we *had* a successful fetch and it has since gone old.
+# Bootstrap (SUCCESS_FILE missing) is silent — local refs are still authoritative
+# for the comparison we just did.
 LAST_SUCCESS=$(mtime "$SUCCESS_FILE")
-if [ "$LAST_SUCCESS" = "0" ] || [ $((NOW - LAST_SUCCESS)) -gt "$STALE_AFTER" ]; then
+if [ "$LAST_SUCCESS" != "0" ] && [ $((NOW - LAST_SUCCESS)) -gt "$STALE_AFTER" ]; then
     echo "󱛅"
     exit 0
 fi
@@ -91,7 +99,7 @@ AHEAD="${COUNTS%%[[:space:]]*}"
 BEHIND="${COUNTS##*[[:space:]]}"
 
 if [ "$AHEAD" = "0" ] && [ "$BEHIND" = "0" ]; then
-    echo ""
+    echo "$SYNC_ICON"
 else
-    echo "󰊢"
+    echo "$OUT_ICON"
 fi
