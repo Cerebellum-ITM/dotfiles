@@ -4,6 +4,13 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+# [v0.1.5] - 2026-04-27
+### Prevents errors
+### Added
+- Prevents errors by adding a conditional check for the availability of the `go` command before loading the Go path.
+  - Adds `if` statement to verify existence of `go` command using `command -v go >/dev/null 2>&1;`
+  - Conditional loads Go path only if `go` command exists, preventing PATH updates when `go` is missing
+
 # [v0.1.4] - 2026-04-27
 
 - Updates commit configuration to align with the latest CommitCraft CLI version.
