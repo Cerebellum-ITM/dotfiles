@@ -4,6 +4,17 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+# [v0.1.4] - 2026-04-27
+
+- Updates commit configuration to align with the latest CommitCraft CLI version.
+
+### Added
+- `change_analyzer_prompt_file`, `change_analyzer_prompt_model`, `change_analyzer_max_diff_size`, `commit_body_generator_prompt_file`, `commit_body_generator_prompt_model`, `commit_title_generator_prompt_file`, `commit_title_generator_prompt_model`, `only_translate_prompt_model`, `changelog.path`, `changelog.bump_strategy`, `changelog.prompt_file`, `changelog.prompt_model` to `.config/CommitCraft/config.toml`.
+
+### Removed
+- Legacy configuration fields from `.config/CommitCraft/config.toml`:
+- `summary_prompt_file`, `summary_prompt_model`, `summary_prompt_max_diff_size`, `commit_builder_prompt_file`, `commit_builder_prompt_model`, `outformat_prompt_file`, `outformat_prompt_model`.
+
 ## [v0.1.3] - 2026-04-27
 -
 Adds `cc` alias for `commitcraft` to facilitate easy access via short name.

@@ -1,6 +1,3 @@
-# CommitCraft Global Configuration
-# This file was auto-generated. You can customize it.
-
 [commit_types]
   behavior = "replace"
 
@@ -49,23 +46,29 @@
     description = "Documentation updates"
     Color = "254"
 
-[changelog]
-  enabled = true
-
 [commit_format]
   type_format = "[%s]"
 
 [tui]
   use_nerd_fonts = true
+  theme = "harmonized"
 
 [prompts]
-  summary_prompt_file = "prompts/summary.prompt"
-  summary_prompt_model = "meta-llama/llama-4-scout-17b-16e-instruct"
-  summary_prompt_max_diff_size = 80000
-  commit_builder_prompt_file = "prompts/commit_builder.prompt"
-  commit_builder_prompt_model = "llama-3.1-8b-instant"
-  outformat_prompt_file = "prompts/output_format.prompt"
-  outformat_prompt_model = "llama-3.1-8b-instant"
+  change_analyzer_prompt_file = "prompts/change_analyzer.prompt"
+  change_analyzer_prompt_model = "meta-llama/llama-4-scout-17b-16e-instruct"
+  change_analyzer_max_diff_size = 80000
+  commit_body_generator_prompt_file = "prompts/commit_body_generator.prompt"
+  commit_body_generator_prompt_model = "llama-3.1-8b-instant"
+  commit_title_generator_prompt_file = "prompts/commit_title_generator.prompt"
+  commit_title_generator_prompt_model = "llama-3.1-8b-instant"
   only_translate_prompt_file = "prompts/only_translate.prompt"
+  only_translate_prompt_model = "llama-3.1-8b-instant"
   release_prompt_file = "prompts/release.prompt"
   release_prompt_model = "llama-3.3-70b-versatile"
+
+[changelog]
+  enabled = true
+  path = "CHANGELOG.md"
+  bump_strategy = "patch"
+  prompt_file = "prompts/changelog_refiner.prompt"
+  prompt_model = "llama-3.1-8b-instant"
