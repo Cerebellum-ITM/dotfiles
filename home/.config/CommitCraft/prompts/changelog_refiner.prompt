@@ -1,54 +1,155 @@
 You generate two pieces of text for a commit that updates a project's
 CHANGELOG.md:
 
-1. A NEW changelog entry, in the EXACT markdown layout shown in
+1. A NEW changelog entry, in the EXACT visual layout shown in
    FORMAT_SAMPLE. Match heading level, version prefix style ("v1.2.3"
-   vs "[1.2.3]"), date format, dash separator, bullet-vs-paragraph
-   style, blank-line spacing, and any subsection headings (e.g.
-   "### Usage", "### Added") found in the sample.
+   vs "[1.2.3]"), dash separator, bullet character, blank-line spacing,
+   and any subsection headings (e.g. "### Usage", "### Added") found in
+   the sample. Imitation applies to STRUCTURE and VISUAL STYLE only —
+   the textual content of the entry is always written in English (see
+   LANGUAGE rule below).
 
 2. A SHORT one-line bullet (or one short sentence) that will be
    APPENDED to the commit body to document the CHANGELOG.md update.
-   This line must:
-   - Mention the literal token "CHANGELOG.md".
-   - Be self-contained — do not reference other bullets, do not
-     restate facts already in the body, do not include the version
-     number unless natural.
-   - Match the bullet style hinted by BODY_BULLET_STYLE ("-", "*",
-     "+", or "none" if the body has no bullets — in that case return
-     a plain sentence with no leading bullet character).
 
 INPUTS you will receive:
 
 - FORMAT_SAMPLE: the existing changelog title and most recent entry,
   used as a style reference for the changelog entry. Imitate it
-  strictly.
+  strictly. May be empty when the project has no prior entries — see
+  EMPTY FORMAT_SAMPLE rule.
 - SUGGESTED_VERSION: the version string for the new entry's heading.
-- DATE: ISO date (YYYY-MM-DD) to use in the heading.
+- DATE: ISO date (YYYY-MM-DD) for the heading. If FORMAT_SAMPLE uses a
+  different date format, reformat DATE to match the sample.
 - STAGE2_BODY: the commit body produced by the upstream pipeline.
-  Use it ONLY as a source of facts about what changed when writing
-  the changelog entry. Do not echo, rephrase, or comment on it in
-  your output.
-- STAGE3_TITLE: the commit subject line.
+  Use it as the source of facts about what changed. Extract those
+  facts and rewrite them in the changelog's voice — do not copy text
+  verbatim and do not write meta-commentary about the body itself.
+- STAGE3_TITLE: the commit subject line. Use it to (a) extract a
+  bracketed tag prefix if present and use it for subsection
+  classification (see TAG MAPPING), and (b) understand the scope of
+  the change. Do not include STAGE3_TITLE verbatim in the output.
 - BODY_BULLET_STYLE: the bullet character used by the existing body
-  ("-", "*", "+", or "none").
+  ("-", "*", "+", or "none" if the body has no bullets).
+
+CHANGELOG ENTRY RULES:
+
+- Generate one bullet per distinct observable change. Do not bundle
+  unrelated changes into a single bullet, unless FORMAT_SAMPLE clearly
+  uses aggregated bullets.
+- If FORMAT_SAMPLE uses subsection headings (e.g. "### Added",
+  "### Fixed"), classify the changes under the appropriate subsection.
+  If FORMAT_SAMPLE lists bullets directly under the version heading
+  with no subsections, do the same.
+- TAG MAPPING (when STAGE3_TITLE starts with a bracketed tag):
+  `[ADD]` → Added, `[IMP]` → Changed, `[FIX]` → Fixed,
+  `[REM]` → Removed. `[STYLE]` and other tags fall into "Changed"
+  unless the sample provides a more specific subsection. If no tag is
+  present, infer the subsection from the content.
+- Voice and tense: past tense, active voice, user-focused
+  ("Added support for…", "Fixed crash when…"). Do not mix tenses
+  within an entry. When FORMAT_SAMPLE's existing entries use a
+  different convention, follow the sample.
+- End the changelog_entry with exactly one trailing blank line (the
+  string must end with `\n\n`) so it concatenates cleanly before the
+  previous version block.
+- Do not include the file's H1 title in changelog_entry — only the
+  new per-version block (heading + body).
+
+EMPTY FORMAT_SAMPLE rule:
+
+If FORMAT_SAMPLE is empty or absent, fall back to the Keep a Changelog
+format:
+
+    ## [SUGGESTED_VERSION] - DATE
+
+    ### Added
+
+    - <bullet per change>
+
+Use `-` as the bullet character in this fallback. Pick the subsection
+heading from TAG MAPPING (or infer it from the content).
+
+COMMIT MENTION LINE RULES:
+
+- Must contain the literal token "CHANGELOG.md".
+- Must be self-contained: do not reference other bullets and do not
+  restate facts already present in the body.
+- Must NOT include the version number — the surrounding commit
+  context already conveys it.
+- Must be a single physical line (no `\n` inside the string value).
+- Bullet style:
+  - If BODY_BULLET_STYLE is "-", "*", or "+", prefix the line with
+    that character followed by a single space.
+  - If BODY_BULLET_STYLE is "none", return a plain sentence with no
+    leading bullet character.
+- Tense and voice: match the verb tense and voice of the existing
+  body. If the body is empty or ambiguous, default to past tense
+  active voice ("Documented…", "Recorded…").
+
+LANGUAGE rule:
+
+All textual content in both outputs must be in English regardless of
+the input language. The "imitate strictly" instruction governs the
+visual structure and formatting of FORMAT_SAMPLE — not the language of
+its prose.
 
 OUTPUT FORMAT:
 
-Return a single JSON object, no prose around it, no markdown code fences.
+Return a single JSON object, no prose around it, no markdown code
+fences.
 
 {
   "changelog_entry": "<full markdown for the new entry, including its
-heading and trailing newline>",
+heading and a trailing blank line>",
   "commit_mention_line": "<single line to append to the commit body>"
 }
 
-Rules:
+JSON validity:
 - The JSON must be valid and parseable.
 - Inside string values, escape newlines as \n and quotes as \".
 - Inside string values, escape any literal backslashes and control
   characters per the JSON spec.
-- Do not include the file's H1 title in changelog_entry — only the
-  new per-version block.
-- commit_mention_line must be a single physical line (no \n inside).
-- All output must be in English regardless of the input language.
+- Do not emit trailing commas, BOM, or any text outside the JSON
+  object.
+
+EXAMPLES:
+
+Example 1 — sample exists, dashed bullets, tagged title.
+
+INPUTS:
+  FORMAT_SAMPLE:
+    ## [1.4.0] - 2024-01-15
+
+    ### Added
+
+    - Added support for environment-based configuration.
+
+    ### Fixed
+
+    - Fixed crash when the config file was missing.
+  SUGGESTED_VERSION: 1.5.0
+  DATE: 2024-02-20
+  STAGE2_BODY:
+    - Add response caching layer for the public API
+    - Reduce p95 latency by ~40% on cached endpoints
+  STAGE3_TITLE: [ADD] api: add response caching layer
+  BODY_BULLET_STYLE: -
+
+OUTPUT:
+{"changelog_entry":"## [1.5.0] - 2024-02-20\n\n### Added\n\n- Added a response caching layer for the public API, reducing p95 latency by ~40% on cached endpoints.\n\n","commit_mention_line":"- Documented the new caching layer under CHANGELOG.md."}
+
+Example 2 — empty FORMAT_SAMPLE (first entry), no body bullets.
+
+INPUTS:
+  FORMAT_SAMPLE: <empty>
+  SUGGESTED_VERSION: 0.1.0
+  DATE: 2024-03-05
+  STAGE2_BODY:
+    Initial CLI release. Provides the `foo` and `bar` subcommands and
+    publishes a prebuilt binary to GitHub releases.
+  STAGE3_TITLE: [ADD] cli: initial release
+  BODY_BULLET_STYLE: none
+
+OUTPUT:
+{"changelog_entry":"## [0.1.0] - 2024-03-05\n\n### Added\n\n- Added the initial CLI release with the `foo` and `bar` subcommands.\n- Published a prebuilt binary to GitHub releases.\n\n","commit_mention_line":"Documented the initial release in CHANGELOG.md."}

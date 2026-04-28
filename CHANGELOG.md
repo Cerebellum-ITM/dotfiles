@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## v0.1.7 — 2026-04-27
+
+enhance changelog prompt with guidelines and examples
+
+Improves the prompt for changelog generation in CommitCraft.
+
 ### [v0.1.6] - 2026-04-27
 - Improves the prompt for synthesizing commit messages into coherent release notes by refining instructions for capitalization, formatting, and organization.
   • Updates the `commit.Body` reference to maintain consistent capitalization.
