@@ -4,6 +4,23 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## [Unreleased]
+
+### Changed
+
+- Replaced the three per-prompt status scripts (`check_parent_directory_status.sh`, `check_current_directory_status.sh`, `check_dotfiles_status.sh`) with a single `tools/check_repo_status.sh` that takes a mode argument (`current`, `parent`, or `dotfiles`). Removes the synchronous `ping google.com` call and collapses 4 git invocations per check into 1, dramatically reducing post-command prompt latency. Usage:
+  ```bash
+  check_repo_status.sh current   # status of the repo at $PWD
+  check_repo_status.sh parent    # status of parent repo when $PWD matches *addons*
+  check_repo_status.sh dotfiles  # status of $HOME/dotfiles vs origin/main
+  ```
+- Tuned `home/.oh-my-posh/prompt_config.toml` segment caching: `os`, `sysinfo`, `shell`, `host` cached `24h`; `node`, `php`, `npm` cached `5m`; the three `command` segments cached `30s`. Removed `fetch_upstream_icon` from the `git` segment (now handled by the unified status script).
+- Improved zsh startup time in `home/.zshrc`: deferred `zsh-syntax-highlighting`, `zsh-completions`, `zsh-autosuggestions`, and `fzf-tab` via `zinit wait lucid`; cached `compinit` (full rebuild at most once per 24h); replaced `go env GOPATH` lookup with a direct `$HOME/go/bin` reference; removed duplicate `fzf --zsh` and duplicate `atuin init` invocations; fixed a typo (`"STERM PROGRAM"` → `"$TERM_PROGRAM"`) that prevented oh-my-posh from being skipped on Apple Terminal.
+
+### Removed
+
+- Deleted `tools/check_parent_directory_status.sh`, `tools/check_current_directory_status.sh`, and `tools/check_dotfiles_status.sh` (superseded by `tools/check_repo_status.sh`).
+
 ## v0.1.11 — 2026-04-27
 
 - Enhanced the change-analyzer prompt used by CommitCraft by adding a description of the generated output's purpose and refining the instruction wording for improved clarity.

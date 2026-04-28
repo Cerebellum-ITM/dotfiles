@@ -1,8 +1,7 @@
 # shellcheck disable=SC1090
 # shellcheck disable=SC2034
 
-# shellcheck disable=SC2050
-if [ "STERM PROGRAM" != "Apple_Terminal" ]; then
+if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
     eval "$(oh-my-posh init zsh --config $HOME/.oh-my-posh/prompt_config.toml)"
 fi
 
@@ -20,9 +19,8 @@ source "${ZINIT_HOME}/zinit.zsh"
 export LC_ALL=en_US.UTF-8
 export LSCOLORS="Gxfxcxdxbxegedabagacad" 
 
-if command -v go >/dev/null 2>&1; then
-    PATH_GO_BIN="$(go env GOPATH)/bin"
-    export PATH="$PATH_GO_BIN:$PATH"
+if [ -d "$HOME/go/bin" ]; then
+    export PATH="$HOME/go/bin:$PATH"
 fi
 
 
@@ -38,14 +36,20 @@ fi
 # Vim mode
 # bindkey -v
 
-# Add in zsh plugins
-zinit light zsh-users/zsh-syntax-highlighting
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-zinit light Aloxaf/fzf-tab
+# Add in zsh plugins (deferred via turbo mode for faster startup)
+zinit wait lucid light-mode for \
+    zsh-users/zsh-syntax-highlighting \
+    zsh-users/zsh-completions \
+    zsh-users/zsh-autosuggestions \
+    Aloxaf/fzf-tab
 
-# Load completions
-autoload -Uz compinit && compinit
+# Load completions (cached: full compinit at most once per 24h)
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
 
 # Keybindings
 bindkey '^[OA' history-search-backward
@@ -101,7 +105,6 @@ alias tfs='eval $(tmux showenv -s SSH_AUTH_SOCK)'
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source <(fzf --zsh)
 
 source ~/dotfiles/tools/tput-config.sh
 source ~/dotfiles/home/.config/.tmp/.docker-compose-config
@@ -182,9 +185,6 @@ fi
 
 if [ -n "$TMUX" ]; then
     eval "$(tmux showenv -s SSH_AUTH_SOCK)"
-    . "$HOME/.atuin/bin/env"
-    eval "$(atuin init zsh)"
-
 fi
 
 printf '\n%.0s' {1..100}

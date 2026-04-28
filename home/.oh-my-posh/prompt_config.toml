@@ -37,7 +37,7 @@ final_space = true
     style = 'plain'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '24h'
 
   [[blocks.segments]]
     template = '{{ .Path }} '
@@ -70,7 +70,6 @@ final_space = true
       cherry_pick_icon = ' '
       commit_icon = ' '
       fetch_status = true
-      fetch_upstream_icon = true
       merge_icon = ' '
       no_commits_icon = ' '
       rebase_icon = ' '
@@ -88,7 +87,8 @@ final_space = true
       '{{if eq .Output ""}}p:error{{end}}',
     ]
     [blocks.segments.properties]
-      command = '$HOME/dotfiles/tools/check_parent_directory_status.sh'
+      cache_duration = '30s'
+      command = '$HOME/dotfiles/tools/check_repo_status.sh parent'
 
   [[blocks.segments]]
     template = '{{ .Output }} '
@@ -101,7 +101,8 @@ final_space = true
       '{{if eq .Output "󰊢"}}p:error{{end}}',
     ]
     [blocks.segments.properties]
-      command = '$HOME/dotfiles/tools/check_current_directory_status.sh'
+      cache_duration = '30s'
+      command = '$HOME/dotfiles/tools/check_repo_status.sh current'
 
   [[blocks.segments]]
     template = '{{ .Output }} '
@@ -114,7 +115,8 @@ final_space = true
       '{{if eq .Output "󰊢"}}p:error{{end}}',
     ]
     [blocks.segments.properties]
-      command = '$HOME/dotfiles/tools/check_dotfiles_status.sh'
+      cache_duration = '30s'
+      command = '$HOME/dotfiles/tools/check_repo_status.sh dotfiles'
 
   [[blocks.segments]]
     template = '❯'
@@ -138,7 +140,7 @@ final_space = true
     style = 'plain'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '24h'
 
   [[blocks.segments]]
     template = '<#cc7eda> | with</> {{ .UserName }}@{{ .HostName }}'
@@ -148,7 +150,7 @@ final_space = true
     foreground_templates = ['{{if .Root}}p:warning{{else}}p:green{{end}}']
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '24h'
 
   [[blocks.segments]]
     template = '<#cc7eda> | </><#7eb8da></> {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}'
@@ -158,7 +160,7 @@ final_space = true
     style = 'powerline'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '5m'
       fetch_version = true
 
   [[blocks.segments]]
@@ -169,7 +171,7 @@ final_space = true
     style = 'powerline'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '5m'
 
   [[blocks.segments]]
     template = '<#cc7eda> | </><#7eb8da> </> {{ .Full }}'
@@ -179,7 +181,7 @@ final_space = true
     style = 'powerline'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '5m'
 
   [[blocks.segments]]
     template = '<> </>'
@@ -189,7 +191,7 @@ final_space = true
     style = 'powerline'
 
     [blocks.segments.properties]
-      cache_duration = 'none'
+      cache_duration = '24h'
 
   [[blocks.segments]]
     template = '<#FFFF00>| Took {{ .FormattedMs }} 󰀡  </>'
