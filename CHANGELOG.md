@@ -8,11 +8,13 @@ Sections are dated (rolling) instead of versioned — each entry references the 
 
 ### Added
 
-- New `gretime` shell function (in `scripts/git_retime.sh`) to rewrite the date of an existing commit through a `gum`-based UI: pick a commit from the last N, choose between *Now* (sets author + committer to current time), *Custom* (`YYYY-MM-DD HH:MM:SS`), or *Sync* (align committer to author date). Detects BSD vs GNU `date`, warns when the commit is already pushed, and uses `git rebase -i` programmatically for non-HEAD commits. Usage:
+- New `gretime` shell function (in `scripts/git_retime.sh`) to rewrite the date of an existing commit through a `gum`-based UI: pick a commit from the last N (or pass a hash directly to skip the picker), choose between *Now* (sets author + committer to current time), *Custom* (`YYYY-MM-DD HH:MM:SS`), or *Sync* (align committer to author date). Detects BSD vs GNU `date`, warns when the commit is already pushed, and uses `git rebase -i` programmatically for non-HEAD commits. Usage:
   ```bash
-  gretime          # last 20 commits
-  gretime 50       # last 50 commits
+  gretime          # pick from last 20 commits
+  gretime 50       # pick from last 50 commits
+  gretime <hash>   # re-time that commit directly
   ```
+- New `T` keybinding in `lazygit` (commits context) that runs `tools/lazygit-gretime.sh` against the selected commit, exposing `gretime` from inside lazygit.
 
 ### Changed
 

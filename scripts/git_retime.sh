@@ -27,10 +27,13 @@ _gretime_is_pushed() {
 }
 
 function gretime() {
-    local count="${1:-20}"
-    if ! [[ "$count" =~ ^[0-9]+$ ]]; then
-        gum_log_error "$(gum_red "") gretime: argument must be a number (commits to list)"
-        return 1
+    local count=20 preselected_hash=""
+    if [[ -n "$1" ]]; then
+        if [[ "$1" =~ ^[0-9]+$ ]] && [[ "${#1}" -le 3 ]]; then
+            count="$1"
+        else
+            preselected_hash="$1"
+        fi
     fi
 
     if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
@@ -48,30 +51,40 @@ function gretime() {
         return 1
     fi
 
-    gum_log_info "$(git_strong_white_dark " ") gretime $(git_green "Pick a commit")"
-
     local commit_list selected hash short subject current_date
-    commit_list=$(git log -n "$count" --format='%h │ %ai │ %s' 2>/dev/null)
-    if [[ -z "$commit_list" ]]; then
-        gum_log_error "$(gum_red "") No commits found"
-        return 1
-    fi
+    if [[ -n "$preselected_hash" ]]; then
+        hash=$(git rev-parse --verify "$preselected_hash" 2>/dev/null) || {
+            gum_log_error "$(gum_red "") Not a valid commit: $(gum_yellow_bold "$preselected_hash")"
+            return 1
+        }
+        short=$(git rev-parse --short "$hash")
+        current_date=$(git show -s --format=%ai "$hash")
+        subject=$(git show -s --format=%s "$hash")
+        gum_log_info "$(git_strong_white_dark " ") gretime $(git_green "Re-timing") $(gum_blue_bold "$short")"
+    else
+        gum_log_info "$(git_strong_white_dark " ") gretime $(git_green "Pick a commit")"
+        commit_list=$(git log -n "$count" --format='%h │ %ai │ %s' 2>/dev/null)
+        if [[ -z "$commit_list" ]]; then
+            gum_log_error "$(gum_red "") No commits found"
+            return 1
+        fi
 
-    selected=$(echo "$commit_list" | gum choose \
-        --header "Select the commit to re-time (last $count)" \
-        --height 20)
-    if [[ -z "$selected" ]]; then
-        gum_log_info "$(git_strong_white_dark " ") No selection; $(gum_yellow_bold "aborting")"
-        return 0
-    fi
+        selected=$(echo "$commit_list" | gum choose \
+            --header "Select the commit to re-time (last $count)" \
+            --height 20)
+        if [[ -z "$selected" ]]; then
+            gum_log_info "$(git_strong_white_dark " ") No selection; $(gum_yellow_bold "aborting")"
+            return 0
+        fi
 
-    short=$(echo "$selected" | awk -F' │ ' '{print $1}' | tr -d ' ')
-    current_date=$(echo "$selected" | awk -F' │ ' '{print $2}')
-    subject=$(echo "$selected" | awk -F' │ ' '{print $3}')
-    hash=$(git rev-parse "$short") || {
-        gum_log_error "$(gum_red "") Could not resolve $short"
-        return 1
-    }
+        short=$(echo "$selected" | awk -F' │ ' '{print $1}' | tr -d ' ')
+        current_date=$(echo "$selected" | awk -F' │ ' '{print $2}')
+        subject=$(echo "$selected" | awk -F' │ ' '{print $3}')
+        hash=$(git rev-parse "$short") || {
+            gum_log_error "$(gum_red "") Could not resolve $short"
+            return 1
+        }
+    fi
 
     gum_log_info "$(git_strong_white_dark " ") Target: $(gum_blue_bold "$short") $(gum_yellow_dark "($current_date)") $subject"
 

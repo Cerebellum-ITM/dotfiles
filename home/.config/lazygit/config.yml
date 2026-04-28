@@ -76,3 +76,8 @@ customCommands:
     command: "$HOME/.local/bin/commitcraft -w {{ .SelectedCommit.Sha }}"
     description: 'Reword selected commit with CommitCraft'
     output: terminal
+  - key: 'T'
+    context: 'commits'
+    command: "$HOME/dotfiles/tools/lazygit-gretime.sh {{ .SelectedCommit.Sha }}"
+    description: 'Rewrite the date of the selected commit (gretime)'
+    output: terminal
