@@ -4,6 +4,14 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
 
+## v0.1.8 — 2026-04-27
+
+### Changed
+
+- Improved the commit title prompt in CommitCraft to generate more informative and concise titles.
+- Introduced more examples for generating titles in common scenarios, such as improvements, fixes, and additions.
+- Emphasized capturing the essence of all changes and provided guidance on handling multiple changes without a unifying theme.
+
 ## v0.1.7 — 2026-04-27
 
 enhance changelog prompt with guidelines and examples
