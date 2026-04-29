@@ -25,7 +25,7 @@ _create_a_changelog(){
         gum_log_debug "$(git_strong_red "") The $(git_strong_red "commit") has been created $(git_green_light  "successfully")."
         gum_log_info "$(gum_cyan_dark "") $(git_strong_white_light "Task complete.")"
     else
-        gun_log_fatal "$(gum_red "") $(git_strong_red_dark "There is no docker-compose file; it is most likely that this is not the parent directory.")"
+        gum_log_fatal "$(gum_red "") $(git_strong_red_dark "There is no docker-compose file; it is most likely that this is not the parent directory.")"
     fi
 }
 
@@ -37,7 +37,7 @@ odoo() {
         fi
     elif [[ "$1" == "--search-odoo-port"  || "$1" == "-p" ]]; then
         if [[ ! "$2" ]]; then
-            gun_log_fatal "$(gum_red "") $(git_strong_red_dark "You did not enter the port you want to search for.")"
+            gum_log_fatal "$(gum_red "") $(git_strong_red_dark "You did not enter the port you want to search for.")"
             return 1
         fi
         _check_for_caddy_file || return 1

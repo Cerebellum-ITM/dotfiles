@@ -15,12 +15,12 @@ commit_message=$(commitcraft -o)
 EXIT_STATUS=$?
 
 if [ "$EXIT_STATUS" -eq 1 ]; then
-    gun_log_fatal "$(git_strong_red 󰊢) - An error occurred while initializing CommitCraft"
+    gum_log_fatal "$(git_strong_red 󰊢) - An error occurred while initializing CommitCraft"
     exit 1
 fi
 
 if [ -z "$commit_message" ]; then
-    gun_log_fatal "$(git_strong_red 󰊢) - the creation of the commit was canceled"
+    gum_log_fatal "$(git_strong_red 󰊢) - the creation of the commit was canceled"
     exit 1
 fi
 echo -n "$commit_message" >/tmp/fzf_git_commit

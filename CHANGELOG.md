@@ -6,8 +6,14 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 
 ## [v2026.04.29] - 2026-04-29
 
+### Changed
+
+- Refactored `scripts/fzf-git-custom.sh`: `create_commit` is split into `_do_commit <current|parent>` and `_maybe_push <current|parent>` (preserves push-toggle semantics via `/tmp/fzf_git_commit_options`); the `--commit`/`--commit-submodule` branches now share `_run_commit_flow`; the `if/elif` dispatcher in `fzf-git` is now a `case`; tmp-file paths are centralized as `FZF_GIT_*` constants. The legacy `create_commit module|submodule` entry point still works as a shim.
+- Stubbed the changelog auto-write inside the commit flow. `_check_for_changelog` and `_write_in_changelog` now emit a `gum_log_debug` "skipped (WIP)" message and do nothing — pending a dedicated changelog flow (TODO in the file).
+
 ### Fixed
 
+- Renamed the misspelled log helper `gun_log_fatal` → `gum_log_fatal` across `tools/gum_log_functions.sh`, `tools/lazygit-custom-commit-workflow.sh`, `scripts/fzf-make.sh`, `scripts/odoo.sh`, and `scripts/fzf-git-custom.sh`. No remaining `gun_log_fatal` references.
 - Restored per-mode prompt icons in `tools/check_repo_status.sh` that were lost when the three status scripts were unified: `dotfiles` mode now shows `` (`U+EAFD`) when the repo is in sync, and `parent` mode shows `` (`U+F4DC`) when an `*addons*` directory is out of sync. `current` mode keeps `󰊢` for out-of-sync.
 - Stopped drawing the offline icon (`󱛅`) in the prompt. The bg `git fetch` still runs and the segment fills in on the next prompt with fresh data; previously every first prompt into a repo with stale/missing fetch cache flashed `󱛅` for ~30 s while the async fetch finished, which was indistinguishable from a real failure.
 

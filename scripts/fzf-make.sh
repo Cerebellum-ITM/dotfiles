@@ -4,7 +4,7 @@ FZF_MAKE_HISTORY_FILE="$HOME/dotfiles/home/.config/.tmp/.fzf-make_history.log"
 
 _check_fzf_make_exit_code() {
     if [ -f /tmp/fzf_makefile_exit_code ] && [ "$(cat /tmp/fzf_makefile_exit_code)" -eq 130 ]; then
-        gun_log_fatal "Process aborted by the $(git_strong_white "user")"
+        gum_log_fatal "Process aborted by the $(git_strong_white "user")"
         rm /tmp/fzf_makefile_exit_code
         return 1
     fi
@@ -121,7 +121,7 @@ _select_odoo_module() {
     _check_fzf_make_exit_code || return 1
     #* Check if a directory was selected
     if [[ -z "$dir" ]]; then
-        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        gum_log_fatal "No $(gum_yellow_underline "directory") selected."
         return 1
     fi
 
@@ -135,7 +135,7 @@ _select_odoo_module() {
     _check_fzf_make_exit_code || return 1
     #* Check if a subdirectory was selected
     if [[ -z "$subdir" ]]; then
-        gun_log_fatal "No $(gum_yellow_underline "subdirectory") selected."
+        gum_log_fatal "No $(gum_yellow_underline "subdirectory") selected."
         return 1
     fi
     if [[ "$return_full_path" == "true" ]]; then
@@ -151,7 +151,7 @@ _install_odoo_module() {
     local history_entry subdir
     subdir=$(_select_odoo_module)
     if [[ -z "$subdir" ]]; then
-        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        gum_log_fatal "No $(gum_yellow_underline "directory") selected."
         return 1
     fi
 
@@ -165,7 +165,7 @@ _install_odoo_module() {
 _update_odoo_module() {
     subdir=$(_select_odoo_module)
     if [[ -z "$subdir" ]]; then
-        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        gum_log_fatal "No $(gum_yellow_underline "directory") selected."
         return 1
     fi
 
@@ -181,7 +181,7 @@ _update_odoo_translation() {
     local history_entry subdir
     subdir=$(_select_odoo_module)
     if [[ -z "$subdir" ]]; then
-        gun_log_fatal "No $(gum_yellow_underline "directory") selected."
+        gum_log_fatal "No $(gum_yellow_underline "directory") selected."
         return 1
     fi
 

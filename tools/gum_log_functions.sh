@@ -16,7 +16,7 @@ gum_log_error() {
     gum log --structured --time TimeOnly --level error "$@"
 }
 
-gun_log_fatal() {
+gum_log_fatal() {
     gum log --structured --time TimeOnly --level fatal "$@"
 }
 
