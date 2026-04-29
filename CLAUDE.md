@@ -32,7 +32,7 @@ This repo maintains `CHANGELOG.md` as a complement to `git log`: commits explain
 
 **When to add an entry:** any change that is observable by the user — a new script, function, flag, command, behavior change, or removal. Skip pure refactors, formatting, comment edits, and `[STYLE]`-only commits unless the user asks.
 
-**Where:** under the `## [Unreleased]` section at the top of `CHANGELOG.md`. Do not create a new dated section unless the user explicitly requests a "cut".
+**Where:** directly under the CalVer section for today's date at the top of `CHANGELOG.md`. If `## [v<today>] - <today>` already exists, append the entry to the right `### Added/Changed/Fixed/Removed` subsection. If it does not exist yet, create it at the very top of the version list (above yesterday's section) with the appropriate subsection. There is no `[Unreleased]` buffer — every entry lands on a real CalVer section the moment it is written.
 
 **Language:** English.
 
@@ -56,9 +56,7 @@ This repo maintains `CHANGELOG.md` as a complement to `git log`: commits explain
 - Every entry that introduces a new tool, flag, or invocation **must show a usage example**, not just a description. Use a fenced ` ```bash ` block when the example is more than one line.
 - One change = one entry. Don't bundle unrelated changes into a single bullet.
 
-**Cutting a dated section:** only when the user asks, or naturally when `Unreleased` accumulates more than ~5–10 entries. Replace `## [Unreleased]` with `## [YYYY-MM-DD]` and add a fresh empty `## [Unreleased]` above it.
-
-**No SemVer.** No version numbers, no git tags for releases, no `VERSION` file. Sections are dated (rolling).
+**Versioning: CalVer.** Format `## [vYYYY.MM.DD] - YYYY-MM-DD`. The version *is* the date the entry was added. There is no `[Unreleased]` section: every change lands on its dated CalVer section the moment it is recorded. If the same day already has a section, append into its existing `### Added/Changed/Fixed/Removed`. If a second cut on the same day is genuinely warranted (rare), suffix the version: `vYYYY.MM.DD.2`. No SemVer, no git tags for releases, no `VERSION` file.
 
 ## Working style in this repo
 

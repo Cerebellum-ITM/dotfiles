@@ -2,158 +2,102 @@
 
 All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
-Sections are dated (rolling) instead of versioned — each entry references the git short hash for exact traceability back to `git log`.
+Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
-## [v0.1.13] - 2026-04-28
+## [v2026.04.29] - 2026-04-29
 
-- Fixed terminal closure error when invoking the alias `s -f` by ensuring flags are handled locally and preventing unintended termination.
+### Fixed
 
-## [v0.1.12] - 2026-04-28
+- Restored per-mode prompt icons in `tools/check_repo_status.sh` that were lost when the three status scripts were unified: `dotfiles` mode now shows `` (`U+EAFD`) when the repo is in sync, and `parent` mode shows `` (`U+F4DC`) when an `*addons*` directory is out of sync. `current` mode keeps `󰊢` for out-of-sync.
+- Stopped drawing the offline icon (`󱛅`) in the prompt. The bg `git fetch` still runs and the segment fills in on the next prompt with fresh data; previously every first prompt into a repo with stale/missing fetch cache flashed `󱛅` for ~30 s while the async fetch finished, which was indistinguishable from a real failure.
 
-### Changed
-
-- Added visual status icons to `check_repo_status.sh` for synchronized and offline states.
-- Refined error output handling to suppress consecutive 'no connection' messages.
-
-## [Unreleased]
+## [v2026.04.28] - 2026-04-28
 
 ### Added
 
-- New `gretime` shell function (in `scripts/git_retime.sh`) to rewrite the date of an existing commit through a `gum`-based UI: pick a commit from the last N (or pass a hash directly to skip the picker), choose between *Now* (sets author + committer to current time), *Custom* (`YYYY-MM-DD HH:MM:SS`), or *Sync* (align committer to author date). Detects BSD vs GNU `date`, warns when the commit is already pushed, and uses `git rebase -i` programmatically for non-HEAD commits. Usage:
+- `gretime` shell function (`scripts/git_retime.sh`) to rewrite the date of an existing commit through a `gum`-based UI: pick a commit from the last N (or pass a hash to skip the picker), choose *Now* (sets author + committer to current time), *Custom* (`YYYY-MM-DD HH:MM:SS`), or *Sync* (align committer to author date). Detects BSD vs GNU `date`, warns when the commit is already pushed, and uses `git rebase -i` programmatically for non-HEAD commits. Usage:
   ```bash
   gretime          # pick from last 20 commits
   gretime 50       # pick from last 50 commits
   gretime <hash>   # re-time that commit directly
   ```
-- New `T` keybinding in `lazygit` (commits context) that runs `tools/lazygit-gretime.sh` against the selected commit, exposing `gretime` from inside lazygit.
+- `T` keybinding in `lazygit` (commits context) that runs `tools/lazygit-gretime.sh` against the selected commit, exposing `gretime` from inside lazygit.
+- Visual status icons in `tools/check_repo_status.sh` for synchronized and offline states.
 
 ### Changed
 
-- Replaced the three per-prompt status scripts (`check_parent_directory_status.sh`, `check_current_directory_status.sh`, `check_dotfiles_status.sh`) with a single `tools/check_repo_status.sh` that takes a mode argument (`current`, `parent`, or `dotfiles`). Removes the synchronous `ping google.com` call and collapses 4 git invocations per check into 1, dramatically reducing post-command prompt latency. Usage:
+- Replaced the three per-prompt status scripts (`check_parent_directory_status.sh`, `check_current_directory_status.sh`, `check_dotfiles_status.sh`) with a single `tools/check_repo_status.sh` that takes a mode argument. Removes the synchronous `ping google.com` call and collapses 4 git invocations per check into 1, dramatically reducing post-command prompt latency. Usage:
   ```bash
   check_repo_status.sh current   # status of the repo at $PWD
   check_repo_status.sh parent    # status of parent repo when $PWD matches *addons*
   check_repo_status.sh dotfiles  # status of $HOME/dotfiles vs origin/main
   ```
 - Tuned `home/.oh-my-posh/prompt_config.toml` segment caching: `os`, `sysinfo`, `shell`, `host` cached `24h`; `node`, `php`, `npm` cached `5m`; the three `command` segments cached `30s`. Removed `fetch_upstream_icon` from the `git` segment (now handled by the unified status script).
-- Improved zsh startup time in `home/.zshrc`: deferred `zsh-syntax-highlighting`, `zsh-completions`, `zsh-autosuggestions`, and `fzf-tab` via `zinit wait lucid`; cached `compinit` (full rebuild at most once per 24h); replaced `go env GOPATH` lookup with a direct `$HOME/go/bin` reference; removed duplicate `fzf --zsh` and duplicate `atuin init` invocations; fixed a typo (`"STERM PROGRAM"` → `"$TERM_PROGRAM"`) that prevented oh-my-posh from being skipped on Apple Terminal.
+- Improved zsh startup time in `home/.zshrc`: deferred `zsh-syntax-highlighting`, `zsh-completions`, `zsh-autosuggestions`, and `fzf-tab` via `zinit wait lucid`; cached `compinit` (full rebuild at most once per 24 h); replaced `go env GOPATH` lookup with a direct `$HOME/go/bin` reference; removed duplicate `fzf --zsh` and duplicate `atuin init` invocations; fixed a typo (`"STERM PROGRAM"` → `"$TERM_PROGRAM"`) that prevented oh-my-posh from being skipped on Apple Terminal.
+- Refined error output handling in `check_repo_status.sh` to suppress consecutive "no connection" messages.
+
+### Fixed
+
+- Terminal closure error when invoking the alias `s -f` by handling flags locally and preventing unintended termination.
 
 ### Removed
 
 - Deleted `tools/check_parent_directory_status.sh`, `tools/check_current_directory_status.sh`, and `tools/check_dotfiles_status.sh` (superseded by `tools/check_repo_status.sh`).
 
-## v0.1.11 — 2026-04-27
+## [v2026.04.27] - 2026-04-27
 
-- Enhanced the change-analyzer prompt used by CommitCraft by adding a description of the generated output's purpose and refining the instruction wording for improved clarity.
-- Added documentation of the output purpose and its downstream consumption.
-- Optimized the prompt content for lower token count and increased summary generation accuracy.
+### Added
 
-## v0.1.10 — 2026-04-27
-
-- Updated the AI models used by the CLI for commit body generation, switching to a higher-capacity model (`openai/gpt-oss-120b`) for more accurate commit message creation.
-- Updated the prompt model for changelog generation to `llama-3.3-70b-versatile` for improved output.
-- Reordered configuration sections and tag definitions for better readability, explicitly defined `tui.theme` and `tui.use_nerd_fonts`, and removed the unused `change_analyzer_max_diff_size` entry.
-
-## v0.1.9 — 2026-04-27
-
-- Improved the commit body generator prompt to provide more comprehensive guidance for composing commit message bodies.
-- Added an expanded instruction set that includes examples of proper and improper commit body formats, specifies present-tense third-person style requirements, and provides length guidelines based on change magnitude.
-
-## v0.1.8 — 2026-04-27
+- Conditional check for the availability of the `go` command before loading the Go path (only updates `PATH` when `go` is present).
+- `change_analyzer_prompt_file`, `change_analyzer_prompt_model`, `change_analyzer_max_diff_size`, `commit_body_generator_prompt_file`, `commit_body_generator_prompt_model`, `commit_title_generator_prompt_file`, `commit_title_generator_prompt_model`, `only_translate_prompt_model`, `changelog.path`, `changelog.bump_strategy`, `changelog.prompt_file`, `changelog.prompt_model` keys to `.config/CommitCraft/config.toml`.
 
 ### Changed
 
-- Improved the commit title prompt in CommitCraft to generate more informative and concise titles.
-- Introduced more examples for generating titles in common scenarios, such as improvements, fixes, and additions.
-- Emphasized capturing the essence of all changes and provided guidance on handling multiple changes without a unifying theme.
-
-## v0.1.7 — 2026-04-27
-
-enhance changelog prompt with guidelines and examples
-
-Improves the prompt for changelog generation in CommitCraft.
-
-### [v0.1.6] - 2026-04-27
-- Improves the prompt for synthesizing commit messages into coherent release notes by refining instructions for capitalization, formatting, and organization.
-  • Updates the `commit.Body` reference to maintain consistent capitalization.
-  • Refines guidelines for organizing release notes into structured sections with past tense, active voice, and bullet points.
-    • Instructs users to prefix bullets with `-` instead of `*`
-    • Specifies writing commit entries in past tense, active voice
-    • Adds guidelines for classifying commit entries based on bracketed tags `[ADD]`, `[IMP]`, `[FIX]`, `[REM]`
-  • Standardizes the output format for consolidated entries describing the same capability or incremental fixes.
-
-# [v0.1.5] - 2026-04-27
-### Prevents errors
-### Added
-- Prevents errors by adding a conditional check for the availability of the `go` command before loading the Go path.
-  - Adds `if` statement to verify existence of `go` command using `command -v go >/dev/null 2>&1;`
-  - Conditional loads Go path only if `go` command exists, preventing PATH updates when `go` is missing
-
-# [v0.1.4] - 2026-04-27
-
-- Updates commit configuration to align with the latest CommitCraft CLI version.
-
-### Added
-- `change_analyzer_prompt_file`, `change_analyzer_prompt_model`, `change_analyzer_max_diff_size`, `commit_body_generator_prompt_file`, `commit_body_generator_prompt_model`, `commit_title_generator_prompt_file`, `commit_title_generator_prompt_model`, `only_translate_prompt_model`, `changelog.path`, `changelog.bump_strategy`, `changelog.prompt_file`, `changelog.prompt_model` to `.config/CommitCraft/config.toml`.
+- Enhanced the CommitCraft change-analyzer prompt: added a description of the generated output's purpose and refined instruction wording. Documented the output purpose and its downstream consumption. Optimized prompt content for lower token count and improved summary accuracy.
+- Switched the CLI commit-body-generation model to `openai/gpt-oss-120b` for more accurate messages, and the changelog-generation model to `llama-3.3-70b-versatile`. Reordered configuration sections and tag definitions for readability, explicitly defined `tui.theme` and `tui.use_nerd_fonts`, removed the unused `change_analyzer_max_diff_size`.
+- Improved the commit-body-generator prompt with more comprehensive guidance: examples of proper/improper formats, present-tense third-person style, and length guidelines based on change magnitude.
+- Improved the commit-title prompt in CommitCraft: more examples for common scenarios (improvements, fixes, additions), emphasis on capturing the essence of all changes, and guidance on handling multiple changes without a unifying theme.
+- Enhanced the changelog-generation prompt with guidelines and examples.
+- Refined the release-notes synthesis prompt: consistent capitalization (`commit.Body`), structured sections in past tense / active voice, bullets with `-` instead of `*`, classification by bracketed tags `[ADD]`/`[IMP]`/`[FIX]`/`[REM]`, and a standardized format for consolidated entries.
 
 ### Removed
-- Legacy configuration fields from `.config/CommitCraft/config.toml`:
-- `summary_prompt_file`, `summary_prompt_model`, `summary_prompt_max_diff_size`, `commit_builder_prompt_file`, `commit_builder_prompt_model`, `outformat_prompt_file`, `outformat_prompt_model`.
 
-## [v0.1.3] - 2026-04-27
--
-Adds `cc` alias for `commitcraft` to facilitate easy access via short name.
+- Legacy fields from `.config/CommitCraft/config.toml`: `summary_prompt_file`, `summary_prompt_model`, `summary_prompt_max_diff_size`, `commit_builder_prompt_file`, `commit_builder_prompt_model`, `outformat_prompt_file`, `outformat_prompt_model`.
 
-## [v0.1.2] - 2026-04-27
--
-Adds changelog functionality to commit message refiner.
- Introduces `refiner.md` to guide commit message entry generation
-Modifies the code to include new refiner configuration section, enabling the functionality
-
-## [v0.1.1] - 2026-04-26
--
-Adds new changelog refiner functionality to CommitCraft's CLI.
-  - Introduces `changelog_refiner.prompt` file to guide changelog entry generation
-  - Modifies `config.toml` to include new changelog configuration section, enabling the functionality
-
-## [v0.1.0] - 2026-04-26
-- Removes old fzf-based commit workflow that has been replaced by the Commitcraft CLI, streamlining the commit process in `scripts/fzf-git-custom.sh`.\n  - Refactors `create_commit` function to eliminate intermediary steps and user prompts, simplifying logic and directly interacting with Git for committing changes.\n  - Removes temporary files used by the old workflow, enhancing code maintainability.\n  - Adapts commit process to align with the new CLI tool's functionality, potentially improving performance and reducing user errors.\n
-
-## [Unreleased]
-
-### Fixed
-- `s` now tracks the last-sourced `.zshrc` hash **per shell session** (in-memory `_S_ZSHRC_HASH` variable) instead of the global state file, so with multiple terminals open none of them gets skipped just because another already updated the on-disk hash. Adds `-f`/`--force` flag to re-source even when the hash matches. Usage: `s` or `s -f`.
+## [v2026.04.26] - 2026-04-26
 
 ### Added
-- `dotfiles force-cli` (alias `-fc`): interactive multi-select prompt (powered by `gum choose --no-limit`) to force-reinstall managed CLI tools — currently `commitcraft` and `cast` — bypassing the cached release tag in `~/.cache/dotfiles/state`. Useful when a binary is broken locally or you want to re-pull the same version. Usage:
+
+- `cc` alias for `commitcraft` (short-name access).
+- Changelog functionality in the commit-message refiner: `refiner.md` guides commit-message entry generation; new refiner configuration section enables it.
+- Changelog refiner functionality in the CommitCraft CLI: `changelog_refiner.prompt` guides changelog entry generation; new section in `config.toml` enables it.
+- `commitcraft` integration in the lazygit custom commit workflow: reword a staged commit message via the `commitcraft` CLI from inside lazygit. (`d767813`)
+- `cast` plugin enabled in the Neovim CLI integration. (`29fa7d4`)
+- Global `cast` configuration so the CLI picks up consistent defaults across shells. (`6b97b70`)
+- `.zshrc` support for the `cast` tool (PATH/aliases). (`e2facba`)
+- `commitcraft` commit-analysis tooling (standalone CLI plus integration hooks). (`6c37ae4`)
+- `.commitcraft.toml` feature configuration consumed by the `commitcraft` CLI. (`6e3e926`)
+- `dotfiles force-cli` (alias `-fc`): interactive multi-select prompt (`gum choose --no-limit`) to force-reinstall managed CLI tools (`commitcraft`, `cast`), bypassing the cached release tag in `~/.cache/dotfiles/state`. Usage:
   ```bash
   dotfiles force-cli
   # or
   dotfiles -fc
-  # then space-toggle the tools you want and press enter
   ```
 
-## [2026-04-26]
-
-### Added
-- `commitcraft` integration in the lazygit custom commit workflow: lets you reword a staged commit message via the `commitcraft` CLI from inside lazygit. (`d767813`)
-- `cast` plugin enabled in the Neovim CLI integration. (`29fa7d4`)
-- Global `cast` configuration so the CLI picks up consistent defaults across shells. (`6b97b70`)
-- `.zshrc` support for the `cast` tool (PATH/aliases). Usage: just invoke `cast` in any new shell. (`e2facba`)
-- `commitcraft` commit-analysis tooling introduced; available as a standalone CLI plus integration hooks. (`6c37ae4`)
-- `.commitcraft.toml` feature configuration consumed by the `commitcraft` CLI. (`6e3e926`)
-
 ### Changed
+
+- Removed the old fzf-based commit workflow (replaced by the CommitCraft CLI) in `scripts/fzf-git-custom.sh`. Refactored `create_commit` to eliminate intermediary steps and prompts; removed temp files used by the old workflow.
 - `scripts/dotfiles.sh`: introduced state file at `~/.cache/dotfiles/state` and the `_dotfiles_update_cli` helper. `dotfiles update` now fetches the latest GitHub release tag for `commitcraft` and `cast`, compares against the cached tag, and skips reinstall when up to date. Usage:
   ```bash
   dotfiles update   # or: dotfiles -u
   ```
   (`8e7797c`)
-- `.zshrc`: efficiency checks added; the `s` helper now SHA-compares `.zshrc` against its last-sourced hash and skips re-sourcing when unchanged. Usage: run `s` instead of `source ~/.zshrc`. (`83aaa51`)
-- `CommitCraft`: improved commit-title prompt rules. (`f46da84`)
-- `CommitCraft`: prevents the model from wrapping output in markdown code blocks. (`e31d5aa`)
-- `CommitCraft`: general commit-prompt improvements. (`1b87d1b`)
-- `CommitCraft`: commit-message optimization pass. (`ad969e5`)
-- `lazygit` custom commit workflow: now exposes a `commitcraft` output option. (`95740be`)
+- `.zshrc`: the `s` helper now SHA-compares `.zshrc` against its last-sourced hash and skips re-sourcing when unchanged. Usage: `s` (instead of `source ~/.zshrc`). (`83aaa51`)
+- CommitCraft prompt improvements: title-prompt rules (`f46da84`), prevents wrapping output in markdown code blocks (`e31d5aa`), general commit-prompt improvements (`1b87d1b`), commit-message optimization pass (`ad969e5`).
+- `lazygit` custom commit workflow: exposes a `commitcraft` output option. (`95740be`)
 - `templates/`: Odoo 19 support added; initial addon version standardized to `0.0.0`. (`433afa3`)
-- `scripts/`: directory-selection validation hardened in the `fzf-make` script. (`6cd0f70`)
+- `scripts/`: directory-selection validation hardened in `fzf-make`. (`6cd0f70`)
+
+### Fixed
+
+- `s` now tracks the last-sourced `.zshrc` hash **per shell session** (in-memory `_S_ZSHRC_HASH`) instead of the global state file, so with multiple terminals open none of them gets skipped just because another already updated the on-disk hash. Adds `-f`/`--force` flag to re-source even when the hash matches. Usage: `s` or `s -f`.

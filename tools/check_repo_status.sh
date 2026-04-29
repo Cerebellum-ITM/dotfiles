@@ -86,12 +86,11 @@ COUNTS=$(git -C "$REPO" rev-list --left-right --count "HEAD...$UPSTREAM" 2>/dev/
     exit 0
 }
 
-# Only flag stale if we *had* a successful fetch and it has since gone old.
-# Bootstrap (SUCCESS_FILE missing) is silent — local refs are still authoritative
-# for the comparison we just did.
+# When the last successful fetch is old (or never happened), stay silent rather
+# than drawing 󱛅. The bg fetch we just kicked off will land before the next
+# prompt and the segment will reappear naturally with fresh data.
 LAST_SUCCESS=$(mtime "$SUCCESS_FILE")
-if [ "$LAST_SUCCESS" != "0" ] && [ $((NOW - LAST_SUCCESS)) -gt "$STALE_AFTER" ]; then
-    echo "󱛅"
+if [ "$LAST_SUCCESS" = "0" ] || [ $((NOW - LAST_SUCCESS)) -gt "$STALE_AFTER" ]; then
     exit 0
 fi
 
