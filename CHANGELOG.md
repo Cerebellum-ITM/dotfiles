@@ -8,7 +8,7 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 
 ### Added
 
-- New `wt` shell function (`scripts/wt.sh`) to manage git worktrees end-to-end via `gum`. Subcommands: `new` (interactive create, with optional `--go` to build `./bin/<name>` and emit a sourceable `./activate` that prepends `bin/` to `PATH`), `cd` (picker → cd to worktree), `ls` (table with branch + clean/dirty + ★ on the primary), `rm` (multi-select picker with confirm and `--force` fallback for dirty/locked worktrees), `main` (cd to the primary worktree), `prune` (`git worktree prune -v`). New worktrees automatically receive `.env` and `.commitcraft.toml` from the source repo if present. Reload with `s -f`, then:
+- New `wt` shell function (`scripts/wt.sh`) to manage git worktrees end-to-end via `gum`. Subcommands: `new` (interactive create, with optional `--go` to build `./bin/<name>` and emit a sourceable `./activate` that prepends `bin/` to `PATH`), `cd` (picker → cd to worktree), `ls` (table with branch + clean/dirty + ★ on the primary), `rm` (picker with confirm and `--force` fallback for dirty/locked worktrees), `main` (cd to the primary worktree), `prune` (`git worktree prune -v`). New worktrees automatically receive `.env` and `.commitcraft.toml` from the source repo if present. Reload with `s -f`, then:
   ```bash
   wt new            # interactive: pick/create branch, confirm, creates <repo>-<branch>
   wt new --go       # also builds Go binary into ./bin and writes ./activate
@@ -18,6 +18,10 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
   wt main           # cd to the primary worktree
   wt prune          # garbage-collect worktree refs
   ```
+
+### Fixed
+
+- `wt` was unusable in zsh: a local variable named `path` inside `_wt_cd`/`_wt_rm`/`_wt_list` collided with zsh's tied `path` array (the lowercase mirror of `PATH`), silently emptying `PATH` mid-function and producing confusing errors like `command not found: gum` and `command not found: awk`. Renamed the local to `wt_path` and dropped the `awk` dependency entirely (replaced with `case` + parameter expansion), which also makes the script portable to environments where `awk` is not on `PATH`. As a side effect, `wt rm` is now single-select (Enter on the highlighted row, with a confirm step) instead of the previous space-toggle multi-select that was confusing in practice. (`d6580cd`)
 
 ## [v2026.04.29] - 2026-04-29
 
