@@ -4,6 +4,21 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.04.30] - 2026-04-30
+
+### Added
+
+- New `wt` shell function (`scripts/wt.sh`) to manage git worktrees end-to-end via `gum`. Subcommands: `new` (interactive create, with optional `--go` to build `./bin/<name>` and emit a sourceable `./activate` that prepends `bin/` to `PATH`), `cd` (picker → cd to worktree), `ls` (table with branch + clean/dirty + ★ on the primary), `rm` (multi-select picker with confirm and `--force` fallback for dirty/locked worktrees), `main` (cd to the primary worktree), `prune` (`git worktree prune -v`). New worktrees automatically receive `.env` and `.commitcraft.toml` from the source repo if present. Reload with `s -f`, then:
+  ```bash
+  wt new            # interactive: pick/create branch, confirm, creates <repo>-<branch>
+  wt new --go       # also builds Go binary into ./bin and writes ./activate
+  wt cd             # pick a worktree and cd into it
+  wt ls             # list worktrees with state
+  wt rm             # pick worktree(s) to remove
+  wt main           # cd to the primary worktree
+  wt prune          # garbage-collect worktree refs
+  ```
+
 ## [v2026.04.29] - 2026-04-29
 
 ### Changed
