@@ -8,6 +8,10 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 
 ### Changed
 
+- Rewrote `tools/gum_styles.sh` to emit truecolor ANSI directly via `printf` instead of forking `gum style` once per fragment. Public API is unchanged — every wrapper (`gum_green`, `gum_yellow_bold`, `git_strong_white_dark`, `gum_custom_color_style`, `gum_print_styles`, etc.) keeps the same name, signature, and color, so no call sites in the repo need to change. Each colored log line in `dotfiles update` and similar flows now spawns ~0 extra processes instead of 3–5, making logs feel instant. As a side effect, message bodies passed via `$(gum_color "...")` into `gum log` now actually display in color — previously `gum style` stripped ANSI in command-substitution contexts and only the timestamp/level were colored. `gum` itself is still used everywhere it adds value: `gum log`, `gum spin`, `gum choose`, `gum confirm`, `gum format`. Reload with:
+  ```bash
+  s -f
+  ```
 - Refactored `scripts/fzf-git-custom.sh`: `create_commit` is split into `_do_commit <current|parent>` and `_maybe_push <current|parent>` (preserves push-toggle semantics via `/tmp/fzf_git_commit_options`); the `--commit`/`--commit-submodule` branches now share `_run_commit_flow`; the `if/elif` dispatcher in `fzf-git` is now a `case`; tmp-file paths are centralized as `FZF_GIT_*` constants. The legacy `create_commit module|submodule` entry point still works as a shim.
 - Stubbed the changelog auto-write inside the commit flow. `_check_for_changelog` and `_write_in_changelog` now emit a `gum_log_debug` "skipped (WIP)" message and do nothing — pending a dedicated changelog flow (TODO in the file).
 
