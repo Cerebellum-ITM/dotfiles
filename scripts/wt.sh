@@ -52,20 +52,31 @@ _wt_require_repo() {
 }
 
 _wt_main_repo() {
-    # First "worktree" entry of `git worktree list --porcelain` is the primary.
-    git worktree list --porcelain 2>/dev/null \
-        | awk '/^worktree /{print substr($0,10); exit}'
+    local line
+    while IFS= read -r line; do
+        case "$line" in
+            "worktree "*) printf '%s\n' "${line#worktree }"; return 0 ;;
+        esac
+    done < <(git worktree list --porcelain 2>/dev/null)
 }
 
-# Emits one line per worktree: <path>\t<branch_or_detached>\t<primary|secondary>
+# Emits one line per worktree: <wt_path>\t<branch_or_detached>\t<primary|secondary>
 _wt_list() {
-    git worktree list --porcelain 2>/dev/null | awk '
-        /^worktree /  { if (path != "") print path "\t" branch "\t" kind;
-                        path=substr($0,10); branch="(detached)"; kind=(seen?"secondary":"primary"); seen=1 }
-        /^branch /    { sub("refs/heads/","",$2); branch=$2 }
-        /^detached$/  { branch="(detached)" }
-        END           { if (path != "") print path "\t" branch "\t" kind }
-    '
+    local line wt_path="" branch="(detached)" kind="" seen=0
+    while IFS= read -r line; do
+        case "$line" in
+            "worktree "*)
+                [[ -n "$wt_path" ]] && printf '%s\t%s\t%s\n' "$wt_path" "$branch" "$kind"
+                wt_path="${line#worktree }"
+                branch="(detached)"
+                if (( seen )); then kind="secondary"; else kind="primary"; fi
+                seen=1
+                ;;
+            "branch refs/heads/"*) branch="${line#branch refs/heads/}" ;;
+            "detached")            branch="(detached)" ;;
+        esac
+    done < <(git worktree list --porcelain 2>/dev/null)
+    [[ -n "$wt_path" ]] && printf '%s\t%s\t%s\n' "$wt_path" "$branch" "$kind"
 }
 
 _wt_copy_extras() {
@@ -172,30 +183,31 @@ _wt_cd() {
     _wt_check_deps || return 1
     _wt_require_repo >/dev/null || return 1
 
-    local lines pick path
-    lines=$(_wt_list) || return 1
-    [[ -z "$lines" ]] && { gum_log_warning "no worktrees"; return 0; }
+    local p b k marker items="" pick wt_path
+    while IFS=$'\t' read -r p b k; do
+        [[ -z "$p" ]] && continue
+        marker=" "
+        [[ "$k" == "primary" ]] && marker="★"
+        items+=$(printf '%s %-30s  %s' "$marker" "$b" "$p")
+        items+=$'\n'
+    done < <(_wt_list)
+    [[ -z "$items" ]] && { gum_log_warning "no worktrees"; return 0; }
 
-    pick=$(printf '%s\n' "$lines" \
-        | awk -F'\t' '{ marker=($3=="primary"?"★":" "); printf "%s  %-30s %s\n", marker, $2, $1 }' \
-        | gum choose --header "cd to worktree")
+    pick=$(printf '%s' "$items" | gum choose --header "cd to worktree")
     [[ -z "$pick" ]] && return 0
-
-    path=${pick#*  }            # strip "★  " or "   "
-    path=${path#*[[:space:]]}   # strip branch column
-    path=$(printf '%s' "$path" | sed -E 's/^[[:space:]]+//')
-    cd "$path" || return 1
+    wt_path="${pick##*  }"   # wt_path is the last column after "  " separator
+    cd "$wt_path" || return 1
 }
 
 _wt_ls() {
     _wt_check_deps || return 1
     _wt_require_repo >/dev/null || return 1
 
-    local lines path branch kind state_str marker
+    local lines wt_path branch kind state_str marker
     lines=$(_wt_list) || return 1
-    while IFS=$'\t' read -r path branch kind; do
-        [[ -z "$path" ]] && continue
-        if [[ -n "$(git -C "$path" status --porcelain 2>/dev/null | head -n1)" ]]; then
+    while IFS=$'\t' read -r wt_path branch kind; do
+        [[ -z "$wt_path" ]] && continue
+        if [[ -n "$(git -C "$wt_path" status --porcelain 2>/dev/null | head -n1)" ]]; then
             state_str=$(gum_yellow_bold "dirty")
         else
             state_str=$(gum_green "clean")
@@ -203,7 +215,7 @@ _wt_ls() {
         marker=" "
         [[ "$kind" == "primary" ]] && marker=$(gum_green "★")
         printf '%s  %-6s  %-25s  %s\n' \
-            "$marker" "$state_str" "$(gum_yellow_bold "$branch")" "$(git_strong_white_dark "$path")"
+            "$marker" "$state_str" "$(gum_yellow_bold "$branch")" "$(git_strong_white_dark "$wt_path")"
     done <<<"$lines"
 }
 
@@ -211,38 +223,36 @@ _wt_rm() {
     _wt_check_deps || return 1
     _wt_require_repo >/dev/null || return 1
 
-    local lines secondary picks pick path
-    lines=$(_wt_list) || return 1
-    secondary=$(printf '%s\n' "$lines" | awk -F'\t' '$3=="secondary"')
-    if [[ -z "$secondary" ]]; then
+    local p b k items="" pick wt_path
+    while IFS=$'\t' read -r p b k; do
+        [[ -z "$p" || "$k" != "secondary" ]] && continue
+        items+=$(printf '%-30s  %s' "$b" "$p")
+        items+=$'\n'
+    done < <(_wt_list)
+    if [[ -z "$items" ]]; then
         gum_log_info "$(git_strong_white_dark " ") no secondary worktrees to remove"
         return 0
     fi
 
-    picks=$(printf '%s\n' "$secondary" \
-        | awk -F'\t' '{ printf "%-30s %s\n", $2, $1 }' \
-        | gum choose --no-limit --header "Remove worktree(s) (space to toggle)")
-    [[ -z "$picks" ]] && { gum_log_info "aborted"; return 0; }
+    pick=$(printf '%s' "$items" | gum choose --header "Remove which worktree?")
+    [[ -z "$pick" ]] && { gum_log_info "aborted"; return 0; }
 
-    gum confirm "Remove the selected worktree(s)?" || { gum_log_info "aborted"; return 0; }
+    wt_path="${pick##*  }"   # wt_path is after the last "  " separator
+    gum confirm "Remove $(gum_yellow_bold "$wt_path")?" || { gum_log_info "aborted"; return 0; }
 
-    while IFS= read -r pick; do
-        [[ -z "$pick" ]] && continue
-        path=$(printf '%s' "$pick" | awk '{$1=""; sub(/^ +/,""); print}')
-        if git worktree remove "$path" 2>/dev/null; then
-            gum_log_info "$(git_strong_white_dark " ") removed $(gum_green "$path")"
-        else
-            if gum confirm "$(gum_yellow_bold "$path") is dirty or locked. Force remove?"; then
-                if git worktree remove --force "$path"; then
-                    gum_log_info "$(git_strong_white_dark " ") force-removed $(gum_green "$path")"
-                else
-                    gum_log_error "$(gum_red "") failed to remove $path"
-                fi
+    if git worktree remove "$wt_path" 2>/dev/null; then
+        gum_log_info "$(git_strong_white_dark " ") removed $(gum_green "$wt_path")"
+    else
+        if gum confirm "$(gum_yellow_bold "$wt_path") is dirty or locked. Force remove?"; then
+            if git worktree remove --force "$wt_path"; then
+                gum_log_info "$(git_strong_white_dark " ") force-removed $(gum_green "$wt_path")"
             else
-                gum_log_info "$(git_strong_white_dark " ") skipped $path"
+                gum_log_error "$(gum_red "") failed to remove $wt_path"
             fi
+        else
+            gum_log_info "$(git_strong_white_dark " ") skipped $wt_path"
         fi
-    done <<<"$picks"
+    fi
 }
 
 _wt_main() {
