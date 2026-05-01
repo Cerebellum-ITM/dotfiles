@@ -4,9 +4,17 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.2] - 2026-05-01
+
+- Reduced the maximum prompt depth in the oh-my-posh configuration to 2, limiting the display to the current folder and its parent directory.
+
 ## [v2026.05.01] - 2026-05-01
 
 - Added three new prompt files to the CommitCraft CLI to support automated release-note generation: `release_body.prompt`, `release_refine.prompt`, and `release_title.prompt`.
+
+### Changed
+
+- Oh-my-posh prompt now shows only 2 path levels (current folder and its parent) instead of 3. Edit in `home/.oh-my-posh/prompt_config.toml` (`max_depth = 2`).
 
 ## [v2026.04.30] - 2026-04-30
 

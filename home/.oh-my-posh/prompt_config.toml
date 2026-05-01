@@ -50,7 +50,7 @@ final_space = true
       cache_duration = 'none'
       folder_icon = '.. ..'
       home_icon = '~'
-      max_depth = 3
+      max_depth = 2
       style = 'agnoster_short'
 
   [[blocks.segments]]
