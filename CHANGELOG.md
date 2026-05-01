@@ -4,6 +4,10 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.05.01] - 2026-05-01
+
+- Added three new prompt files to the CommitCraft CLI to support automated release-note generation: `release_body.prompt`, `release_refine.prompt`, and `release_title.prompt`.
+
 ## [v2026.04.30] - 2026-04-30
 
 ### Added
