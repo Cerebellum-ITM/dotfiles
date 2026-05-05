@@ -24,10 +24,7 @@ if [ -d "$HOME/go/bin" ]; then
 fi
 
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    export PATH="$HOME/.local/bin:$PATH"
-    # export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-fi
+export PATH="$HOME/.local/bin:$PATH"
 
 if [ -f "$HOME/dotfiles/home/.config/atuin/sync-server.env" ]; then
   source "$HOME/dotfiles/home/.config/atuin/sync-server.env"

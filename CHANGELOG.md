@@ -4,6 +4,16 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.6] - 2026-05-05
+
+- Removed the operating system guard from the ~/.local/bin export in .zshrc, allowing the directory to be added to PATH on all supported platforms.
+
+## [v2026.05.05] - 2026-05-05
+
+### Fixed
+
+- `~/.local/bin` is now exported into `PATH` on macOS as well, not only on Linux. Previously the export was guarded by `OSTYPE == linux-gnu*`, so binaries installed there by `tools/install_github_release.sh` (e.g. `commitcraft`, `cast`) were invisible on Macs that didn't have `~/.local/bin/env` (uv/rustup) sourcing the directory as a side effect. Pull the dotfiles and run `s` to pick it up.
+
 ## [v2026.5.2] - 2026-05-01
 
 - Reduced the maximum prompt depth in the oh-my-posh configuration to 2, limiting the display to the current folder and its parent directory.
