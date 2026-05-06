@@ -4,6 +4,20 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.9] - 2026-05-05
+
+### Changed
+
+- Enabled programs running inside tmux to emit DCS‑wrapped OSC 52 sequences directly to the outer terminal by setting `allow-passthrough on` in `~/.tmux.conf`.
+- Configured Ghostty with unconditional clipboard access by setting `clipboard-write = allow`, `clipboard-read = allow`, and `clipboard-trim-trailing-spaces = true`, stabilizing OSC 52 behavior over SSH and preventing intermittent copy failures.
+
+## [v2026.5.8.2] - 2026-05-05
+
+### Changed
+
+- Tmux now enables `allow-passthrough on`, so programs running inside tmux can emit DCS-wrapped OSC 52 sequences directly to the outer terminal as a fallback when `set-clipboard` forwarding misbehaves.
+- Ghostty is configured to accept OSC 52 unconditionally with `clipboard-write = allow`, `clipboard-read = allow`, and `clipboard-trim-trailing-spaces = true` in `home/.config/ghostty/config`. Without this, Ghostty's default policy can silently drop or queue clipboard writes, producing intermittent behavior over SSH. Reload Ghostty (`Cmd+Shift+,`) for the new policy to apply.
+
 ## [v2026.5.8] - 2026-05-05
 ### Fixed
 - Fixed OSC 52 clipboard forwarding by relocating the terminal-overrides configuration after TPM loading and broadening the terminal pattern to apply to all terminal types.

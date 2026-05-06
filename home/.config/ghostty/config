@@ -3,3 +3,11 @@ shell-integration = zsh
 shell-integration-features = sudo
 unfocused-split-opacity = 0.85
 macos-option-as-alt = right
+
+# Allow programs (notably Neovim/tmux over SSH via OSC 52) to write to the
+# system clipboard without prompting. Without this, OSC 52 writes are subject
+# to a default policy that can silently drop or queue them, producing the
+# symptom of "yank works once and then stops" or "works outside tmux only".
+clipboard-write = allow
+clipboard-read = allow
+clipboard-trim-trailing-spaces = true
