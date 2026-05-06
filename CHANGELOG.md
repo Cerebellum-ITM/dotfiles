@@ -4,7 +4,15 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.8] - 2026-05-05
+### Fixed
+- Fixed OSC 52 clipboard forwarding by relocating the terminal-overrides configuration after TPM loading and broadening the terminal pattern to apply to all terminal types.
+
 ## [v2026.5.7] - 2026-05-05
+
+### Fixed
+
+- OSC 52 clipboard forwarding through tmux now actually works. The `set-clipboard on` and `Ms` capability lines were being overwritten at startup by `tmux-sensible` (loaded via TPM), which silently reset `terminal-overrides`. Moved both lines to the end of `home/.tmux.conf`, after `run '~/.tmux/plugins/tpm/tpm'`, and broadened the pattern from `xterm*` to `*` so it also matches `xterm-ghostty`, `screen-*`, etc. Reload with `tmux kill-server` to pick it up.
 
 - Added OSC 52 clipboard synchronization for Neovim over SSH, enabling seamless copy-paste between remote Neovim and the host terminal.
 - Configured tmux to forward OSC 52 sequences, enhancing clipboard functionality.
