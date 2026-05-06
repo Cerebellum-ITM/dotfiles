@@ -4,7 +4,23 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.7] - 2026-05-05
+
+- Added OSC 52 clipboard synchronization for Neovim over SSH, enabling seamless copy-paste between remote Neovim and the host terminal.
+- Configured tmux to forward OSC 52 sequences, enhancing clipboard functionality.
+
 ## [v2026.5.6] - 2026-05-05
+
+### Added
+
+- Neovim now syncs its clipboard to the local machine's clipboard over SSH via OSC 52 escape sequences. When `$SSH_TTY` is set, the `+` and `*` registers route through `vim.ui.clipboard.osc52`, so `yy` (with `clipboard=unnamedplus` already on) lands in the local Mac/Linux clipboard. Requires reopening nvim after pulling.
+- Tmux now forwards OSC 52 clipboard sequences to the outer terminal, so programs running inside tmux (notably Neovim over SSH) can write to the local clipboard. Verify with:
+  ```bash
+  printf '\033]52;c;%s\a' "$(printf 'hello' | base64)"
+  ```
+  inside tmux and pasting locally. Reload with `tmux kill-server` to pick up the new `terminal-overrides`.
+
+### Changed
 
 - Removed the operating system guard from the ~/.local/bin export in .zshrc, allowing the directory to be added to PATH on all supported platforms.
 
