@@ -127,6 +127,7 @@ function dotfiles() {
 
         _dotfiles_update_cli "Cerebellum-ITM/CommitCraftReborn" "commitcraft"
         _dotfiles_update_cli "Cerebellum-ITM/cast" "cast"
+        _dotfiles_update_cli "Cerebellum-ITM/teleport" "teleport"
 
         if [[ "$repo_changed" == 'true' ]]; then
             # shellcheck source=/dev/null
@@ -142,10 +143,11 @@ function dotfiles() {
         gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_green "complete")"
     elif [[ "$1" == "force-cli" || "$1" == "-fc" ]]; then
         shift
-        local -a cli_options=("commitcraft" "cast")
+        local -a cli_options=("commitcraft" "cast" "teleport")
         local -A cli_repos=(
             [commitcraft]="Cerebellum-ITM/CommitCraftReborn"
             [cast]="Cerebellum-ITM/cast"
+            [teleport]="Cerebellum-ITM/teleport"
         )
         local selection
         selection=$(printf '%s\n' "${cli_options[@]}" | gum choose \

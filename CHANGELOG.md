@@ -18,7 +18,11 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 - Tmux now enables `allow-passthrough on`, so programs running inside tmux can emit DCS-wrapped OSC 52 sequences directly to the outer terminal as a fallback when `set-clipboard` forwarding misbehaves.
 - Ghostty is configured to accept OSC 52 unconditionally with `clipboard-write = allow`, `clipboard-read = allow`, and `clipboard-trim-trailing-spaces = true` in `home/.config/ghostty/config`. Without this, Ghostty's default policy can silently drop or queue clipboard writes, producing intermittent behavior over SSH. Reload Ghostty (`Cmd+Shift+,`) for the new policy to apply.
 
-## [v2026.5.8] - 2026-05-05
+## [v2026.5.8] - 2026-05-08
+### Added
+
+- Added `teleport` (`Cerebellum-ITM/teleport`) as a managed CLI: it is now updated automatically on `dotfiles update` and available for force-reinstall via `dotfiles force-cli`.
+
 ### Fixed
 - Fixed OSC 52 clipboard forwarding by relocating the terminal-overrides configuration after TPM loading and broadening the terminal pattern to apply to all terminal types.
 
