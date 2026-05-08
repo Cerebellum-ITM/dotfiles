@@ -4,6 +4,17 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.10] - 2026-05-08
+
+### Removed
+
+- Removed the `tmux-yank` plugin from `~/.tmux.conf` to prevent interference with OSC 52 clipboard forwarding.
+
+### Changed
+
+- Bound `MouseDragEnd1Pane` to `copy-selection-and-cancel` to enable copying selections via OSC 52 on mouse drag-release.
+- Reordered the vi/copy configuration block to the end of the file to prevent overwriting by TPM and `tmux-sensible`.
+
 ## [v2026.5.9] - 2026-05-05
 
 ### Changed
@@ -25,6 +36,10 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 
 ### Fixed
 - Fixed OSC 52 clipboard forwarding by relocating the terminal-overrides configuration after TPM loading and broadening the terminal pattern to apply to all terminal types.
+- Restored end-to-end clipboard copy from remote tmux/Neovim (over SSH from a Ghostty Mac client) to the local macOS clipboard by removing the `tmux-yank` plugin, which was hijacking `y` and `MouseDragEnd1Pane` to call `pbcopy`/`xclip`/`wl-copy` on the *remote* host and breaking the OSC 52 chain. Native `copy-selection-and-cancel` + `set-clipboard on` now drives both keyboard yank and mouse-drag copy. After pulling, run: ```bash
+rm -rf ~/.tmux/plugins/tmux-yank
+tmux kill-server
+```
 
 ## [v2026.5.7] - 2026-05-05
 
