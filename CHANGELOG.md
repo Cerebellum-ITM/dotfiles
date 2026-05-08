@@ -4,16 +4,23 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.11] - 2026-05-08
+
+- Fixed the malformed terminal override for `Ms` in `~/.tmux.conf` to correctly propagate OSC 52 clipboard data to Ghostty both locally and over SSH.
+- Updated copy-mode-vi bindings for `y` and `MouseDragEnd1Pane` to use `copy-pipe-and-cancel` with a fallback chain of `pbcopy`, `xclip`, or `wl-copy`, ensuring local clipboard synchronization.
+
 ## [v2026.5.10] - 2026-05-08
+
+### Fixed
+
+- Tmux clipboard forwarding now actually works end-to-end (locally and over SSH from a Ghostty Mac client). Two issues were fixed: (1) the `Ms` terminal-override was malformed — it hardcoded `c` and only used `%p2%s`, which broke tmux's `set-clipboard on` re-emission; replaced with the canonical `\E]52;%p1%s;%p2%s\7`. (2) `y` and `MouseDragEnd1Pane` in copy-mode-vi now use `copy-pipe-and-cancel` with a `pbcopy → xclip → wl-copy` fallback so the selection lands in the local clipboard tool *and* tmux still emits OSC 52 to the outer terminal — both paths fire, the right one wins per environment. After pulling: ```bash
+rm -rf ~/.tmux/plugins/tmux-yank   # only if not already removed
+tmux kill-server
+```
 
 ### Removed
 
 - Removed the `tmux-yank` plugin from `~/.tmux.conf` to prevent interference with OSC 52 clipboard forwarding.
-
-### Changed
-
-- Bound `MouseDragEnd1Pane` to `copy-selection-and-cancel` to enable copying selections via OSC 52 on mouse drag-release.
-- Reordered the vi/copy configuration block to the end of the file to prevent overwriting by TPM and `tmux-sensible`.
 
 ## [v2026.5.9] - 2026-05-05
 
