@@ -98,6 +98,7 @@ alias ft='_odoo_template_list'
 alias it='$HOME/dotfiles/scripts/odoo_developer_tools.sh'
 alias kk="printf '\n%.0s' {1..100}"
 alias tfs='eval $(tmux showenv -s SSH_AUTH_SOCK)'
+alias tp='teleport'
 
 # Shell integrations
 eval "$(zoxide init zsh --cmd cd)"

@@ -4,6 +4,15 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.12] - 2026-05-11
+Added a `tp` alias to `.zshrc` that forwards all arguments to the `teleport` command, enabling `tp <args>` as a shortcut for `teleport <args>`.
+
+## [v2026.5.11] - 2026-05-11
+
+### Added
+
+- Added `tp` alias for the `teleport` CLI in `.zshrc`. Usage: `tp <args>`.
+
 ## [v2026.5.11] - 2026-05-08
 
 - Fixed the malformed terminal override for `Ms` in `~/.tmux.conf` to correctly propagate OSC 52 clipboard data to Ghostty both locally and over SSH.
