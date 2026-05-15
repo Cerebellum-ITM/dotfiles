@@ -4,6 +4,23 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.16] - 2026-05-15
+
+### Added
+
+- Added numpad-based keybindings for creating, navigating, and resizing splits in Ghostty, including shortcuts for moving focus and resizing splits.
+- Updated `home/.config/ghostty/config` with the new keybindings and documented the reload shortcut.
+
+## [v2026.5.15] - 2026-05-15
+
+### Added
+
+- Added Ghostty keybindings for split management driven by the numpad in a directional cross (4/6/8/2 = left/right/up/down). `cmd+shift+kp_*` creates a split, `cmd+kp_*` moves focus between splits, and `cmd+alt+kp_*` resizes the active split by 10 px. Reload Ghostty's config to apply:
+  ```bash
+  # in Ghostty
+  cmd+shift+,
+  ```
+
 ## [v2026.5.12] - 2026-05-11
 Added a `tp` alias to `.zshrc` that forwards all arguments to the `teleport` command, enabling `tp <args>` as a shortcut for `teleport <args>`.
 

@@ -11,3 +11,22 @@ macos-option-as-alt = right
 clipboard-write = allow
 clipboard-read = allow
 clipboard-trim-trailing-spaces = true
+
+# Splits via numpad (4/6/2/8 = left/right/down/up, layout en cruz direccional)
+# Crear splits: cmd+shift + numpad
+keybind = cmd+shift+kp_4=new_split:left
+keybind = cmd+shift+kp_6=new_split:right
+keybind = cmd+shift+kp_8=new_split:up
+keybind = cmd+shift+kp_2=new_split:down
+
+# Navegar entre splits: cmd + numpad
+keybind = cmd+kp_4=goto_split:left
+keybind = cmd+kp_6=goto_split:right
+keybind = cmd+kp_8=goto_split:up
+keybind = cmd+kp_2=goto_split:down
+
+# Redimensionar split activo: cmd+alt + numpad (10 px por pulsación)
+keybind = cmd+alt+kp_4=resize_split:left,10
+keybind = cmd+alt+kp_6=resize_split:right,10
+keybind = cmd+alt+kp_8=resize_split:up,10
+keybind = cmd+alt+kp_2=resize_split:down,10
