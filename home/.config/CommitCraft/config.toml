@@ -1,6 +1,6 @@
 [changelog]
   bump_strategy = "patch"
-  enabled = true
+  enabled = false
   path = "CHANGELOG.md"
   prompt_file = "prompts/changelog_refiner.prompt"
   prompt_model = "llama-3.3-70b-versatile"
