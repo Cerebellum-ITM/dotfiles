@@ -63,11 +63,15 @@
   commit_body_generator_prompt_file = "prompts/commit_body_generator.prompt"
   commit_body_generator_prompt_model = "openai/gpt-oss-120b"
   commit_title_generator_prompt_file = "prompts/commit_title_generator.prompt"
-  commit_title_generator_prompt_model = "llama-3.1-8b-instant"
+  commit_title_generator_prompt_model = "openai/gpt-oss-20b"
   only_translate_prompt_file = "prompts/only_translate.prompt"
   only_translate_prompt_model = "llama-3.1-8b-instant"
-  release_prompt_file = "prompts/release.prompt"
-  release_prompt_model = "llama-3.3-70b-versatile"
+  release_body_prompt_file = "prompts/release_body.prompt"
+  release_body_prompt_model = "openai/gpt-oss-120b"
+  release_title_prompt_file = "prompts/release_title.prompt"
+  release_title_prompt_model = "openai/gpt-oss-20b"
+  release_refine_prompt_file = "prompts/release_refine.prompt"
+  release_refine_prompt_model = "llama-3.3-70b-versatile"
 
 [tui]
   theme = "harmonized"
