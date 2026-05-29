@@ -138,6 +138,7 @@ final_space = true
     template = 'on 󰅭 {{.Name}}'
     type = 'shell'
     style = 'plain'
+    min_width = 160
 
     [blocks.segments.properties]
       cache_duration = '24h'
@@ -147,6 +148,7 @@ final_space = true
     background = 'transparent'
     type = 'text'
     style = 'plain'
+    min_width = 140
     foreground_templates = ['{{if .Root}}p:warning{{else}}p:green{{end}}']
 
     [blocks.segments.properties]
@@ -158,6 +160,7 @@ final_space = true
     background = 'transparent'
     type = 'node'
     style = 'powerline'
+    min_width = 180
 
     [blocks.segments.properties]
       cache_duration = '5m'
@@ -169,6 +172,7 @@ final_space = true
     background = 'transparent'
     type = 'php'
     style = 'powerline'
+    min_width = 180
 
     [blocks.segments.properties]
       cache_duration = '5m'
@@ -179,6 +183,7 @@ final_space = true
     background = 'transparent'
     type = 'npm'
     style = 'powerline'
+    min_width = 180
 
     [blocks.segments.properties]
       cache_duration = '5m'
@@ -189,6 +194,7 @@ final_space = true
     background = 'transparent'
     type = 'sysinfo'
     style = 'powerline'
+    min_width = 200
 
     [blocks.segments.properties]
       cache_duration = '24h'
@@ -199,6 +205,7 @@ final_space = true
     background = 'transparent'
     type = 'executiontime'
     style = 'plain'
+    min_width = 110
 
     [blocks.segments.properties]
       cache_duration = 'none'
@@ -211,6 +218,7 @@ final_space = true
     background = 'transparent'
     type = 'time'
     style = 'plain'
+    min_width = 80
 
     [blocks.segments.properties]
       cache_duration = 'none'

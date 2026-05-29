@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.5.29] - 2026-05-29
+
+### Changed
+
+- oh-my-posh right prompt now hides segments progressively as the terminal narrows: `sysinfo` hides below 200 cols, `node`/`php`/`npm` below 180, `shell` below 160, `user@host` below 140, `executiontime` below 110, and `time` below 80 — left prompt (path, git, repo-status icons) is always visible at any width. (`prompt_config.toml`)
+
 ## [v2026.5.16] - 2026-05-15
 
 ### Added
