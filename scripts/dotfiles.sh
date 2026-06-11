@@ -33,13 +33,13 @@ function _dotfiles_update_cli() {
     latest=$(_dotfiles_latest_release_tag "$repo")
     if [[ -z "$latest" ]]; then
         gum_log_warning "$(gum_yellow_dark "󰀪") Could not fetch latest release for $(gum_yellow_bold "$binary")"
-        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_yellow_dark "fetch failed")"
+        _dotfiles_summary_add "$(gum_yellow_dark "󰀨") $binary $(gum_yellow_dark "fetch failed")"
         return 0
     fi
     stored=$(_dotfiles_state_get "$state_key")
     if [[ "$force" != "true" ]] && [[ "$stored" == "$latest" ]] && command -v "$binary" &>/dev/null; then
         gum_log_info "$(git_strong_white_dark " ") $binary $(gum_green "up to date") ($latest)"
-        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_green "up to date") ($latest)"
+        _dotfiles_summary_add "$(gum_green "󰗠") $binary $(gum_green "up to date") ($latest)"
         return 0
     fi
     if [[ "$force" == "true" ]]; then
@@ -50,15 +50,15 @@ function _dotfiles_update_cli() {
     if "$HOME/dotfiles/tools/install_github_release.sh" "$repo" "$binary"; then
         _dotfiles_state_set "$state_key" "$latest"
         gum_log_info "$(git_strong_white_dark " ") $binary update $(gum_green "complete")"
-        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_yellow_bold "${stored:-none}") -> $(gum_green "$latest")"
+        _dotfiles_summary_add "$(gum_yellow_bold "󰁟") $binary $(gum_yellow_bold "${stored:-none}") -> $(gum_green "$latest")"
     else
         gum_log_warning "$(gum_red "") $binary update $(gum_yellow_bold "failed")"
-        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_red "update failed") $(gum_yellow_bold "-> $latest")"
+        _dotfiles_summary_add "$(gum_red "󰅙") $binary $(gum_red "update failed") $(gum_yellow_bold "-> $latest")"
     fi
 }
 
 function _dotfiles_print_summary() {
-    gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_blue_bold "summary")"
+    gum_log_info "$(gum_blue_bold "󱃔") dotfiles update $(gum_blue_bold "summary")"
     local line
     for line in "${_DOTFILES_UPDATE_SUMMARY[@]}"; do
         gum_log_info "$line"
@@ -116,13 +116,13 @@ function dotfiles() {
 
         if [[ -z "$remote_head" ]]; then
             gum_log_warning "$(gum_yellow_dark "󰀪") No upstream configured; skipping repo update check"
-            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_yellow_dark "no upstream")"
+            _dotfiles_summary_add "$(gum_yellow_dark "󰀨") repo $(gum_yellow_dark "no upstream")"
         elif [[ "$local_head" == "$remote_head" ]]; then
             gum_log_info "$(git_strong_white_dark " ") dotfiles repo $(gum_green "already up to date")"
-            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_green "up to date")"
+            _dotfiles_summary_add "$(gum_green "󰗠") repo $(gum_green "up to date")"
         else
             repo_changed=true
-            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_yellow_bold "updated") $(gum_green "(new code pulled)")"
+            _dotfiles_summary_add "$(gum_yellow_bold "󰁟") repo $(gum_yellow_bold "updated") $(gum_green "(new code pulled)")"
             stash_output=$(git stash 2>&1)
             if [[ "$stash_output" != *"No local changes to save"* ]]; then
                 stash_message=$(git stash list -1)
