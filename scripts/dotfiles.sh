@@ -156,16 +156,19 @@ function dotfiles() {
                 echo "Failed to source ~/.zshrc"
                 return 1
             }
+        else
+            # No re-source happened, so mirror the screen flush that .zshrc's
+            # trailing `printf '\n%.0s' {1..100}` performs. Either way the live
+            # per-CLI progress lines scroll off screen, leaving only the summary.
+            printf '\n%.0s' {1..100}
         fi
         cd - >/dev/null 2>&1 || {
             echo "Failed to return to previous directory"
             return 1
         }
-        gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_green "complete")"
-        # Printed last, AFTER the .zshrc re-source: that source re-runs the
-        # trailing `printf '\n%.0s' {1..100}` which scrolls earlier output off
-        # screen. Emitting the summary here keeps it as the final visible block
-        # right above the prompt instead of being flushed away.
+        # Printed last, after the screen flush, so the consolidated recap is the
+        # only block left visible right above the prompt — the per-CLI progress
+        # logs above have already scrolled away, no duplication on screen.
         _dotfiles_print_summary
     elif [[ "$1" == "force-cli" || "$1" == "-fc" ]]; then
         shift
