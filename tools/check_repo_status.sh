@@ -26,12 +26,17 @@ CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-posh-repo-status"
 mkdir -p "$CACHE_DIR" 2>/dev/null
 
 mtime() {
-    if [ -f "$1" ]; then
-        if stat -f %m "$1" 2>/dev/null; then return; fi
-        stat -c %Y "$1" 2>/dev/null || echo 0
-    else
-        echo 0
-    fi
+    [ -f "$1" ] || { echo 0; return; }
+    # GNU coreutils first (`stat -c %Y`): on Linux the BSD form `stat -f %m`
+    # is `--file-system` mode where %m is not a valid directive — it prints
+    # garbage yet exits 0, so it must not be tried first. BSD/macOS falls back
+    # to `stat -f %m`. Any non-numeric result degrades to 0 (treated as "never").
+    local t
+    t=$(stat -c %Y "$1" 2>/dev/null) || t=$(stat -f %m "$1" 2>/dev/null)
+    case "$t" in
+        '' | *[!0-9]*) echo 0 ;;
+        *) echo "$t" ;;
+    esac
 }
 
 resolve_repo() {
