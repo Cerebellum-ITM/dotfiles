@@ -150,8 +150,6 @@ function dotfiles() {
         _dotfiles_update_cli "Cerebellum-ITM/teleport" "teleport"
         _dotfiles_update_cli "Cerebellum-ITM/Echo" "echo_cli"
 
-        _dotfiles_print_summary
-
         if [[ "$repo_changed" == 'true' ]]; then
             # shellcheck source=/dev/null
             source ~/.zshrc || {
@@ -164,6 +162,11 @@ function dotfiles() {
             return 1
         }
         gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_green "complete")"
+        # Printed last, AFTER the .zshrc re-source: that source re-runs the
+        # trailing `printf '\n%.0s' {1..100}` which scrolls earlier output off
+        # screen. Emitting the summary here keeps it as the final visible block
+        # right above the prompt instead of being flushed away.
+        _dotfiles_print_summary
     elif [[ "$1" == "force-cli" || "$1" == "-fc" ]]; then
         shift
         local -a cli_options=("commitcraft" "cast" "teleport" "echo_cli")

@@ -9,6 +9,7 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
 ### Fixed
 
 - The dotfiles/repo "in sync vs out of date" prompt icon (oh-my-posh `check_repo_status.sh`) now works on Linux again. `mtime()` tried the BSD `stat -f %m` first; on GNU coreutils that is `--file-system` mode where `%m` prints garbage yet exits 0, so the correct `stat -c %Y` was never reached — breaking the fetch throttle and staleness logic and leaving the indicator permanently blank. It now uses `stat -c %Y` first with `stat -f %m` as the BSD fallback and guards for a numeric result. No usage change; takes effect on the next prompt render.
+- `dotfiles -u`'s consolidated update summary is now printed *after* the `.zshrc` re-source instead of before it, so it is no longer scrolled off screen by the trailing `printf '\n%.0s' {1..100}` flush in `.zshrc` and stays as the final block right above the prompt. Usage: `dotfiles -u`.
 
 ## [v2026.6.10] - 2026-06-10
 
