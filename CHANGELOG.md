@@ -4,6 +4,16 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.6.10] - 2026-06-10
+
+### Added
+
+- `echo_cli` (Cerebellum-ITM/Echo) is now managed by the dotfiles CLI auto-updater: `dotfiles -u` checks its latest release and installs/updates it, and it can be force-reinstalled via `dotfiles -fc`. Usage:
+  ```bash
+  dotfiles -u        # updates echo_cli alongside commitcraft/cast/teleport
+  dotfiles -fc       # pick echo_cli from the list to force reinstall
+  ```
+
 ## [v2026.5.29] - 2026-05-29
 
 ### Changed
