@@ -13,6 +13,7 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
   dotfiles -u        # updates echo_cli alongside commitcraft/cast/teleport
   dotfiles -fc       # pick echo_cli from the list to force reinstall
   ```
+- Added `ec` alias for the `echo_cli` CLI in `.zshrc`. Usage: `ec <args>`.
 
 ## [v2026.5.29] - 2026-05-29
 
