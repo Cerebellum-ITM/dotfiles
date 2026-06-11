@@ -15,6 +15,10 @@ Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut
   ```
 - Added `ec` alias for the `echo_cli` CLI in `.zshrc`. Usage: `ec <args>`.
 
+### Changed
+
+- `dotfiles -u` now prints a consolidated update summary (per-CLI status — up to date / version bump / failed — plus the dotfiles repo status) right before it re-sources `.zshrc`, so the recap survives the screen-clearing newline flush and stays readable in scrollback. Usage: `dotfiles -u`.
+
 ## [v2026.5.29] - 2026-05-29
 
 ### Changed

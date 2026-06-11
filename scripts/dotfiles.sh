@@ -24,16 +24,22 @@ function _dotfiles_latest_release_tag() {
         grep '"tag_name":' | head -n1 | sed -E 's/.*"tag_name": "([^"]+)".*/\1/'
 }
 
+function _dotfiles_summary_add() {
+    _DOTFILES_UPDATE_SUMMARY+=("$1")
+}
+
 function _dotfiles_update_cli() {
     local repo="$1" binary="$2" force="${3:-false}" state_key="cli_${2}_tag" latest stored
     latest=$(_dotfiles_latest_release_tag "$repo")
     if [[ -z "$latest" ]]; then
         gum_log_warning "$(gum_yellow_dark "󰀪") Could not fetch latest release for $(gum_yellow_bold "$binary")"
+        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_yellow_dark "fetch failed")"
         return 0
     fi
     stored=$(_dotfiles_state_get "$state_key")
     if [[ "$force" != "true" ]] && [[ "$stored" == "$latest" ]] && command -v "$binary" &>/dev/null; then
         gum_log_info "$(git_strong_white_dark " ") $binary $(gum_green "up to date") ($latest)"
+        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_green "up to date") ($latest)"
         return 0
     fi
     if [[ "$force" == "true" ]]; then
@@ -44,9 +50,19 @@ function _dotfiles_update_cli() {
     if "$HOME/dotfiles/tools/install_github_release.sh" "$repo" "$binary"; then
         _dotfiles_state_set "$state_key" "$latest"
         gum_log_info "$(git_strong_white_dark " ") $binary update $(gum_green "complete")"
+        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_yellow_bold "${stored:-none}") -> $(gum_green "$latest")"
     else
         gum_log_warning "$(gum_red "") $binary update $(gum_yellow_bold "failed")"
+        _dotfiles_summary_add "$(git_strong_white_dark " ") $binary $(gum_red "update failed") $(gum_yellow_bold "-> $latest")"
     fi
+}
+
+function _dotfiles_print_summary() {
+    gum_log_info "$(git_strong_white_dark " ") dotfiles update $(gum_blue_bold "summary")"
+    local line
+    for line in "${_DOTFILES_UPDATE_SUMMARY[@]}"; do
+        gum_log_info "$line"
+    done
 }
 
 function dotfiles_update() {
@@ -86,6 +102,7 @@ function dotfiles() {
         shift
         local stash_output stash_message pull_output local_head remote_head repo_changed
         repo_changed=false
+        _DOTFILES_UPDATE_SUMMARY=()
         gum_log_info "$(git_strong_white_dark " ") dotfiles $(git_green "Update")"
         gum spin --spinner dot --title "Starting the process of $(gum_blue_bold "updating") the $(git_strong_white_dark "dotfiles") repository has begun $(git_strong_white_dark )" -- sleep 1
         cd "$HOME/dotfiles" || {
@@ -99,10 +116,13 @@ function dotfiles() {
 
         if [[ -z "$remote_head" ]]; then
             gum_log_warning "$(gum_yellow_dark "󰀪") No upstream configured; skipping repo update check"
+            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_yellow_dark "no upstream")"
         elif [[ "$local_head" == "$remote_head" ]]; then
             gum_log_info "$(git_strong_white_dark " ") dotfiles repo $(gum_green "already up to date")"
+            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_green "up to date")"
         else
             repo_changed=true
+            _dotfiles_summary_add "$(git_strong_white_dark " ") repo $(gum_yellow_bold "updated") $(gum_green "(new code pulled)")"
             stash_output=$(git stash 2>&1)
             if [[ "$stash_output" != *"No local changes to save"* ]]; then
                 stash_message=$(git stash list -1)
@@ -129,6 +149,8 @@ function dotfiles() {
         _dotfiles_update_cli "Cerebellum-ITM/cast" "cast"
         _dotfiles_update_cli "Cerebellum-ITM/teleport" "teleport"
         _dotfiles_update_cli "Cerebellum-ITM/Echo" "echo_cli"
+
+        _dotfiles_print_summary
 
         if [[ "$repo_changed" == 'true' ]]; then
             # shellcheck source=/dev/null
