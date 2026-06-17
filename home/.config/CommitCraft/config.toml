@@ -76,3 +76,7 @@
 [tui]
   theme = "harmonized"
   use_nerd_fonts = true
+
+[agent]
+  mode = "delegate"
+  strategy = "single"
