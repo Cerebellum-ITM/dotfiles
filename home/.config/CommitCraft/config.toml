@@ -59,7 +59,7 @@
 [prompts]
   change_analyzer_max_diff_size = 80000
   change_analyzer_prompt_file = "prompts/change_analyzer.prompt"
-  change_analyzer_prompt_model = "meta-llama/llama-4-scout-17b-16e-instruct"
+  change_analyzer_prompt_model = "openai/gpt-oss-120b"
   commit_body_generator_prompt_file = "prompts/commit_body_generator.prompt"
   commit_body_generator_prompt_model = "openai/gpt-oss-120b"
   commit_title_generator_prompt_file = "prompts/commit_title_generator.prompt"
