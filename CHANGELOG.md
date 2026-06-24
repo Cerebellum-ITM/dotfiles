@@ -4,6 +4,16 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.6.24] - 2026-06-24
+
+### Added
+
+- Tab completion for the `echo_cli` (Echo) CLI and its `ec` alias, defined inline in `.zshrc` (self-contained, runs after `compinit`, so no `_echo_cli` file in `fpath` is needed). It completes the full subcommand list and per-command flags (e.g. `db-restore` → `--as --force --neutralize`, `logs` → `-t --no-follow -c --copy …`), plus `-C`/`--project-dir` in first position. The command/flag list is static — update the `_echo_cli` function if Echo gains or removes commands. Usage:
+  ```bash
+  echo_cli <Tab>         # list subcommands
+  ec db-restore --<Tab>  # list flags for a subcommand
+  ```
+
 ## [v2026.6.17] - 2026-06-17
 
 ### Added

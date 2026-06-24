@@ -186,5 +186,57 @@ if [ -n "$TMUX" ]; then
     eval "$(tmux showenv -s SSH_AUTH_SOCK)"
 fi
 
+# --- echo_cli (Echo) Tab completion -------------------------------------
+# Completion for the `echo_cli` binary and its `ec` alias. Self-contained
+# (runs after compinit above), so no fpath/_echo_cli file is needed.
+# NOTE: static list — if Echo gains/removes commands or flags, update here.
+_echo_cli() {
+  local -a cmds
+  cmds=(
+    init reset alias link
+    install update uninstall test modules modinfo modstate view
+    i18n-export i18n-update i18n-pull
+    db-admin db-backup db-restore db-drop db-neutralize db-list db-use
+    bash psql shell shell-run connect
+    up down stop restart ps logs deploy
+    copy-last report run help
+  )
+  if (( CURRENT == 2 )); then
+    _describe 'echo_cli command' cmds
+    _arguments '-C[project dir]:dir:_files -/' '--project-dir[project dir]:dir:_files -/'
+    return
+  fi
+  local -a flags
+  case ${words[2]} in
+    alias)         flags=(--list --rm --migrate) ;;
+    link)          flags=(--show --rm) ;;
+    install)       flags=(--with-demo --level) ;;
+    update)        flags=(--all --last --level --i18n --installed) ;;
+    uninstall)     flags=(--level) ;;
+    test)          flags=(--update --tags) ;;
+    modules)       flags=(--config) ;;
+    modinfo|view)  flags=(--copy --last) ;;
+    modstate)      flags=(--all --json) ;;
+    i18n-export)   flags=(--out) ;;
+    i18n-update)   flags=(--force) ;;
+    i18n-pull)     flags=(--from --all --installed) ;;
+    db-admin|db-drop|db-neutralize) flags=(--force) ;;
+    db-backup)     flags=(--with-filestore) ;;
+    db-restore)    flags=(--as --force --neutralize) ;;
+    down)          flags=(--force) ;;
+    restart|shell) flags=(--from --remote --force) ;;
+    logs)          flags=(-t --no-follow -c --copy --all --from --remote) ;;
+    shell-run)     flags=(--no-copy --force --from --remote) ;;
+    connect)       flags=(--all --force --fresh --new-window) ;;
+    deploy)        flags=(--from --limit --dry-run --force --i18n --no-i18n) ;;
+    copy-last)     flags=(--errors) ;;
+    report)        flags=(--step --level --min-level --copy) ;;
+    run)           flags=(--pick --last --continue-on-error --log) ;;
+  esac
+  compadd -- $flags
+}
+compdef _echo_cli echo_cli ec
+# ------------------------------------------------------------------------
+
 printf '\n%.0s' {1..100}
 
