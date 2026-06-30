@@ -8,54 +8,6 @@
 [commit_format]
   type_format = "[%s]"
 
-[commit_types]
-  behavior = "replace"
-
-  [[commit_types.types]]
-    Color = "39"
-    description = "Improvements to the implementation"
-    tag = "IMP"
-
-  [[commit_types.types]]
-    Color = "197"
-    description = "Bug fixes"
-    tag = "FIX"
-
-  [[commit_types.types]]
-    Color = "47"
-    description = "Feature additions"
-    tag = "ADD"
-
-  [[commit_types.types]]
-    Color = "202"
-    description = "Feature removals"
-    tag = "REM"
-
-  [[commit_types.types]]
-    Color = "141"
-    description = "Code refactoring"
-    tag = "REF"
-
-  [[commit_types.types]]
-    Color = "221"
-    description = "File moves or renames"
-    tag = "MOV"
-
-  [[commit_types.types]]
-    Color = "81"
-    description = "Release-related commits"
-    tag = "REL"
-
-  [[commit_types.types]]
-    Color = "15"
-    description = "Work in progress"
-    tag = "WIP"
-
-  [[commit_types.types]]
-    Color = "254"
-    description = "Documentation updates"
-    tag = "DOC"
-
 [prompts]
   change_analyzer_max_diff_size = 80000
   change_analyzer_prompt_file = "prompts/change_analyzer.prompt"

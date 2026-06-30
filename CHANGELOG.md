@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.6.30] - 2026-06-30
+
+### Removed
+
+- Dropped the custom `[commit_types]` override (`behavior = "replace"` plus the redefined IMP/FIX/ADD/REM/REF/MOV/REL/WIP/DOC tag set) from CommitCraft's `config.toml`, so CommitCraft now falls back to its built-in default commit-type taxonomy. Usage: `commitcraft ai list-tags` now reflects the builtin defaults instead of the local override.
+
 ## [v2026.6.24] - 2026-06-24
 
 ### Added
