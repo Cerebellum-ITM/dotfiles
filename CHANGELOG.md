@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.7.8] - 2026-07-08
+
+### Changed
+
+- Raised CommitCraft's `change_analyzer_max_diff_size` from `80000` to `150000` in `config.toml`. The change-analyzer model (`openai/gpt-oss-120b`, 128k-token context) only used ~17% of its window at the old cap; 150 KB (~37k tokens of diff, ~30% of the window) covers virtually every real code commit without truncating, while leaving ample headroom for the model's reasoning budget and for worse-than-`chars/4` tokenization on non-ASCII diffs. Very large diffs (e.g. big Odoo `.po` re-exports, which exceed the 128k window anyway) still truncate and lean on keypoints. Usage: takes effect on the next `commitcraft ai generate`/`ai context`; run `commitcraft ai context --strict` to confirm a large staged diff still fits.
+
 ## [v2026.6.30] - 2026-06-30
 
 ### Removed
