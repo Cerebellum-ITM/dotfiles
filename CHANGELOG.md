@@ -4,6 +4,12 @@ All notable user-observable changes to this dotfiles repo are documented here.
 Format inspired by [Keep a Changelog](https://keepachangelog.com).
 Versioning is **CalVer** (`vYYYY.MM.DD`, with `.N` suffix when more than one cut lands on the same day). Each entry references a git short hash where available for traceability back to `git log`.
 
+## [v2026.7.21] - 2026-07-21
+
+### Added
+
+- New lazygit custom command in the commits panel: press `H` on a selected commit to view its diff via `hunk show <sha>` (opens full-screen in the terminal for paging/scrolling). Usage: in lazygit, focus the commits panel, select a commit, and press `H`.
+
 ## [v2026.7.8] - 2026-07-08
 
 ### Changed

@@ -81,3 +81,8 @@ customCommands:
     command: "$HOME/dotfiles/tools/lazygit-gretime.sh {{ .SelectedCommit.Sha }}"
     description: 'Rewrite the date of the selected commit (gretime)'
     output: terminal
+  - key: 'H'
+    context: 'commits'
+    command: "hunk show {{ .SelectedCommit.Sha }}"
+    description: 'Show the diff of the selected commit (hunk show)'
+    output: terminal
